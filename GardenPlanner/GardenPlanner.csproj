@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{8B51D7AB-C05B-43FE-814C-ED9034AB28A4}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GardenPlanner</RootNamespace>
+    <AssemblyName>GardenPlanner</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="gtk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="gdk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="glade-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="pango-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="atk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Mono.Posix" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cairo" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gtk-gui\gui.stetic">
+      <LogicalName>gui.stetic</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="gtk-gui\MainWindow.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Garden\Garden.cs" />
+    <Compile Include="Garden\Planting.cs" />
+    <Compile Include="Garden\Plant.cs" />
+    <Compile Include="Garden\PlantVariety.cs" />
+    <Compile Include="Garden\PlantFamily.cs" />
+    <Compile Include="Garden\GardenData.cs" />
+    <Compile Include="Garden\VarietyKeySeq.cs" />
+    <Compile Include="Garden\GardenDataEntry.cs" />
+    <Compile Include="Garden\BedMethod.cs" />
+    <Compile Include="MainWindowMenuBar.cs" />
+    <Compile Include="Garden\GardenDataException.cs" />
+    <Compile Include="Garden\GardenPoint.cs" />
+    <Compile Include="Garden\GardenShape.cs" />
+    <Compile Include="Garden\GardenArea.cs" />
+    <Compile Include="Garden\Growable.cs" />
+    <Compile Include="Garden\Affectable.cs" />
+    <Compile Include="Garden\GardenDrawable.cs" />
+    <Compile Include="GardenDrawingArea.cs" />
+    <Compile Include="EditPlantVarietyWindow.cs" />
+    <Compile Include="EditAffectableWindow.cs" />
+    <Compile Include="EditGrowableWindow.cs" />
+    <Compile Include="EditPlantWindow.cs" />
+    <Compile Include="EditPlantFamilyWindow.cs" />
+    <Compile Include="Garden\FeederType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Garden\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
