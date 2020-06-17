@@ -87,6 +87,13 @@
     <Compile Include="EditPlantWindow.cs" />
     <Compile Include="EditPlantFamilyWindow.cs" />
     <Compile Include="Garden\FeederType.cs" />
+    <Compile Include="InfoAffectableWindow.cs" />
+    <Compile Include="InfoGrowableWindow.cs" />
+    <Compile Include="InfoPlantFamilyWindow.cs" />
+    <Compile Include="InfoPlantWindow.cs" />
+    <Compile Include="InfoPlantVarietyWindow.cs" />
+    <Compile Include="Garden\DateRange.cs" />
+    <Compile Include="Translation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

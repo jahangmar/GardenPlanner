@@ -35,5 +35,16 @@ namespace GardenPlanner.Garden
                 (Value as GardenDataEntry).ID = key;
             dic.Add(key, Value);
         }
+
+        protected void RemFromDictionary<T>(string key, Dictionary<string, T> dic)
+        {
+            dic.Remove(key);
+        }
+
+        protected void RemFromDictionary<T>(T value, Dictionary<string, T> dic)
+        {
+            if (value is GardenDataEntry entry)
+                dic.Remove(entry.ID);
+        }
     }
 }

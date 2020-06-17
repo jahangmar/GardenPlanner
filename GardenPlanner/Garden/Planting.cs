@@ -8,8 +8,6 @@ namespace GardenPlanner.Garden
     /// </summary>
     public class Planting : GardenArea, GardenDrawable
     {
-        public string GardenID;
-
         /// <summary>
         /// List of varieties planted
         /// </summary>
@@ -17,7 +15,7 @@ namespace GardenPlanner.Garden
         public Dictionary<VarietyKeySeq, int> Varieties;
 
         private Color Color;
-        private readonly Color LINE_COLOR = new Color(1, 1, 1);
+        private readonly Color LINE_COLOR = new Color(0.2, 0.2, 0.2);
         private const int LINE_WIDTH = 1;
 
         public Planting(string name, string description) : base(name, description)
@@ -33,6 +31,9 @@ namespace GardenPlanner.Garden
             Varieties.Add(new VarietyKeySeq(family, plant, variety), count);
             CalcColor();
         }
+
+        public void AddVariety(PlantVariety variety, int count = 0) =>
+            AddVarietyKeys(variety.FamilyID, variety.PlantID, variety.ID, count);
 
         public void RemoveVarietyKey(string family, string plant, string variety)
         {
@@ -62,7 +63,7 @@ namespace GardenPlanner.Garden
             Color = new Color(r, g, b);
         }
 
-        public void Draw(Context context, int xoffset=0, int yoffset=0, double zoom=1)
+        public override void Draw(Context context, int xoffset=0, int yoffset=0, double zoom=1)
         {
             Shape.Draw(context, xoffset, yoffset, LINE_COLOR, Color, LINE_WIDTH, zoom);
         }

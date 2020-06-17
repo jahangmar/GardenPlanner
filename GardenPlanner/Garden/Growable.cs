@@ -5,25 +5,21 @@ namespace GardenPlanner.Garden
 {
     public abstract class Growable : Affectable
     {
-        /// <summary>
-        /// Start date for when this plant can be sown or planted
-        /// </summary>
-        public DateTime PlantDateStart;
 
         /// <summary>
-        /// End date for when this plant can be sown or planted
+        /// Date for when this plant can be sown inside
         /// </summary>
-        public DateTime PlantDateEnd;
+        public DateRange SowInsideDateRange = new DateRange();
 
         /// <summary>
-        /// Start date for when this plant can be harvested
+        /// Date for when this plant can be sown or planted outside
         /// </summary>
-        public DateTime HarvestDateStart;
+        public DateRange PlantOutsideDateRange = new DateRange();
 
         /// <summary>
-        /// End date for when this plant can be harvested
+        /// Date for when this plant can be harvested
         /// </summary>
-        public DateTime HarvestDateEnd;
+        public DateRange HarvestDateRange;
 
         /// <summary>
         /// Number of days it takes from planting or sowing to harvest

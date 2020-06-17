@@ -28,6 +28,23 @@ namespace GardenPlanner.Garden
 
         public void AddPoint(GardenPoint gardenPoint) => AddPoint(gardenPoint, Points.Count);
 
+        public void AddPoint(int x, int y, int idx) => AddPoint(new GardenPoint(x, y), idx);
+        public void AddPoint(int x, int y) => AddPoint(x, y, Points.Count);
+
+        public void AddPoints(List<GardenPoint> points)
+        {
+            Points.AddRange(points);
+        }
+
+        public bool FinishPoints()
+        {
+            if (Points.Count == 0)
+                return false;
+
+            AddPoint(Points[0]);
+            return true;
+        }
+
         public void ModPoint(GardenPoint gardenPoint, int idx)
         {
             if (idx < 0 || idx > Points.Count)
@@ -47,6 +64,24 @@ namespace GardenPlanner.Garden
 
         public List<GardenPoint> GetPoints() => Points;
 
+        public bool ContainsPointOnEdge(GardenPoint p, int xoffset=0, int yoffset=0, double zoom = GardenPoint.STD_ZOOM)
+        {
+            if (Points.Count < 2)
+                return false;
+
+            GardenPoint offset = new GardenPoint(xoffset, yoffset);
+
+            bool found = p.Between(Points[Points.Count - 1]*zoom+offset, Points[0]*zoom+offset);
+
+            for (int i=0; !found && i < Points.Count-1; i++)
+            {
+                found = p.Between(Points[i]*zoom+offset, Points[i + 1]*zoom+offset);
+            }
+            return found;
+        }
+
+        //public bool ContainsPoint(GardenPoint p) => ContainsPoint(p.X, p.Y);
+
         public void Draw(Context context, int xoffset, int yoffset, Color lineColor, Color fillColor, double lineWidth, double zoom = GardenPoint.STD_ZOOM)
         {
             context.LineCap = LineCap.Round;
@@ -59,7 +94,8 @@ namespace GardenPlanner.Garden
                 {
                     context.LineTo(point.ToCairoPointD(xoffset, yoffset, zoom));
                 }
-                context.FillPreserve();
+                if (fillColor.A < 1)
+                    context.FillPreserve();
                 context.SetSourceColor(lineColor);
                 context.Stroke();
             }

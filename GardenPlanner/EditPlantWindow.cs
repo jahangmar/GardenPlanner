@@ -7,12 +7,17 @@ namespace GardenPlanner
         {
         }
 
-        public override void Delete(Plant plant)
+        protected override void Delete(Plant plant)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Save()
+        protected override void Save()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void Info()
         {
             throw new System.NotImplementedException();
         }

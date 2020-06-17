@@ -12,11 +12,11 @@ namespace GardenPlanner
         private readonly PlantVariety Variety;
         private readonly bool Create;
 
-        public EditPlantVarietyWindow(Plant plant) : this(new PlantVariety("", ""), true)
+        /*public EditPlantVarietyWindow(Plant plant) : this(new PlantVariety("", ""), true)
         {
             Variety.PlantID = plant.ID;
             Variety.FamilyID = plant.FamilyID;
-        }
+        }*/
 
         public EditPlantVarietyWindow(PlantVariety variety, bool create=false) : base(create ? "Create new variety" : "Edit variety '" + variety.Name + "'")
         {
@@ -30,11 +30,42 @@ namespace GardenPlanner
             DescriptionTextView = new TextView();
             DescriptionTextView.Buffer.Text = variety.Description;
             AddEntry("Description ", DescriptionTextView);
-
-
         }
 
-        public override void Save()
+        /// <summary>
+        /// Shows the window for varieties that already exist.
+        /// </summary>
+        public static void ShowWindow(PlantVariety variety, bool create=false) {
+            EditPlantVarietyWindow win = new EditPlantVarietyWindow(variety, create);
+            win.ShowAll();
+        }
+
+        /// <summary>
+        /// Shows the window for new varieties not yet added to a plant
+        /// </summary>
+        /// <param name="plant">the plant the variety belongs to</param>
+        public static void ShowWindow(Plant plant)
+        {
+            PlantVariety variety = new PlantVariety("", "");
+            variety.PlantID = plant.ID;
+            variety.FamilyID = plant.FamilyID;
+            EditPlantVarietyWindow win = new EditPlantVarietyWindow(variety, true);
+            win.ShowAll();
+        }
+
+        protected PlantVariety ModifyOrCreate(PlantVariety variety = null)
+        {
+            if (variety == null)
+                variety = new PlantVariety("", "");
+
+            variety.Name = NameEntry.Text;
+            variety.Description = DescriptionTextView.Buffer.Text;
+
+            return variety;
+        }
+
+
+        protected override void Save()
         {
             //TODO do the actual saving
 
@@ -44,8 +75,7 @@ namespace GardenPlanner
                 return;
             }
 
-            Variety.Name = NameEntry.Text;
-            Variety.Description = DescriptionTextView.Buffer.Text;
+            ModifyOrCreate(Variety);
 
             try
             {
@@ -74,9 +104,14 @@ namespace GardenPlanner
             }
         }
 
-        public override void Delete(PlantVariety variety)
+        protected override void Delete(PlantVariety variety)
         {
             throw new System.NotImplementedException();
+        }
+
+        protected override void Info()
+        {
+            InfoPlantVarietyWindow.ShowWindow(ModifyOrCreate(Variety), true, Create);
         }
     }
 }

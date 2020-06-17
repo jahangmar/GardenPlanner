@@ -15,7 +15,7 @@ namespace GardenPlanner.Garden
         /// <summary>
         /// Coordinate in cm
         /// </summary>
-        public int X, Y;
+        public readonly int X, Y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:GardenPlanner.Garden.GardenPoint"/> class.
@@ -31,5 +31,58 @@ namespace GardenPlanner.Garden
         //public Point ToCairoPoint(int zoom = STD_ZOOM) => new Point(X * zoom, Y * zoom);
         public PointD ToCairoPointD(int xoffset = 0, int yoffset = 0, double zoom = STD_ZOOM) => new PointD(xoffset + X * zoom, yoffset + Y * zoom);
 
+        public bool Between(GardenPoint p1, GardenPoint p2)
+        {
+            GardenPoint vec = p1 - p2;
+            //System.Console.WriteLine("p1 is " + p1);
+            //System.Console.WriteLine("p2 is " + p2);
+            //System.Console.WriteLine("this is " + this);
+            //System.Console.WriteLine("vec is " + vec);
+            //vec + p2 == p1
+            //this == p2 + vec * f where 0 < f < 1
+            for (float f = 0; f <= 1; f += 0.1f)
+            {
+                //System.Console.WriteLine("...checking " + (p2 + (vec * f)));
+                if (this.Equals(p2 + (vec * f), 20))
+                    return true;
+            }
+            return false;
+        }
+
+        public static GardenPoint operator *(GardenPoint p1, GardenPoint p2) =>
+            new GardenPoint(p1.X * p2.X, p1.Y * p2.Y);
+
+        public static GardenPoint operator *(GardenPoint p1, double d) =>
+            new GardenPoint((int) (p1.X * d), (int) (p1.Y * d));
+
+        public static GardenPoint operator +(GardenPoint p1, GardenPoint p2) =>
+            new GardenPoint(p1.X + p2.X, p1.Y + p2.Y);
+
+        public static GardenPoint operator +(GardenPoint p1, int i) =>
+            new GardenPoint(p1.X + i, p1.Y + i);
+
+        public static GardenPoint operator -(GardenPoint p1, GardenPoint p2) =>
+            new GardenPoint(p1.X - p2.X, p1.Y - p2.Y);
+
+        public static GardenPoint operator -(GardenPoint p1, int i) =>
+            new GardenPoint(p1.X - i, p1.Y - i);
+
+        public override bool Equals(object obj) =>
+            Equals(obj, 1);
+
+        public bool Equals(object obj, float epsilon)
+        {
+            if (obj is GardenPoint p)
+                return (System.Math.Abs(p.X - this.X) < epsilon && System.Math.Abs(p.Y - this.Y) < epsilon);
+
+            return false;
+        }
+    
+
+        public override int GetHashCode() =>
+            X.GetHashCode() ^ Y.GetHashCode();
+
+        public override string ToString() =>
+            "(" + X + ", " + Y + ")";
     }
 }

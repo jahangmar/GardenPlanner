@@ -10,8 +10,10 @@ namespace GardenPlanner
 
         VBox EntryBox = new VBox();
 
+
         HButtonBox ActionButtonBox = new HButtonBox();
         Button SaveButton = new Button(new Label("Save"));
+        Button InfoButton = new Button(new Label("Info"));
         Button DeleteButton = new Button(new Label("Delete"));
         Button DiscardButton = new Button(new Label("Discard"));
 
@@ -23,13 +25,14 @@ namespace GardenPlanner
 
             VPaned.Add(EntryBox);
 
+            ActionButtonBox.Add(InfoButton);
             ActionButtonBox.Add(SaveButton);
             ActionButtonBox.Add(DeleteButton);
             ActionButtonBox.Add(DiscardButton);
             VPaned.Add2(ActionButtonBox);
 
             this.Add(VPaned);
-
+            InfoButton.Clicked += (object sender, System.EventArgs e) => Info();
             DiscardButton.Clicked += (object sender, System.EventArgs e) => TryToClose();
             SaveButton.Clicked += (object sender, System.EventArgs e) => Save();
         }
@@ -80,7 +83,8 @@ namespace GardenPlanner
             dialog.Destroy();
         }
 
-        public abstract void Save();
-        public abstract void Delete(T affectable);
+        protected abstract void Info();
+        protected abstract void Save();
+        protected abstract void Delete(T affectable);
     }
 }

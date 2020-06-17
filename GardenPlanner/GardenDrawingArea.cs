@@ -1,6 +1,8 @@
 ﻿using Gtk;
 using Cairo;
 using Gdk;
+using GardenPlanner.Garden;
+using System.Collections.Generic;
 
 namespace GardenPlanner
 {
@@ -9,9 +11,14 @@ namespace GardenPlanner
     /// </summary>
     public class GardenDrawingArea : Gtk.DrawingArea
     {
-        private Garden.Garden Garden;
+        public Garden.Garden Garden;
 
         public static double Zoom = 1;
+
+        public static GardenDrawingArea ActiveInstance;
+
+        public GardenArea SelectedArea;
+        public List<GardenPoint> NewPoints = new List<GardenPoint>();
 
         public GardenDrawingArea(Garden.Garden garden, SpinButton zoomButton, int width=800, int height=600)
         {
@@ -19,15 +26,25 @@ namespace GardenPlanner
             this.SetSizeRequest(width, height);
             this.AddEvents((int)(Gdk.EventMask.ButtonPressMask | Gdk.EventMask.ButtonReleaseMask | Gdk.EventMask.PointerMotionMask | Gdk.EventMask.KeyPressMask | Gdk.EventMask.KeyReleaseMask | Gdk.EventMask.AllEventsMask));
 
+
             this.ButtonPressEvent += delegate (object o, ButtonPressEventArgs args)
             {
                 if (args.Event.Button == 1)
                 {
-                    System.Console.WriteLine("left mouse button clicked on " + Garden.Name + " at " + args.Event.X + "/" + args.Event.Y); //TODO
-
+                    if (MainWindow.GetInstance().AreaNewButton.Active)
+                    {
+                        UndoSelection();
+                        GardenPoint gridPoint = SnapToGrid((int)args.Event.X, (int)args.Event.Y);
+                        NewPoints.Add(gridPoint);
+                        Draw();
+                    }
+                    else if (CheckAreaClick((int)args.Event.X, (int)args.Event.Y))
+                    {
+                        MakeSelection();
+                    }
                 }
 
-            };
+                };                    
 
             zoomButton.ValueChanged += (object sender, System.EventArgs e) =>
             {
@@ -37,19 +54,103 @@ namespace GardenPlanner
             };
         }
 
+        public void MakeSelection()
+        {
+            MainWindow.GetInstance().SelectGardenEntry(SelectedArea);
+            MainWindow.GetInstance().PlantAddButton.Sensitive = SelectedArea is Planting;
+            Draw();
+        }
+
+        public void UndoSelection()
+        {
+            SelectedArea = null;
+            MainWindow.GetInstance().PlantAddButton.Sensitive = false;
+            Draw();
+        }
+
+        private GardenPoint SnapToGrid(int x, int y)
+        {
+            double grid = (25);
+            return new GardenPoint(-XOffset() + (int)(System.Math.Round((double) (x / grid)) * grid), -YOffset() + (int)(System.Math.Round((double) (y / grid)) * grid));
+        }
+
+        /// <summary>
+        /// Checks if an area of the garden was selected by clicking the edge of that area.
+        /// </summary>
+        /// <returns><c>true</c>, if click selection was made, <c>false</c> otherwise.</returns>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        private bool CheckAreaClick(int x, int y)
+        {
+            GardenPoint clicked = new GardenPoint(x, y);
+
+            foreach (GardenArea area in Garden.MethodAreas.Values)
+                if (area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                {
+                    SelectedArea = area;
+                    return true;
+                }
+
+            foreach (GardenArea area in Garden.Plantings.Values)
+                if (area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                {
+                    SelectedArea = area;
+                    return true;
+                }
+
+
+
+            if (Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+            {
+                SelectedArea = Garden;
+                return true;
+
+                //System.Console.WriteLine("clicked on " + garden.Name + " edge");
+                /*
+                Cairo.Context context = Gdk.CairoHelper.Create(this.GdkWindow);
+                context.MoveTo(clicked.ToCairoPointD());
+                context.SetSourceColor(new Cairo.Color(0, 0, 1));
+                context.LineWidth = 5;
+                context.LineTo((clicked +2).ToCairoPointD());
+                context.Stroke();
+                */
+            }
+
+            return false;
+        }
+
         protected override bool OnExposeEvent(EventExpose evnt)
         {
             Draw();
             return base.OnExposeEvent(evnt);
         }
 
-        private void Draw()
+        private int XOffset() => (int)(100 * Zoom);
+        private int YOffset() => (int)(100 * Zoom);
+
+        public void Draw()
         {
+            if (ActiveInstance == null)
+                return;
             Cairo.Context context = Gdk.CairoHelper.Create(this.GdkWindow);
             DrawBackground(context);
             DrawGrid(context);
             DrawGarden(context);
+            DrawSelection(context);
             context.Dispose();
+        }
+
+        private void DrawSelection(Context context)
+        {
+            if (SelectedArea != null)
+                SelectedArea.Shape.Draw(context, XOffset(), YOffset(), new Cairo.Color(0, 0, 0), new Cairo.Color(0.2, 0.2, 0.2, 0.2), 3, Zoom);
+
+            if (NewPoints.Count > 0)
+            {
+                context.MoveTo(NewPoints[0].ToCairoPointD(XOffset(), YOffset(), Zoom));
+                NewPoints.ForEach((GardenPoint p) => context.LineTo(p.ToCairoPointD(XOffset(), YOffset(), Zoom)));
+                context.Stroke();
+            }
         }
 
         private void DrawBackground(Context context)
@@ -117,7 +218,7 @@ namespace GardenPlanner
             */
 
 
-            Garden.Draw(context, (int) (100*Zoom), (int) (100*Zoom), Zoom);
+            Garden.Draw(context, XOffset(), YOffset(), Zoom);
         }
     }
 }
