@@ -94,6 +94,7 @@
     <Compile Include="InfoPlantVarietyWindow.cs" />
     <Compile Include="Garden\DateRange.cs" />
     <Compile Include="Translation.cs" />
+    <Compile Include="NumberInputWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

@@ -13,7 +13,7 @@ namespace GardenPlanner.Garden
         public Dictionary<string, GardenArea> MethodAreas = new Dictionary<string, GardenArea>();
 
         private const double LINE_WIDTH = 2;
-
+               
         public Garden(string name, string description) : base(name, description)
         {
 

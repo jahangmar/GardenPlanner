@@ -24,7 +24,8 @@ namespace GardenPlanner
         {
             this.Garden = garden;
             this.SetSizeRequest(width, height);
-            this.AddEvents((int)(Gdk.EventMask.ButtonPressMask | Gdk.EventMask.ButtonReleaseMask | Gdk.EventMask.PointerMotionMask | Gdk.EventMask.KeyPressMask | Gdk.EventMask.KeyReleaseMask | Gdk.EventMask.AllEventsMask));
+            this.AddEvents((int)(Gdk.EventMask.ButtonPressMask | Gdk.EventMask.ButtonReleaseMask | Gdk.EventMask.PointerMotionMask
+            | Gdk.EventMask.KeyPressMask | Gdk.EventMask.KeyReleaseMask | Gdk.EventMask.AllEventsMask));
 
 
             this.ButtonPressEvent += delegate (object o, ButtonPressEventArgs args)
@@ -42,8 +43,11 @@ namespace GardenPlanner
                     {
                         MakeSelection();
                     }
+                    else
+                    {
+                        UndoSelection();
+                    }
                 }
-
                 };                    
 
             zoomButton.ValueChanged += (object sender, System.EventArgs e) =>
@@ -52,6 +56,16 @@ namespace GardenPlanner
                 if (IsDrawable)
                     Draw();
             };
+
+            this.QueryTooltip += (object o, QueryTooltipArgs args) =>
+            {
+                System.Console.WriteLine("tooltip drawing area");
+            };
+            zoomButton.QueryTooltip += (object o, QueryTooltipArgs args) =>
+            {
+                System.Console.WriteLine("tooltip zoom button");
+            };
+
         }
 
         public void MakeSelection()
@@ -59,6 +73,34 @@ namespace GardenPlanner
             MainWindow.GetInstance().SelectGardenEntry(SelectedArea);
             MainWindow.GetInstance().PlantAddButton.Sensitive = SelectedArea is Planting;
             Draw();
+
+            if (SelectedArea is Garden.Garden g)
+            {
+                TooltipText = "Garden '" + g.Name + "'";
+            }
+            else if (SelectedArea is Planting p)
+            {
+                string s = "";
+                foreach (var k in p.Varieties.Keys)
+                {
+                    PlantVariety v = GardenData.LoadedData.GetVariety(k);
+                    s += v.Name + ", ";
+                }
+                if (s.Length > 0)
+                {
+                    s = s.Substring(0, s.Length - 2);
+                    TooltipText = "Planting '" + p.Name + "': " + s;
+                }
+                else
+                {
+                    TooltipText = "Planting '" + p.Name + "'";
+                }
+
+            }
+            else if (SelectedArea is GardenArea a)
+            {
+                TooltipText = "MethodArea '" + a.Name + "'";
+            }
         }
 
         public void UndoSelection()
@@ -66,6 +108,7 @@ namespace GardenPlanner
             SelectedArea = null;
             MainWindow.GetInstance().PlantAddButton.Sensitive = false;
             Draw();
+            TooltipText = "";
         }
 
         private GardenPoint SnapToGrid(int x, int y)

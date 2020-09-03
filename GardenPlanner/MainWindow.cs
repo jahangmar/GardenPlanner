@@ -27,6 +27,9 @@ public partial class MainWindow : Window
     Button AreaCancelButton = new Button("Cancel");
     bool AreaCancelButtonClicked = false;
 
+    Frame DateFrame = new Frame();
+    SpinButton yearButton = new SpinButton(2020,2030,1), monthButton = new SpinButton(1,12,1);
+
     //Dictionary<string, Dictionary<string, ComboBox>> VarietyBoxes;
     //Dictionary<string, ComboBox> PlantBoxes;
 
@@ -71,12 +74,18 @@ public partial class MainWindow : Window
         PlantAddButton.Clicked += (object sender, System.EventArgs e) =>
         {
             GardenDrawingArea area = GardenDrawingArea.ActiveInstance;
-            if (area.SelectedArea is Planting planting)
+            if (area.SelectedArea is Planting planting && SelectedEntry is PlantVariety variety)
             {
-                if (SelectedEntry is PlantVariety variety)
-                {
-                    planting.AddVariety(variety); //TODO count
-                }
+                NumberInputWindow.ShowWindow("Adding "+variety.Name+"...", "Select the amount", 1, 500, (int res) => {
+
+                    {
+                        planting.AddVariety(variety, res);
+                        GardenDrawingArea.ActiveInstance.Draw();
+                    }
+                    return true;
+                });
+
+
             }
         };
 
@@ -231,6 +240,15 @@ public partial class MainWindow : Window
 
         frame = new Frame("Zoom");
         frame.Add(ZoomButton);
+        ToolBox.Add(frame);
+
+        frame = new Frame("Date");
+        VButtonBox buttonBox = new VButtonBox();
+        yearButton = new SpinButton(GardenData.GetFirstYear(), GardenData.GetLastYear(), 1);
+        buttonBox.Add(yearButton);
+        buttonBox.Add(monthButton);
+
+        frame.Add(buttonBox);
         ToolBox.Add(frame);
 
         //FamilyPlantVarietySelector.Add1(PopulateFamilies(GardenData.LoadedData)); 

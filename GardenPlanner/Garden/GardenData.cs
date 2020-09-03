@@ -4,16 +4,24 @@ namespace GardenPlanner.Garden
 {
     public class GardenData
     {
-        public static GardenData LoadedData = new GardenData();
+        public static GardenData LoadedData = new GardenData("default");
 
         public Dictionary<string, Garden> Gardens;
         public Dictionary<string, PlantFamily> Families;
 
-        public GardenData()
+        public string Name;
+
+        public GardenData(string name)
         {
             Gardens = new Dictionary<string, Garden>();
             Families = new Dictionary<string, PlantFamily>();
+            this.Name = name;
         }
+
+        public static string GetImagePath() => MainClass.MAIN_PATH + "/" + LoadedData.Name + "/imgs/";
+
+        public static int GetFirstYear() => 2000; //TODO
+        public static int GetLastYear() => 2030; //TODO
 
         public void AddFamily(string key, PlantFamily family)
         {

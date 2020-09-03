@@ -16,6 +16,7 @@ namespace GardenPlanner
 
         public static Translation GetTranslation()
         {
+            return new Translation();
             if (instance == null)
                 instance = Load();
 

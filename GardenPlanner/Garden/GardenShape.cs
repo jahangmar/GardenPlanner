@@ -80,7 +80,30 @@ namespace GardenPlanner.Garden
             return found;
         }
 
-        //public bool ContainsPoint(GardenPoint p) => ContainsPoint(p.X, p.Y);
+        /// <summary>
+        /// Returns the point that is the most left of all points and the most top point of those
+        /// </summary>
+        public GardenPoint GetTopLeftPoint()
+        {
+            if (Points.Count < 0)
+                return new GardenPoint(0, 0);
+
+            GardenPoint result = Points[0];
+            foreach (GardenPoint p in Points)
+            {
+                if (p.X < result.X)
+                {
+                    result = p;
+                    continue;
+                }
+                else if (p.X == result.X && p.Y < result.Y)
+                {
+                    result = p;
+                }
+            }
+            return result;
+
+        }
 
         public void Draw(Context context, int xoffset, int yoffset, Color lineColor, Color fillColor, double lineWidth, double zoom = GardenPoint.STD_ZOOM)
         {

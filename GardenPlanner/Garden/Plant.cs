@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System;
+using Cairo;
 
 namespace GardenPlanner.Garden
 {
@@ -36,6 +36,21 @@ namespace GardenPlanner.Garden
         public void RemoveVariety(string varietyID)
         {
             Varieties.Remove(varietyID);
+        }
+
+
+        private string GetImageSurfacePath() => GardenData.GetImagePath() + "/plants/" + ID + ".png";
+        private ImageSurface imageSurface = null;
+
+        public bool HasImageSurface() => System.IO.File.Exists(GetImageSurfacePath());
+
+        public ImageSurface GetImageSurface()
+        {
+            if (imageSurface == null && HasImageSurface())
+            {
+                    imageSurface = new ImageSurface(GetImageSurfacePath());
+            }
+            return imageSurface;
         }
     }
 }

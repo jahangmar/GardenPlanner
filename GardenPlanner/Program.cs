@@ -7,6 +7,9 @@ namespace GardenPlanner
 {
     class MainClass
     {
+
+        public static string MAIN_PATH = "/home/jan/.gardenplanner/";
+
         public static void Main(string[] args)
         {
             Translation translation = new Translation();
@@ -25,7 +28,7 @@ namespace GardenPlanner
 
         public static GardenData TestData()
         {
-            GardenData Data = new GardenData();
+            GardenData Data = new GardenData("testdata");
 
             var zwiebelgewaechse = new PlantFamily("Zwiebelgewaechse", "");
             Data.AddFamily("zwiebelgewaechse", zwiebelgewaechse);
@@ -36,10 +39,14 @@ namespace GardenPlanner
             var morado = new PlantVariety("Morado", "rotviolett, aus Spanien, geeignet für Herbstpflanzung, bildet Brutzwiebeln");
             morado.Color = new Cairo.Color(0.9, 0.9, 0.9);
             knoblauch.AddVariety("morado", morado);
+            var vallelado = new PlantVariety("Vallelado", "bla");
+            vallelado.Color = new Cairo.Color(0.9, 0.9, 0.9);
+            knoblauch.AddVariety("vallelado", vallelado);
 
             var nachtschattengew = new PlantFamily("Nachtschattengewächse", "");
             Data.AddFamily("nachtschattengewaechse", nachtschattengew);
             var kartoffeln = new Plant("Kartoffel", "");
+            kartoffeln.Color = new Cairo.Color(0.2, 0.8, 0.8);
             nachtschattengew.AddPlant("kartoffel", kartoffeln);
 
             var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma");
@@ -58,6 +65,15 @@ namespace GardenPlanner
             compostArea.Shape.AddPoint(new GardenPoint(100, 200));
             compostArea.Shape.FinishPoints();
             bed1.AddMethodArea("compost", compostArea);
+            var plantingArea = new Planting("Planting", "hier wurde was gepflanzt");
+            plantingArea.Shape.AddPoint(new GardenPoint(400, 400));
+            plantingArea.Shape.AddPoint(new GardenPoint(500, 400));
+            plantingArea.Shape.AddPoint(new GardenPoint(500, 500));
+            plantingArea.Shape.AddPoint(new GardenPoint(400, 500));
+            plantingArea.Shape.FinishPoints();
+            bed1.AddPlanting("planting", plantingArea);
+            plantingArea.AddVariety(morado, 3);
+            plantingArea.AddVariety(vallelado, 2);
 
             string s = Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented);
 
@@ -67,12 +83,11 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -add missing field for varieties, plants, families
- * -set growable values for varieties when adding it to plant based on values of plant
- * -same as above for plant, family, and Affectable interace
- * 
- * -show info for varieties, plants, families
- * -edit info for varieties, plants, families
- * 
- * -show beds, plantings, ...
+ * -scrolling
+ * -show info for plantings/method areas/gardens
+ * -add right-click menu for areas to set values (e.g. start/end date)
+ * -add timeline/date
+ * -add missing implementations for adding families, plants
+ * -add possibility to add images (automatically)
+ * -add save/load
  */
