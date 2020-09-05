@@ -97,6 +97,9 @@
     <Compile Include="NumberInputWindow.cs" />
     <Compile Include="DateInputWindow.cs" />
     <Compile Include="InfoView.cs" />
+    <Compile Include="GardenAreaCreationDialog.cs" />
+    <Compile Include="GardenCreationDialog.cs" />
+    <Compile Include="PlantingCreationDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

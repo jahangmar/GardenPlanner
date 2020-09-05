@@ -87,8 +87,8 @@ namespace GardenPlanner
  * -add window for area creation (name, descr, created, removed)
  * -show info for plantings/method areas/gardens
  * -add missing implementations for adding families, plants
- * -add possibility to add images (automatically)
  * -add save/load
  * -scrolling
+ * -add possibility to add images (automatically)
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)
  */

@@ -81,7 +81,7 @@ namespace GardenPlanner.Garden
             {
                 obj = JsonConvert.DeserializeObject(File.ReadAllText(filename));
             }
-            catch (JsonException e)
+            catch (System.Exception e)
             {
                 ErrorMessage = e.Message;
                 return false;
@@ -100,6 +100,32 @@ namespace GardenPlanner.Garden
             }
 
             return false;
+        }
+
+        public static bool Save(string filename)
+        {
+
+            string name = filename.Substring(filename.LastIndexOf('/')+1);
+            name = name.Substring(0, name.LastIndexOf('.'));
+            LoadedData.Name = name;
+
+            try
+            {
+                File.WriteAllText(filename, JsonConvert.SerializeObject(LoadedData));
+            }
+            catch (System.Exception e)
+            {
+                ErrorMessage = e.Message;
+                return false;
+            }
+
+            return true;
+        }
+
+        public static string GenID(string name)
+        {
+            System.Random random = new System.Random();
+            return name.Replace(' ', '_') + "_" + random.Next();
         }
 
     }
