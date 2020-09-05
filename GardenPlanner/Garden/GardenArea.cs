@@ -31,18 +31,42 @@ namespace GardenPlanner.Garden
         /// </summary>
         public List<BedMethod> Methods;
 
+        public bool CheckDate(int year, int month) => (year == created.Year && month >= created.Month || year > created.Year) &&
+            (year == removed.Year && month <= removed.Month || year < removed.Year) || year == 0 && month == 0;
+
         public GardenArea(string name, string description) : base(name, description)
         {
             Methods = new List<BedMethod>();
             Shape = new GardenShape();
         }
 
+        public GardenArea(string name, string description, int cyear, int cmonth, int ryear, int rmonth) : this(name, description)
+        {
+            SetCreated(cyear, cmonth);
+            SetRemoved(ryear, rmonth);
+        }
+
+        public void SetCreated(int year, int month)
+        {
+            created = new DateTime(year, month, 1);
+            if (removed < created)
+                removed = created;
+        }
+
+        public void SetRemoved(int year, int month)
+        {
+            removed = new DateTime(year, month, 1);
+            if (removed < created)
+                created = removed;
+        }
+
         public bool ContainsPointOnEdge(GardenPoint p, int xoffset = 0, int yoffset = 0, double zoom = GardenPoint.STD_ZOOM) =>
             Shape.ContainsPointOnEdge(p, xoffset, yoffset, zoom);
 
-        public virtual void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom = 1)
+        public virtual void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom = 1, int year=0, int month=0)
         {
-            this.Shape.Draw(context, xoffset, yoffset, new Color(0.3, 0.2, 0.2), new Color(0.4, 0.3, 0.3, 0.5), LINE_WIDTH, zoom);
+            if (CheckDate(year, month))
+                this.Shape.Draw(context, xoffset, yoffset, new Color(0.3, 0.2, 0.2), new Color(0.4, 0.3, 0.3, 0.5), LINE_WIDTH, zoom);
         }
     }
 }

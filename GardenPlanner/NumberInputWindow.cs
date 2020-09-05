@@ -4,12 +4,14 @@ namespace GardenPlanner
     public class NumberInputWindow : Window
     {
 
-        SpinButton spinButton;
-        Label label;
-        Button okButton;
-        Button cancelButton;
+        protected SpinButton spinButton;
+        protected Label label;
+        protected Button okButton;
+        protected Button cancelButton;
+        protected VBox vBox;
+        protected HButtonBox hButtonBox;
 
-        private NumberInputWindow(string title, string message, int min, int max) : base(WindowType.Toplevel)
+        protected NumberInputWindow(string title, string message, int min, int max) : base(WindowType.Toplevel)
         {
             Modal = true;
             Title = title;
@@ -19,12 +21,12 @@ namespace GardenPlanner
             okButton = new Button("Ok");
             cancelButton = new Button("Cancel");
 
-            VBox vBox = new VBox();
+            vBox = new VBox();
 
             vBox.Add(label);
             vBox.Add(spinButton);
 
-            HButtonBox hButtonBox = new HButtonBox();
+            hButtonBox = new HButtonBox();
 
             hButtonBox.Add(cancelButton);
             hButtonBox.Add(okButton);
@@ -34,7 +36,7 @@ namespace GardenPlanner
 
         }
 
-        public static void ShowWindow(string title, string message, int min, int max, System.Func<int, bool> action)
+        public static void ShowWindow(string title, string message, int min, int max, System.Action<int> action)
         {
             NumberInputWindow numberInputWindow = new NumberInputWindow(title, message, min, max);
             numberInputWindow.okButton.Clicked += (object sender, System.EventArgs e) =>

@@ -15,18 +15,18 @@ namespace GardenPlanner
 
             Translation trans = Translation.GetTranslation();
 
-            AddEntry(variety.Name, headline);
+            AddEntry(variety.Name, infoView.headline);
 
             if (Variety.FamilyID == null)
                 throw new Exception("familyID is null for some reason");
 
             Plant plant = GardenData.LoadedData.GetPlant(variety.FamilyID, variety.PlantID);
             AddEntry(plant.Name + trans.VarietyAdd +" ", false); 
-            AddEntry("(" + plant.ScientificName + ")", weak);
+            AddEntry("(" + plant.ScientificName + ")", infoView.weak);
 
             AddEntry(trans.Description +": ", false);
 
-            AddEntry(variety.Description, italic);
+            AddEntry(variety.Description, infoView.italic);
 
             AddEntry(trans.SowPlantOutside+": " + variety.PlantOutsideDateRange);
 

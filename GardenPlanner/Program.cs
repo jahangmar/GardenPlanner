@@ -49,8 +49,8 @@ namespace GardenPlanner
             kartoffeln.Color = new Cairo.Color(0.2, 0.8, 0.8);
             nachtschattengew.AddPlant("kartoffel", kartoffeln);
 
-            var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma");
-            var bed2 = new Garden.Garden("Hauptstraßengarten", "Alte Garten von Oma");
+            var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma", 2000, 1, 2010,6);
+            var bed2 = new Garden.Garden("Hauptstraßengarten", "Alte Garten von Oma", 2000, 1, 2010, 6);
             Data.AddGarden("oma_garten", bed1);
             Data.AddGarden("hptstr_garten", bed2);
             bed1.Shape.AddPoint(new GardenPoint(0, 0));
@@ -58,14 +58,14 @@ namespace GardenPlanner
             bed1.Shape.AddPoint(new GardenPoint(300, 200));
             bed1.Shape.AddPoint(new GardenPoint(300, 0));
             bed1.Shape.FinishPoints();
-            var compostArea = new GardenArea("Kompost", "hier wurde Kompost angewendet");
+            var compostArea = new GardenArea("Kompost", "hier wurde Kompost angewendet", 2000, 1, 2010, 6);
             compostArea.Shape.AddPoint(new GardenPoint(100, 100));
             compostArea.Shape.AddPoint(new GardenPoint(300, 100));
             compostArea.Shape.AddPoint(new GardenPoint(300, 200));
             compostArea.Shape.AddPoint(new GardenPoint(100, 200));
             compostArea.Shape.FinishPoints();
             bed1.AddMethodArea("compost", compostArea);
-            var plantingArea = new Planting("Planting", "hier wurde was gepflanzt");
+            var plantingArea = new Planting("Planting", "hier wurde was gepflanzt", 2000, 1, 2010, 6);
             plantingArea.Shape.AddPoint(new GardenPoint(400, 400));
             plantingArea.Shape.AddPoint(new GardenPoint(500, 400));
             plantingArea.Shape.AddPoint(new GardenPoint(500, 500));
@@ -83,11 +83,12 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -scrolling
+ * -garden area creation
+ * -add window for area creation (name, descr, created, removed)
  * -show info for plantings/method areas/gardens
- * -add right-click menu for areas to set values (e.g. start/end date)
- * -add timeline/date
  * -add missing implementations for adding families, plants
  * -add possibility to add images (automatically)
  * -add save/load
+ * -scrolling
+ * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)
  */

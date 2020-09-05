@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace GardenPlanner.Garden
 {
@@ -10,6 +12,8 @@ namespace GardenPlanner.Garden
         public Dictionary<string, PlantFamily> Families;
 
         public string Name;
+
+        public bool unsaved = false;
 
         public GardenData(string name)
         {
@@ -68,6 +72,35 @@ namespace GardenPlanner.Garden
         public PlantVariety GetVariety(VarietyKeySeq varietyKeySeq) =>
             GetVariety(varietyKeySeq.FamilyKey, varietyKeySeq.PlantKey, varietyKeySeq.VarietyKey);
 
-       
+        public static string ErrorMessage;
+
+        public static bool Load(string filename)
+        {
+            object obj;
+            try
+            {
+                obj = JsonConvert.DeserializeObject(File.ReadAllText(filename));
+            }
+            catch (JsonException e)
+            {
+                ErrorMessage = e.Message;
+                return false;
+            }
+
+
+            if (obj is GardenData)
+            {
+                LoadedData = (GardenData)obj;
+                LoadedData.unsaved = false;
+                return true;
+            }
+            else
+            {
+                ErrorMessage = "invalid json object";
+            }
+
+            return false;
+        }
+
     }
 }

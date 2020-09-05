@@ -48,7 +48,30 @@ namespace GardenPlanner
                         UndoSelection();
                     }
                 }
-                };                    
+                else if (args.Event.Button == 3 || args.Event.Button == 2)
+                {
+                    if (CheckAreaClick((int)args.Event.X, (int)args.Event.Y) && SelectedArea != null)
+                    {
+                        MakeSelection();
+
+                        MenuItem item1 = new MenuItem("Set created date");
+                        item1.Activated += (sender, e) => DateInputWindow.ShowWindow("Set created date", (int y,int m) => { SelectedArea.SetCreated(y, m); });
+                        MenuItem item2 = new MenuItem("Set removed date");
+                        item2.Activated += (sender, e) => DateInputWindow.ShowWindow("Set removed date", (int y, int m) => { SelectedArea.SetRemoved(y, m); });
+                        MenuItem item3 = new MenuItem("Remove variety...");
+                        item3.Sensitive = false;
+                        MenuItem item4 = new MenuItem("Remove area");
+                        item4.Activated += (sender, e) => MainWindow.GetInstance().AreaDeleteButton.Activate();
+                        Menu menu = new Menu() {
+                            item1, item2, item3, item4
+                        };
+
+                        menu.AttachToWidget(this, null);
+                        menu.ShowAll();
+                        menu.Popup();
+                    }
+                }
+            };                    
 
             zoomButton.ValueChanged += (object sender, System.EventArgs e) =>
             {
@@ -126,16 +149,18 @@ namespace GardenPlanner
         private bool CheckAreaClick(int x, int y)
         {
             GardenPoint clicked = new GardenPoint(x, y);
+            int year = MainWindow.GetInstance().GetYear();
+            int month = MainWindow.GetInstance().GetMonth();
 
             foreach (GardenArea area in Garden.MethodAreas.Values)
-                if (area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
                 {
                     SelectedArea = area;
                     return true;
                 }
 
             foreach (GardenArea area in Garden.Plantings.Values)
-                if (area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
                 {
                     SelectedArea = area;
                     return true;
@@ -143,7 +168,7 @@ namespace GardenPlanner
 
 
 
-            if (Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+            if (Garden.CheckDate(year, month) && Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
             {
                 SelectedArea = Garden;
                 return true;
@@ -261,7 +286,7 @@ namespace GardenPlanner
             */
 
 
-            Garden.Draw(context, XOffset(), YOffset(), Zoom);
+            Garden.Draw(context, XOffset(), YOffset(), Zoom, MainWindow.GetInstance().GetYear(), MainWindow.GetInstance().GetMonth());
         }
     }
 }

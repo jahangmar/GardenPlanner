@@ -7,6 +7,7 @@ using Gtk;
 public partial class MainWindow : Window
 {
     MenuBar MenuBar = new MainWindowMenuBar();
+    VBox TopVBox = new VBox();
     Notebook GardenBedBook = new Notebook();
     HPaned GraphicsSidebarHPaned = new HPaned();
     VPaned TopPanedToolboxVPaned = new VPaned();
@@ -14,6 +15,10 @@ public partial class MainWindow : Window
     VPaned FamilyPlantVarietySelector = new VPaned();
     VPaned PlantSideVPaned = new VPaned();
     Box PlantBox = new VBox();
+
+    VPaned PlantAreaInfoVPaned = new VPaned();
+    InfoView AreaInfo = new InfoView();
+
     ComboBox VarietyBox = null;
     HButtonBox ToolBox = new HButtonBox();
     Button PlantEditButton = new Button("Edit");
@@ -21,7 +26,7 @@ public partial class MainWindow : Window
     public Button PlantAddButton = new Button("Add");
 
     SpinButton ZoomButton = new SpinButton(0.1, 10, 0.1);
-    Button AreaDeleteButton = new Button("Delete Area");
+    public Button AreaDeleteButton = new Button("Delete Area");
     public ToggleButton AreaNewButton = new ToggleButton("New Area");
     ComboBox AreaTypeComboBox = new ComboBox(new string[] {"Garden", "Planting", "MethodArea"});
     Button AreaCancelButton = new Button("Cancel");
@@ -62,10 +67,17 @@ public partial class MainWindow : Window
         PlantSideVPaned.Add1(FamilyPlantVarietySelector);
 
         FamilyPlantVarietySelector.SetSizeRequest(100, 400);
-        PlantSideVPaned.Add2(PlantBox);
+        PlantAreaInfoVPaned.Add1(PlantBox);
+        PlantAreaInfoVPaned.Add2(AreaInfo);
+
+        PlantSideVPaned.Add2(PlantAreaInfoVPaned);
 
         TopPanedToolboxVPaned.Add1(GraphicsSidebarHPaned);
         TopPanedToolboxVPaned.Add2(ToolBox);
+
+
+        AreaInfo.WrapMode = WrapMode.Word;
+        AreaInfo.Editable = false;
 
         Frame frame;
 
@@ -82,7 +94,6 @@ public partial class MainWindow : Window
                         planting.AddVariety(variety, res);
                         GardenDrawingArea.ActiveInstance.Draw();
                     }
-                    return true;
                 });
 
 
@@ -205,37 +216,52 @@ public partial class MainWindow : Window
         {
             GardenDrawingArea gardenDrawingArea = GardenDrawingArea.ActiveInstance;
 
-            if (gardenDrawingArea == null)
+            if (gardenDrawingArea == null || gardenDrawingArea.Garden == null)
                 return;
 
-            if (gardenDrawingArea.Garden != null && (gardenDrawingArea.SelectedArea == null || gardenDrawingArea.SelectedArea is Garden))
-            {
-                var garden = gardenDrawingArea.Garden;
+            string name = gardenDrawingArea.SelectedArea != null ? gardenDrawingArea.SelectedArea.Name : gardenDrawingArea.Garden.Name;
 
-                GardenData.LoadedData.Gardens.Remove(garden.ID);
-                GardenBedBook.Remove(GardenBedBook.GetNthPage(GardenBedBook.CurrentPage));
-                //System.Console.WriteLine("delete garden");
-                GardenDrawingArea.ActiveInstance = null;
-                gardenDrawingArea.UndoSelection();
-                SelectGardenEntry(null);
-                if (GardenBedBook.Page >= 0 && GardenBedBook.GetNthPage(GardenBedBook.Page) is GardenDrawingArea drawingArea)
+            Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Warning, ButtonsType.OkCancel, "Do you want to delete '"+name+"'?", new { });
+
+            int response = dialog.Run();
+            //System.Console.WriteLine("response " + result);
+            if (response == (int)ResponseType.Cancel)
+            {
+
+            }
+            else if (response == (int)ResponseType.Ok)
+            {
+
+                if (gardenDrawingArea.Garden != null && (gardenDrawingArea.SelectedArea == null || gardenDrawingArea.SelectedArea is Garden))
                 {
-                    GardenDrawingArea.ActiveInstance = drawingArea;
-                    drawingArea.Draw();
+                    var garden = gardenDrawingArea.Garden;
+
+                    GardenData.LoadedData.Gardens.Remove(garden.ID);
+                    GardenBedBook.Remove(GardenBedBook.GetNthPage(GardenBedBook.CurrentPage));
+                    //System.Console.WriteLine("delete garden");
+                    GardenDrawingArea.ActiveInstance = null;
+                    gardenDrawingArea.UndoSelection();
+                    SelectGardenEntry(null);
+                    if (GardenBedBook.Page >= 0 && GardenBedBook.GetNthPage(GardenBedBook.Page) is GardenDrawingArea drawingArea)
+                    {
+                        GardenDrawingArea.ActiveInstance = drawingArea;
+                        drawingArea.Draw();
+                    }
+                }
+                else if (gardenDrawingArea.SelectedArea is Planting planting)
+                {
+                    gardenDrawingArea.Garden.RemovePlanting(planting);
+                    gardenDrawingArea.UndoSelection();
+                    gardenDrawingArea.Draw();
+                }
+                else if (gardenDrawingArea.SelectedArea is GardenArea area)
+                {
+                    gardenDrawingArea.Garden.RemoveMethodArea(area);
+                    gardenDrawingArea.UndoSelection();
+                    gardenDrawingArea.Draw();
                 }
             }
-            else if (gardenDrawingArea.SelectedArea is Planting planting)
-            {
-                gardenDrawingArea.Garden.RemovePlanting(planting);
-                gardenDrawingArea.UndoSelection();
-                gardenDrawingArea.Draw();
-            }
-            else if (gardenDrawingArea.SelectedArea is GardenArea area)
-            {
-                gardenDrawingArea.Garden.RemoveMethodArea(area);
-                gardenDrawingArea.UndoSelection();
-                gardenDrawingArea.Draw();
-            }
+            dialog.Destroy();
         };
 
         frame = new Frame("Zoom");
@@ -250,6 +276,31 @@ public partial class MainWindow : Window
 
         frame.Add(buttonBox);
         ToolBox.Add(frame);
+
+        int yearValue = yearButton.ValueAsInt;
+        yearButton.ValueChanged += (sender, e) =>
+        {
+            if (yearButton.ValueAsInt > yearValue)
+                monthButton.Value = 1;
+            else
+                monthButton.Value = 12;
+            yearValue = yearButton.ValueAsInt;
+            DateChanged();
+        };
+        monthButton.Changed += (sender, e) =>
+        {
+            DateChanged();
+        };
+
+        void DateChanged()
+        {
+            GardenDrawingArea gardenDrawingArea = GardenDrawingArea.ActiveInstance;
+            if (gardenDrawingArea.SelectedArea != null && !gardenDrawingArea.SelectedArea.CheckDate(yearButton.ValueAsInt, monthButton.ValueAsInt))
+            {
+                gardenDrawingArea.UndoSelection();
+            }
+            gardenDrawingArea.Draw();
+        }
 
         //FamilyPlantVarietySelector.Add1(PopulateFamilies(GardenData.LoadedData)); 
         //RepopulateGrowables();
@@ -285,13 +336,78 @@ public partial class MainWindow : Window
             }
         };
 
-        //this.Add(MenuBar);
-        this.Add(TopPanedToolboxVPaned);
+        TopVBox.Add(MenuBar);
+        TopVBox.Add(TopPanedToolboxVPaned);
+
+        this.Add(TopVBox);
 
         Child.ShowAll();
         //Build();
+        this.DeleteEvent += (object o, DeleteEventArgs args) =>
+        {
+            TryToClose();
+            args.RetVal = true;
+        };
 
+        this.Destroyed += (sender, e) =>
+        {
+            Application.Quit();
+        };
     }
+
+    public void TryToClose()
+    {
+        if (GardenData.LoadedData.unsaved)
+        {
+            Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Warning, ButtonsType.None, "There are unsaved changes. Really quit?", new { });
+            dialog.AddButton("Cancel", ResponseType.Cancel);
+            dialog.AddButton("Close", ResponseType.Close);
+            dialog.AddButton("Save and Close", ResponseType.Apply);
+            int response = dialog.Run();
+            //System.Console.WriteLine("response " + result);
+            if (response == (int)ResponseType.Cancel)
+            {
+                //do nothing
+            }
+            else if (response == (int)ResponseType.Close)
+            {
+                this.Destroy();//close main window (also quits app)
+            }
+            else if (response == (int)ResponseType.Apply)
+            {
+                //TODO save
+            }
+            dialog.Destroy();
+        }
+        else
+        {
+            this.Destroy();
+        }
+    }
+
+    public void ShowAreaSelectionInfo(GardenArea area)
+    {
+        AreaInfo.Buffer.Clear();
+
+        AreaInfo.AddEntry(area.Name, AreaInfo.headline);
+        AreaInfo.AddEntry(area.Description, AreaInfo.italic);
+
+        //TODO info for all 3 types
+        if (area is Garden)
+        {
+
+        }
+        AreaInfo.ApplyTags();
+    }
+
+    public void ShowEmptyAreaSelectionInfo()
+    {
+        AreaInfo.Buffer.Clear();
+    }
+
+    public int GetYear() => yearButton.ValueAsInt;
+
+    public int GetMonth() => monthButton.ValueAsInt;
 
     private GardenDataEntry SelectedEntry;
 
@@ -306,9 +422,15 @@ public partial class MainWindow : Window
             type = "method area";
 
         if (area != null)
+        {
             AreaDeleteButton.Label = "Delete " + type + " '" + area.Name + "'";
+            ShowAreaSelectionInfo(area);
+        }
         else
+        {
             AreaDeleteButton.Label = "Delete";
+            ShowEmptyAreaSelectionInfo();
+        }
     }
 
     private void SelectPlantEntry(GardenDataEntry entry)

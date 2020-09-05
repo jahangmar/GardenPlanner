@@ -95,6 +95,8 @@
     <Compile Include="Garden\DateRange.cs" />
     <Compile Include="Translation.cs" />
     <Compile Include="NumberInputWindow.cs" />
+    <Compile Include="DateInputWindow.cs" />
+    <Compile Include="InfoView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

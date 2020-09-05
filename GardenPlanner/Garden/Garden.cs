@@ -13,10 +13,13 @@ namespace GardenPlanner.Garden
         public Dictionary<string, GardenArea> MethodAreas = new Dictionary<string, GardenArea>();
 
         private const double LINE_WIDTH = 2;
-               
+
         public Garden(string name, string description) : base(name, description)
         {
+        }
 
+        public Garden(string name, string description, int cyear, int cmonth, int ryear, int rmonth) : base(name, description, cyear, cmonth, ryear, rmonth)
+        {
         }
 
         public void AddPlanting(string key, Planting planting)
@@ -55,8 +58,11 @@ namespace GardenPlanner.Garden
             RemFromDictionary(area, MethodAreas);
         }
 
-        public override void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom=1)
+        public override void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom=1, int year=0, int month=0)
         {
+            if (!CheckDate(year, month))
+                return;
+
             this.Shape.Draw(context, xoffset, yoffset, new Color(0, 0, 0), new Color(1, 1, 1), LINE_WIDTH, zoom);
             foreach (KeyValuePair<string, Planting> pair in Plantings)
             {

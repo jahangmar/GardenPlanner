@@ -26,6 +26,12 @@ namespace GardenPlanner.Garden
             Color = new Color(0, 0, 0);
         }
 
+        public Planting(string name, string description, int cyear, int cmonth, int ryear, int rmonth) : base(name, description, cyear, cmonth, ryear, rmonth)
+        {
+            Varieties = new Dictionary<VarietyKeySeq, int>();
+            Color = new Color(0, 0, 0);
+        }
+
         public void AddVarietyKeys(string family, string plant, string variety, int count=0)
         {
             //Varieties.Add(new VarietyKeySeq(family, plant, variety));
@@ -63,8 +69,10 @@ namespace GardenPlanner.Garden
             Color = new Color(r, g, b);
         }
 
-        public override void Draw(Context context, int xoffset=0, int yoffset=0, double zoom=1)
+        public override void Draw(Context context, int xoffset=0, int yoffset=0, double zoom=1, int year=0, int month=0)
         {
+            if (!CheckDate(year, month))
+                return;
 
             Shape.Draw(context, xoffset, yoffset, LINE_COLOR, Color, LINE_WIDTH, zoom);
             if (Varieties.Count > 0)
