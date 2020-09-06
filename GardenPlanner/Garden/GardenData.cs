@@ -22,7 +22,7 @@ namespace GardenPlanner.Garden
             this.Name = name;
         }
 
-        public static string GetImagePath() => MainClass.MAIN_PATH + "/" + LoadedData.Name + "/imgs/";
+        public static string GetImagePath() => MainClass.MAIN_PATH + "/imgs/";
 
         public static int GetFirstYear() => 2000; //TODO
         public static int GetLastYear() => 2030; //TODO
@@ -101,7 +101,7 @@ namespace GardenPlanner.Garden
 
             try
             {
-                File.WriteAllText(filename, JsonConvert.SerializeObject(LoadedData));
+                File.WriteAllText(filename, JsonConvert.SerializeObject(LoadedData, Formatting.Indented));
             }
             catch (System.Exception e)
             {
@@ -115,7 +115,20 @@ namespace GardenPlanner.Garden
         public static string GenID(string name)
         {
             System.Random random = new System.Random();
-            return name.Replace(' ', '_') + "_" + random.Next();
+
+            string s;
+
+            bool IdExists()
+            {
+                return LoadedData.Families.ContainsKey(s) || LoadedData.Gardens.ContainsKey(s);
+                //TODO other dictionaries
+            }
+
+            do {
+                s = name.Replace(' ', '_') + "_" + random.Next();
+            } while (IdExists());
+
+            return s;
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cairo;
+using Newtonsoft.Json;
 
 namespace GardenPlanner.Garden
 {
@@ -9,7 +10,8 @@ namespace GardenPlanner.Garden
     /// </summary>
     public class GardenShape
     {
-        private readonly List<GardenPoint> Points;
+        [JsonProperty]
+        private List<GardenPoint> Points;
 
         public GardenShape()
         {
@@ -85,7 +87,7 @@ namespace GardenPlanner.Garden
         /// </summary>
         public GardenPoint GetTopLeftPoint()
         {
-            if (Points.Count < 0)
+            if (Points.Count == 0)
                 return new GardenPoint(0, 0);
 
             GardenPoint result = Points[0];

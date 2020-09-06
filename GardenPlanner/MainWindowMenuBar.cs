@@ -99,6 +99,10 @@ namespace GardenPlanner
                             md.Run();
                             md.Destroy();
                         }
+                        else
+                        {
+                            MainWindow.GetInstance().ResetForNewData();
+                        }
 
                         break;
                 }

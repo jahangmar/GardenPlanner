@@ -75,7 +75,7 @@ namespace GardenPlanner
             plantingArea.AddVariety(morado, 3);
             plantingArea.AddVariety(vallelado, 2);
 
-            string s = Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented);
+            //string s = Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented);
 
             return Data;
         }
@@ -84,7 +84,6 @@ namespace GardenPlanner
 
 /*TODO
  * -add missing implementations for adding families, plants
- * -fix save/load
  * -scrolling
  * -add possibility to add images (automatically)
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)

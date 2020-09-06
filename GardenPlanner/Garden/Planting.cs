@@ -13,6 +13,7 @@ namespace GardenPlanner.Garden
         /// List of varieties planted
         /// </summary>
         //public List<VarietyKeySeq> Varieties;
+        [JsonConverter(typeof(DictionaryVarietyKeySeqConverter))]
         public Dictionary<VarietyKeySeq, int> Varieties;
 
         private Color Color;

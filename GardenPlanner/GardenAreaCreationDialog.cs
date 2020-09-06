@@ -102,7 +102,7 @@ namespace GardenPlanner
             else if (area is Planting)
                 title = "Edit planting '" + area.Name + "'";
             GardenAreaCreationDialog dialog = new GardenAreaCreationDialog(title);
-
+            dialog.CreateButton.Label = "Edit";
             dialog.NameEntry.Text = area.Name;
             dialog.DescrEntry.Text = area.Description;
             dialog.CYearButton.Value = area.created.Year;
