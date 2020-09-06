@@ -6,7 +6,7 @@ namespace GardenPlanner
 {
     public class PlantingCreationDialog : GardenAreaCreationDialog
     {
-        protected PlantingCreationDialog(List<GardenPoint> points) : base("Create new Planting", points)
+        protected PlantingCreationDialog() : base("Create new Planting")
         {
 
         }
@@ -14,12 +14,12 @@ namespace GardenPlanner
 
         public static void ShowPlantingCreationDialog(List<GardenPoint> points, Action<Planting> action)
         {
-            PlantingCreationDialog dialog = new PlantingCreationDialog(points);
+            PlantingCreationDialog dialog = new PlantingCreationDialog();
 
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 Planting area = new Planting(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                SetValues(area, points, dialog);
+                SetValuesForCreation(area, points, dialog);
 
                 action(area);
                 dialog.Destroy();

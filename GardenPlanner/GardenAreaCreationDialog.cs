@@ -18,12 +18,9 @@ namespace GardenPlanner
         protected SpinButton RYearButton = new SpinButton(2000, 2100, 1);
         protected SpinButton RMonthButton = new SpinButton(1, 12, 1);
 
-        protected List<GardenPoint> Points;
 
-        protected GardenAreaCreationDialog(string title, List<GardenPoint> points) : base(title)
+        protected GardenAreaCreationDialog(string title) : base(title)
         {
-            Points = points;
-
             HBox hbox;
 
             hbox = new HBox();
@@ -75,7 +72,7 @@ namespace GardenPlanner
             ShowAll();
         }
 
-        static protected void SetValues(GardenArea area, List<Garden.GardenPoint> points, GardenAreaCreationDialog dialog)
+        static protected void SetValuesForCreation(GardenArea area, List<Garden.GardenPoint> points, GardenAreaCreationDialog dialog)
         {
             area.Shape.AddPoints(points);
             area.Shape.FinishPoints();
@@ -85,13 +82,41 @@ namespace GardenPlanner
 
         public static void ShowGardenAreaCreationDialog(List<GardenPoint> points, System.Action<GardenArea> action)
         {
-            GardenAreaCreationDialog dialog = new GardenAreaCreationDialog("Create method area", points);
+            GardenAreaCreationDialog dialog = new GardenAreaCreationDialog("Create method area");
 
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 GardenArea area = new Garden.Garden(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                SetValues(area, points, dialog);
+                SetValuesForCreation(area, points, dialog);
                 action(area);
+                GardenDrawingArea.ActiveInstance?.Draw();
+                dialog.Destroy();
+            };
+        }
+
+        public static void ShowGardenAreaEditDialog(GardenArea area)
+        {
+            string title = "Edit method area '" + area.Name + "'";
+            if (area is Garden.Garden)
+                title = "Edit garden '" + area.Name + "'";
+            else if (area is Planting)
+                title = "Edit planting '" + area.Name + "'";
+            GardenAreaCreationDialog dialog = new GardenAreaCreationDialog(title);
+
+            dialog.NameEntry.Text = area.Name;
+            dialog.DescrEntry.Text = area.Description;
+            dialog.CYearButton.Value = area.created.Year;
+            dialog.CMonthButton.Value = area.created.Month;
+            dialog.RYearButton.Value = area.removed.Year;
+            dialog.RMonthButton.Value = area.removed.Month;
+
+            dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
+            {
+                area.Name = dialog.NameEntry.Text;
+                area.Description = dialog.DescrEntry.Text;
+                area.SetCreated(dialog.CYearButton.ValueAsInt, dialog.CMonthButton.ValueAsInt);
+                area.SetRemoved(dialog.RYearButton.ValueAsInt, dialog.RMonthButton.ValueAsInt);
+                GardenDrawingArea.ActiveInstance.MakeSelection();
                 GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
             };

@@ -27,6 +27,7 @@ public partial class MainWindow : Window
 
     SpinButton ZoomButton = new SpinButton(0.1, 10, 0.1);
     public Button AreaDeleteButton = new Button("Delete Area");
+    public Button AreaEditButton = new Button("Edit Area");
     public ToggleButton AreaNewButton = new ToggleButton("New Area");
     ComboBox AreaTypeComboBox = new ComboBox(new string[] {"Garden", "Planting", "MethodArea"});
     Button AreaCancelButton = new Button("Cancel");
@@ -85,6 +86,7 @@ public partial class MainWindow : Window
         ToolBox.Add(AreaNewButton);
         ToolBox.Add(AreaCancelButton);
         ToolBox.Add(AreaTypeComboBox);
+        ToolBox.Add(AreaEditButton);
         ToolBox.Add(AreaDeleteButton);
 
         frame = new Frame("Zoom");
@@ -271,7 +273,15 @@ public partial class MainWindow : Window
             }
         };
 
+        AreaEditButton.Clicked += (object sender, System.EventArgs e) =>
+        {
+            GardenDrawingArea gardenDrawingArea = GardenDrawingArea.ActiveInstance;
 
+            if (gardenDrawingArea == null || gardenDrawingArea.Garden == null || gardenDrawingArea.SelectedArea == null)
+                return;
+
+            GardenAreaCreationDialog.ShowGardenAreaEditDialog(gardenDrawingArea.SelectedArea);
+        };
 
         AreaDeleteButton.Clicked += (object sender, System.EventArgs e) =>
         {
@@ -348,7 +358,7 @@ public partial class MainWindow : Window
         void DateChanged()
         {
             GardenDrawingArea gardenDrawingArea = GardenDrawingArea.ActiveInstance;
-            if (gardenDrawingArea.SelectedArea != null && !gardenDrawingArea.SelectedArea.CheckDate(yearButton.ValueAsInt, monthButton.ValueAsInt))
+            if (gardenDrawingArea.SelectedArea != null && (!gardenDrawingArea.SelectedArea.CheckDate(GetYear(), GetMonth()) || !gardenDrawingArea.Garden.CheckDate(GetYear(), GetMonth())))
             {
                 gardenDrawingArea.UndoSelection();
             }
@@ -374,37 +384,10 @@ public partial class MainWindow : Window
     }
 
     public void ResetForNewData()
-    {/*
-        MenuBar = new MainWindowMenuBar();
-        TopVBox = new VBox();
-        GardenBedBook = new Notebook();
-        GraphicsSidebarHPaned = new HPaned();
-        TopPanedToolboxVPaned = new VPaned();
-        PlantVarietySelector = null;
-        FamilyPlantVarietySelector = new VPaned();
-        PlantSideVPaned = new VPaned();
-        PlantBox = new VBox();
+    {
+        PlantAddButton.Sensitive = false;
+        AreaEditButton.Sensitive = false;
 
-        PlantAreaInfoVPaned = new VPaned();
-        AreaInfo = new InfoView();
-
-        VarietyBox = null;
-        ToolBox = new HButtonBox();
-        PlantEditButton = new Button("Edit");
-        PlantInfoButton = new Button("Info");
-        PlantAddButton = new Button("Add");
-
-        ZoomButton = new SpinButton(0.1, 10, 0.1);
-        AreaDeleteButton = new Button("Delete Area");
-        AreaNewButton = new ToggleButton("New Area");
-        AreaTypeComboBox = new ComboBox(new string[] { "Garden", "Planting", "MethodArea" });
-        AreaCancelButton = new Button("Cancel");
-        AreaCancelButtonClicked = false;
-
-        DateFrame = new Frame();
-        yearButton = new SpinButton(2020, 2030, 1);
-        monthButton = new SpinButton(1, 12, 1);
-        */
         ReloadFamilies();
 
         RemoveAllChildren(GraphicsSidebarHPaned);

@@ -93,8 +93,10 @@ namespace GardenPlanner
 
         public void MakeSelection()
         {
-            MainWindow.GetInstance().SelectGardenEntry(SelectedArea);
-            MainWindow.GetInstance().PlantAddButton.Sensitive = SelectedArea is Planting;
+            MainWindow win = MainWindow.GetInstance();
+            win.SelectGardenEntry(SelectedArea);
+            win.PlantAddButton.Sensitive = SelectedArea is Planting;
+            win.AreaEditButton.Sensitive = true;
             Draw();
 
             if (SelectedArea is Garden.Garden g)
@@ -128,10 +130,13 @@ namespace GardenPlanner
 
         public void UndoSelection()
         {
+            MainWindow win = MainWindow.GetInstance();
             SelectedArea = null;
-            MainWindow.GetInstance().PlantAddButton.Sensitive = false;
+            win.PlantAddButton.Sensitive = false;
+            win.AreaEditButton.Sensitive = false;
             Draw();
             TooltipText = "";
+            win.ShowEmptyAreaSelectionInfo();
         }
 
         private GardenPoint SnapToGrid(int x, int y)
@@ -152,36 +157,27 @@ namespace GardenPlanner
             int year = MainWindow.GetInstance().GetYear();
             int month = MainWindow.GetInstance().GetMonth();
 
-            foreach (GardenArea area in Garden.MethodAreas.Values)
-                if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
-                {
-                    SelectedArea = area;
-                    return true;
-                }
+            if (Garden.CheckDate(year, month))
+            {
+                foreach (GardenArea area in Garden.MethodAreas.Values)
+                    if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                    {
+                        SelectedArea = area;
+                        return true;
+                    }
 
-            foreach (GardenArea area in Garden.Plantings.Values)
-                if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
-                {
-                    SelectedArea = area;
-                    return true;
-                }
+                foreach (GardenArea area in Garden.Plantings.Values)
+                    if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+                    {
+                        SelectedArea = area;
+                        return true;
+                    }
+            }
 
-
-
-            if (Garden.CheckDate(year, month) && Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
+            if (Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
             {
                 SelectedArea = Garden;
                 return true;
-
-                //System.Console.WriteLine("clicked on " + garden.Name + " edge");
-                /*
-                Cairo.Context context = Gdk.CairoHelper.Create(this.GdkWindow);
-                context.MoveTo(clicked.ToCairoPointD());
-                context.SetSourceColor(new Cairo.Color(0, 0, 1));
-                context.LineWidth = 5;
-                context.LineTo((clicked +2).ToCairoPointD());
-                context.Stroke();
-                */
             }
 
             return false;

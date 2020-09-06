@@ -63,17 +63,23 @@ namespace GardenPlanner.Garden
         public override void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom=1, int year=0, int month=0)
         {
             if (!CheckDate(year, month))
-                return;
-
-            this.Shape.Draw(context, xoffset, yoffset, new Color(0, 0, 0), new Color(1, 1, 1), LINE_WIDTH, zoom);
-            foreach (KeyValuePair<string, Planting> pair in Plantings)
             {
-                pair.Value.Draw(context, xoffset, yoffset, zoom);
+                this.Shape.Draw(context, xoffset, yoffset, new Color(0.2, 0.2, 0.2), new Color(0.8, 0.8, 0.8), LINE_WIDTH, zoom);
+                context.MoveTo((new GardenPoint(10,50) + this.Shape.GetTopLeftPoint()).ToCairoPointD(xoffset, yoffset, zoom));
+                context.ShowText("outdated");
             }
-
-            foreach (KeyValuePair<string, GardenArea> pair in MethodAreas)
+            else
             {
-                pair.Value.Draw(context, xoffset, yoffset, zoom);
+                this.Shape.Draw(context, xoffset, yoffset, new Color(0, 0, 0), new Color(1, 1, 1), LINE_WIDTH, zoom);
+                foreach (KeyValuePair<string, Planting> pair in Plantings)
+                {
+                    pair.Value.Draw(context, xoffset, yoffset, zoom, year, month);
+                }
+
+                foreach (KeyValuePair<string, GardenArea> pair in MethodAreas)
+                {
+                    pair.Value.Draw(context, xoffset, yoffset, zoom, year, month);
+                }
             }
         }
     }
