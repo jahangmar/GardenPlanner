@@ -228,7 +228,7 @@ namespace GardenPlanner
             context.LineTo(this.Allocation.Width, this.Allocation.Height);
             context.LineTo(0, this.Allocation.Height);
             context.LineTo(0, 0);
-            context.SetSourceColor(new Cairo.Color(1, 1, 1));
+            context.SetSourceColor(new Cairo.Color(0.95, 0.95, 0.95));
             context.FillPreserve();
             context.Stroke();
         }
@@ -274,18 +274,6 @@ namespace GardenPlanner
 
         private void DrawGarden(Context context)
         {
-
-            /*
-            context.MoveTo(new PointD(0, 0));
-            context.LineTo(new PointD(100, 100));
-            context.LineTo(new PointD(0, 100));
-            context.LineTo(new PointD(300, 200));
-            context.LineTo(new PointD(900, 200));
-            context.LineTo(new PointD(500, 700));
-            context.Stroke();
-            */
-
-
             Garden.Draw(context, XOffset(), YOffset(), Zoom, MainWindow.GetInstance().GetYear(), MainWindow.GetInstance().GetMonth());
         }
     }

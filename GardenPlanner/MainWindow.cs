@@ -195,8 +195,11 @@ public partial class MainWindow : Window
                     switch (AreaTypeComboBox.Active)
                     {
                         case 0://garden
-//                            GardenCreationDialog.ShowGardenCreationDialog(new List<GardenPoint>(points), ((Garden garden) =>
-//                                    ???TODO
+                            if (GardenDrawingArea.ActiveInstance.Garden.Shape.GetPoints().Count == 0)
+                            {
+                                GardenDrawingArea.ActiveInstance.Garden.Shape.AddPoints(points);
+                                GardenDrawingArea.ActiveInstance.Garden.Shape.FinishPoints();
+                            }
                             break;
                         case 1://planting
                             PlantingCreationDialog.ShowPlantingCreationDialog(new List<GardenPoint>(points), (Planting planting) =>
@@ -209,9 +212,27 @@ public partial class MainWindow : Window
                             break;
                     }
                 }
+
             }
             else //activated
             {
+                if (AreaTypeComboBox.Active == 0) //garden
+                {
+                    if (GardenDrawingArea.ActiveInstance == null || GardenDrawingArea.ActiveInstance.Garden.Shape.GetPoints().Count > 0)
+                    {
+                        AreaNewButton.Active = false;
+                        GardenCreationDialog.ShowGardenCreationDialog(new List<GardenPoint>(), ((Garden garden) =>
+                        {
+                            GardenData.LoadedData.AddGarden(GardenData.GenID(garden.Name), garden);
+                            this.ResetForNewData();
+                            GardenBedBook.Page = GardenBedBook.NPages - 1;
+                            AreaNewButton.Active = true;
+                        }));
+                            
+
+                    }
+                }
+
                 AreaCancelButton.Sensitive = true;
             }
 
@@ -420,7 +441,6 @@ public partial class MainWindow : Window
                 {
                     GardenDrawingArea.ActiveInstance = drawingArea;
                     SelectGardenEntry(drawingArea.Garden);
-                    System.Console.WriteLine("selected " + drawingArea.Garden.Name);
                 };
             }
             catch (System.OverflowException)
@@ -481,11 +501,21 @@ public partial class MainWindow : Window
 
         AreaInfo.AddEntry(area.Name, AreaInfo.headline);
         AreaInfo.AddEntry(area.Description, AreaInfo.italic);
+        AreaInfo.AddEntry("Created: "+area.created.Month+"/"+area.created.Year);
+        AreaInfo.AddEntry("Removed: " + area.removed.Month + "/" + area.removed.Year);
 
         //TODO info for all 3 types
-        if (area is Garden)
+        if (area is Planting planting)
         {
-
+            AreaInfo.AddEntry("Varieties:");
+            foreach (KeyValuePair<VarietyKeySeq, int> pair in planting.Varieties)
+            {
+                VarietyKeySeq seq = pair.Key;
+                int count = pair.Value;
+                PlantVariety variety = GardenData.LoadedData.GetVariety(seq);
+                Plant plant = GardenData.LoadedData.GetPlant(seq.FamilyKey, seq.PlantKey);
+                AreaInfo.AddEntry(variety.Name + " (" + plant.Name + "): " + count);
+            }
         }
         AreaInfo.ApplyTags();
     }
@@ -611,7 +641,6 @@ public partial class MainWindow : Window
         familyIDs = new List<string>();
         foreach (KeyValuePair<string, PlantFamily> pair in GardenData.LoadedData.Families)
         {
-            System.Console.WriteLine("found family: " + pair.Value.Name);
             familyBox.AppendText(pair.Value.Name);
             familyIDs.Add(pair.Key);
         }

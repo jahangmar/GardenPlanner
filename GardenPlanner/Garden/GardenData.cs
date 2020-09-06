@@ -76,10 +76,10 @@ namespace GardenPlanner.Garden
 
         public static bool Load(string filename)
         {
-            object obj;
+            GardenData obj;
             try
             {
-                obj = JsonConvert.DeserializeObject(File.ReadAllText(filename));
+                obj = JsonConvert.DeserializeObject<GardenData>(File.ReadAllText(filename));
             }
             catch (System.Exception e)
             {
@@ -87,19 +87,9 @@ namespace GardenPlanner.Garden
                 return false;
             }
 
-
-            if (obj is GardenData)
-            {
-                LoadedData = (GardenData)obj;
+                LoadedData = obj;
                 LoadedData.unsaved = false;
                 return true;
-            }
-            else
-            {
-                ErrorMessage = "invalid json object";
-            }
-
-            return false;
         }
 
         public static bool Save(string filename)

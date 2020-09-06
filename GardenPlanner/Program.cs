@@ -49,8 +49,8 @@ namespace GardenPlanner
             kartoffeln.Color = new Cairo.Color(0.2, 0.8, 0.8);
             nachtschattengew.AddPlant("kartoffel", kartoffeln);
 
-            var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma", 2000, 1, 2010,6);
-            var bed2 = new Garden.Garden("Hauptstraßengarten", "Alte Garten von Oma", 2000, 1, 2010, 6);
+            var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma", 2000, 1, 2000,1);
+            var bed2 = new Garden.Garden("Hauptstraßengarten", "Alte Garten von Oma", 2000, 1, 2000, 1);
             Data.AddGarden("oma_garten", bed1);
             Data.AddGarden("hptstr_garten", bed2);
             bed1.Shape.AddPoint(new GardenPoint(0, 0));
@@ -83,11 +83,8 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -garden area creation
- * -add window for area creation (name, descr, created, removed)
- * -show info for plantings/method areas/gardens
  * -add missing implementations for adding families, plants
- * -add save/load
+ * -fix save/load
  * -scrolling
  * -add possibility to add images (automatically)
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)

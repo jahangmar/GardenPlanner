@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using Cairo;
+using Newtonsoft.Json;
 
 namespace GardenPlanner.Garden
 {
@@ -14,6 +15,7 @@ namespace GardenPlanner.Garden
 
         private const double LINE_WIDTH = 2;
 
+        [JsonConstructor]
         public Garden(string name, string description) : base(name, description)
         {
         }

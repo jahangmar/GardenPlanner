@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cairo;
+using Newtonsoft.Json;
 
 namespace GardenPlanner.Garden
 {
@@ -34,6 +35,7 @@ namespace GardenPlanner.Garden
         public bool CheckDate(int year, int month) => (year == created.Year && month >= created.Month || year > created.Year) &&
             (year == removed.Year && month <= removed.Month || year < removed.Year) || year == 0 && month == 0;
 
+        [JsonConstructor]
         public GardenArea(string name, string description) : base(name, description)
         {
             Methods = new List<BedMethod>();

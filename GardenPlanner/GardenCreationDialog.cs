@@ -17,11 +17,11 @@ namespace GardenPlanner
 
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
-                Garden.Garden garden = new Garden.Garden(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                garden.Shape.AddPoints(points);
-                garden.Shape.FinishPoints();
-                //TODO
-                action(garden);
+                Garden.Garden area = new Garden.Garden(dialog.NameEntry.Text, dialog.DescrEntry.Text);
+                SetValues(area, points, dialog);
+                action(area);
+                GardenDrawingArea.ActiveInstance?.Draw();
+                dialog.Destroy();
             };
         }
     }

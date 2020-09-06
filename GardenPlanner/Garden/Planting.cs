@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cairo;
+using Newtonsoft.Json;
 
 namespace GardenPlanner.Garden
 {
@@ -19,6 +20,7 @@ namespace GardenPlanner.Garden
         private const int LINE_WIDTH = 1;
         private const float IMAGE_SIZE = 48;
 
+        [JsonConstructor]
         public Planting(string name, string description) : base(name, description)
         {
             //Varieties = new List<VarietyKeySeq>();
