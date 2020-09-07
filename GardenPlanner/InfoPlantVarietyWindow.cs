@@ -13,22 +13,17 @@ namespace GardenPlanner
             Variety = variety;
             Create = create;
 
-            Translation trans = Translation.GetTranslation();
-
             AddEntry(variety.Name, infoView.headline);
 
-            if (Variety.FamilyID == null)
-                throw new Exception("familyID is null for some reason");
-
             Plant plant = GardenData.LoadedData.GetPlant(variety.FamilyID, variety.PlantID);
-            AddEntry(plant.Name + trans.VarietyAdd +" ", false); 
+            AddEntry(plant.Name + "-Sorte" +" ", false); 
             AddEntry("(" + plant.ScientificName + ")", infoView.weak);
 
-            AddEntry(trans.Description +": ", false);
+            AddEntry("Beschreibung: ", false);
 
             AddEntry(variety.Description, infoView.italic);
 
-            AddEntry(trans.SowPlantOutside+": " + variety.PlantOutsideDateRange);
+            AddEntry("Aussaat draußen: " + variety.PlantOutsideDateRange);
 
             ApplyTags();
         }

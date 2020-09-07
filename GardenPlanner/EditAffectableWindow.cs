@@ -10,6 +10,9 @@ namespace GardenPlanner
 
         VBox EntryBox = new VBox();
 
+        protected Entry NameEntry;
+        protected TextView DescriptionTextView;
+        protected Entry SciNameEntry;
 
         HButtonBox ActionButtonBox = new HButtonBox();
         Button SaveButton = new Button(new Label("Save"));
@@ -17,13 +20,22 @@ namespace GardenPlanner
         Button DeleteButton = new Button(new Label("Delete"));
         Button DiscardButton = new Button(new Label("Discard"));
 
-        public EditAffectableWindow(string title) : base(WindowType.Toplevel)
+        public EditAffectableWindow(string title, Affectable affectable) : base(WindowType.Toplevel)
         {
             Modal = true;
 
             Title = title;
 
             VPaned.Add(EntryBox);
+
+            NameEntry = new Entry(affectable.Name);
+            AddEntry("Name", NameEntry);
+            SciNameEntry = new Entry(affectable.ScientificName);
+            //AddEntry("Scientific Name", SciNameEntry);
+            DescriptionTextView = new TextView();
+            DescriptionTextView.Buffer.Text = affectable.Description;
+            AddEntry("Description ", DescriptionTextView);
+
 
             ActionButtonBox.Add(InfoButton);
             ActionButtonBox.Add(SaveButton);
@@ -81,6 +93,14 @@ namespace GardenPlanner
             Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, "Error while saving"+ (reason.Length > 0 ? ": "+reason : ""), new { });
             dialog.Run();
             dialog.Destroy();
+        }
+
+        protected Affectable ModifyOrCreate(Affectable affectable = null)
+        {
+            affectable.Name = NameEntry.Text;
+            affectable.Description = DescriptionTextView.Buffer.Text;
+
+            return affectable;
         }
 
         protected abstract void Info();

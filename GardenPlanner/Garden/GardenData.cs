@@ -33,6 +33,16 @@ namespace GardenPlanner.Garden
             family.ID = key;
         }
 
+        public void RemoveFamily(string key)
+        {
+            Families.Remove(key);
+        }
+
+        public void RemoveFamily(PlantFamily family)
+        {
+            RemoveFamily(family.ID);
+        }
+
         public void AddGarden(string key, Garden garden)
         {
             Gardens.Add(key, garden);

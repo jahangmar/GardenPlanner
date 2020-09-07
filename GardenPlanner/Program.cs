@@ -83,7 +83,6 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -add missing implementations for adding families, plants
  * -scrolling
  * -add possibility to add images (automatically)
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)

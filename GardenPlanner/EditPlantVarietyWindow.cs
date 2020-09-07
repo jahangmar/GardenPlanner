@@ -6,9 +6,6 @@ namespace GardenPlanner
 {
     public class EditPlantVarietyWindow : EditGrowableWindow<PlantVariety>
     {
-        Entry NameEntry;
-        TextView DescriptionTextView;
-
         private readonly PlantVariety Variety;
         private readonly bool Create;
 
@@ -18,18 +15,10 @@ namespace GardenPlanner
             Variety.FamilyID = plant.FamilyID;
         }*/
 
-        public EditPlantVarietyWindow(PlantVariety variety, bool create=false) : base(create ? "Create new variety" : "Edit variety '" + variety.Name + "'")
+        public EditPlantVarietyWindow(PlantVariety variety, bool create=false) : base(create ? "Create new variety" : "Edit variety '" + variety.Name + "'", variety)
         {
             Variety = variety;
             Create = create;
-
-            NameEntry = new Entry(variety.Name);
-            AddEntry("Name", NameEntry);
-            //SciNameEntry = new Entry(variety.ScientificName);
-            //AddEntry("Scientific Name", SciNameEntry);
-            DescriptionTextView = new TextView();
-            DescriptionTextView.Buffer.Text = variety.Description;
-            AddEntry("Description ", DescriptionTextView);
         }
 
         /// <summary>
@@ -58,20 +47,14 @@ namespace GardenPlanner
             if (variety == null)
                 variety = new PlantVariety("", "");
 
-            variety.Name = NameEntry.Text;
-            variety.Description = DescriptionTextView.Buffer.Text;
-
-            return variety;
+            return (PlantVariety) base.ModifyOrCreate(variety);
         }
-
 
         protected override void Save()
         {
-            //TODO do the actual saving
-
             if (NameEntry.Text.Length == 0)
             {
-                ShowErrorSave(Variety.Name, "The name has not to be empty");
+                ShowErrorSave(Variety.Name, "The name must not be empty");
                 return;
             }
 
@@ -81,27 +64,23 @@ namespace GardenPlanner
             {
                 Plant plant = GardenData.LoadedData.GetPlant(Variety.FamilyID, Variety.PlantID);
 
-                string id = "variety_" + Variety.Name.Replace(' ', '-');
+                string id = GardenData.GenID(Variety.Name);
 
                 //if variety already exists it is deleted first before it is added again
                 if (!Create)
                 {
                     plant.RemoveVariety(Variety.ID);
                 }
-                //if it was created but has the same name (id) as another variety
-                else if (plant.TryGetVariety(id, out PlantVariety variety))
-                {
-                    ShowErrorSave(Variety.Name, "A variety with the same name already exists");
-                    return;
-                }
-                    plant.AddVariety("variety_" + Variety.Name.Replace(' ', '-'), Variety);
+                plant.AddVariety(id, Variety);
 
-                    ShowSuccessSave(Variety.Name);
+                ShowSuccessSave(Variety.Name);
             }
             catch (GardenDataException)
             {
                 ShowErrorSave(Variety.Name, "Corrupted Data");
             }
+
+            MainWindow.GetInstance().ReloadFamilies();
         }
 
         protected override void Delete(PlantVariety variety)

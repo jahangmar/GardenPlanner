@@ -118,6 +118,7 @@ namespace GardenPlanner
                 area.SetRemoved(dialog.RYearButton.ValueAsInt, dialog.RMonthButton.ValueAsInt);
                 GardenDrawingArea.ActiveInstance.MakeSelection();
                 GardenDrawingArea.ActiveInstance?.Draw();
+                MainWindow.GetInstance().ShowAreaSelectionInfo(area);
                 dialog.Destroy();
             };
         }
