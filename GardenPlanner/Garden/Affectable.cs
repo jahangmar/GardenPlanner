@@ -8,7 +8,7 @@ namespace GardenPlanner.Garden
         /// <summary>
         /// Scientific name for the family or plant
         /// </summary>
-        public string ScientificName;
+        public string ScientificName = "";
 
         /// <summary>
         /// List of good neighbour plants

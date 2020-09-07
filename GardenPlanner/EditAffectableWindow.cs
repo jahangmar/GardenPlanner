@@ -31,7 +31,7 @@ namespace GardenPlanner
             NameEntry = new Entry(affectable.Name);
             AddEntry("Name", NameEntry);
             SciNameEntry = new Entry(affectable.ScientificName);
-            //AddEntry("Scientific Name", SciNameEntry);
+            AddEntry("Scientific Name", SciNameEntry);
             DescriptionTextView = new TextView();
             DescriptionTextView.Buffer.Text = affectable.Description;
             AddEntry("Description ", DescriptionTextView);
@@ -99,7 +99,7 @@ namespace GardenPlanner
         {
             affectable.Name = NameEntry.Text;
             affectable.Description = DescriptionTextView.Buffer.Text;
-
+            affectable.ScientificName = SciNameEntry.Text;
             return affectable;
         }
 

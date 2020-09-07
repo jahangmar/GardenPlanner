@@ -1,4 +1,6 @@
 ﻿using GardenPlanner.Garden;
+using Gtk;
+
 namespace GardenPlanner
 {
     public class EditPlantWindow : EditGrowableWindow<Plant>
@@ -6,10 +8,16 @@ namespace GardenPlanner
         private readonly Plant Plant;
         private readonly bool Create;
 
+        private ComboBoxEntry FeederComboBox;
+
         public EditPlantWindow(Plant plant, bool create = false) : base(create ? "Create new plant" : "Edit plant '" + plant.Name + "'", plant)
         {
             Plant = plant;
             Create = create;
+
+            FeederComboBox = new ComboBoxEntry(System.Enum.GetNames(typeof(FeederType)));
+            FeederComboBox.Active = 0;
+            AddEntry("Feeder", FeederComboBox);
         }
 
         /// <summary>
@@ -37,6 +45,8 @@ namespace GardenPlanner
         {
             if (plant == null)
                 plant = new Plant("", "");
+
+            plant.FeederType = (FeederType) FeederComboBox.Active;
 
             return (Plant)base.ModifyOrCreate(plant);
         }

@@ -7,7 +7,7 @@ namespace GardenPlanner
     {
         VPaned VPaned = new VPaned();
 
-        HButtonBox ActionButtonBox = new HButtonBox();
+        protected HButtonBox ActionButtonBox = new HButtonBox();
         Button CloseButton = new Button(new Label("Close"));
         Button EditButton = new Button(new Label("Edit"));
 

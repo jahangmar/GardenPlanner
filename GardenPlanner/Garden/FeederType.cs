@@ -5,4 +5,5 @@ namespace GardenPlanner.Garden
     {
         Heavy, Medium, Light
     }
+
 }

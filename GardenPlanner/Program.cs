@@ -83,6 +83,12 @@ namespace GardenPlanner
 }
 
 /*TODO
+ * disable add button for families + plants
+ * -bug iamge adding freezes main menu and exit button because info window is still open but behind mainwindwo
+ * -bug: buttons need to be reset after load/new since they allow to get info/edit for obkject of the old loaded data
+ * -bug: <new plant>/... does only work if other entries exists or for initial add (soft-lock if first creation is aborted)
+ * -think about if the plants or areas need more attributes or edit options right now
+ * -wheater data integration
  * -scrolling
  * -add possibility to add images (automatically)
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)
