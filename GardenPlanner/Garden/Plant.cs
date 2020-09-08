@@ -12,8 +12,6 @@ namespace GardenPlanner.Garden
         /// </summary>
         public Dictionary<string, PlantVariety> Varieties;
 
-        public FeederType FeederType;
-
         public Plant(string name, string description) : base(name, description)
         {
             Varieties = new Dictionary<string, PlantVariety>();

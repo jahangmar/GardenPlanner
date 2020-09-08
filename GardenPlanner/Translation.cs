@@ -12,15 +12,17 @@ namespace GardenPlanner
             return JsonConvert.DeserializeObject<Translation>(treader.ReadToEnd());
         }
 
-        private static Translation instance;
+        //private static Translation instance;
 
         public static Translation GetTranslation()
         {
             return new Translation();
+            /*
             if (instance == null)
                 instance = Load();
 
             return instance;
+            */           
         }
 
         //General

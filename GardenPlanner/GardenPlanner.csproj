@@ -101,6 +101,7 @@
     <Compile Include="GardenCreationDialog.cs" />
     <Compile Include="PlantingCreationDialog.cs" />
     <Compile Include="ColorChooser.cs" />
+    <Compile Include="Garden\PlantingInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

@@ -16,6 +16,8 @@ namespace GardenPlanner.Garden
         [JsonConverter(typeof(DictionaryVarietyKeySeqConverter))]
         public Dictionary<VarietyKeySeq, int> Varieties;
 
+
+
         private Color Color;
         private readonly Color LINE_COLOR = new Color(0.2, 0.2, 0.2);
         private const int LINE_WIDTH = 1;
