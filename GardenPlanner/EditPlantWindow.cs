@@ -51,9 +51,11 @@ namespace GardenPlanner
             return (Plant)base.ModifyOrCreate(plant);
         }
 
-        protected override void Delete(Plant plant)
+        protected override void Delete()
         {
-            throw new System.NotImplementedException();
+            bool deleted = DeleteDialog(() => GardenData.LoadedData.RemovePlant(Plant), Plant.Name);
+            if (deleted)
+                base.Delete();
         }
 
         protected override void Save()

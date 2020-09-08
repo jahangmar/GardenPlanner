@@ -26,6 +26,8 @@ namespace GardenPlanner
 
             Title = title;
 
+            TransientFor = MainWindow.GetInstance();
+
             VPaned.Add(EntryBox);
 
             NameEntry = new Entry(affectable.Name);
@@ -47,6 +49,7 @@ namespace GardenPlanner
             InfoButton.Clicked += (object sender, System.EventArgs e) => Info();
             DiscardButton.Clicked += (object sender, System.EventArgs e) => TryToClose();
             SaveButton.Clicked += (object sender, System.EventArgs e) => Save();
+            DeleteButton.Clicked += (object sender, System.EventArgs e) => Delete();
         }
 
         private void TryToClose()
@@ -105,6 +108,30 @@ namespace GardenPlanner
 
         protected abstract void Info();
         protected abstract void Save();
-        protected abstract void Delete(T affectable);
+        protected virtual void Delete()
+        {
+            MainWindow.GetInstance().ReloadFamilies();
+            GardenDrawingArea.ActiveInstance.Draw();
+            this.Destroy();
+        }
+
+        protected bool DeleteDialog(System.Action action, string name)
+        {
+            Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Warning, ButtonsType.OkCancel, "Do you want to delete '" + name + "'?", new { });
+
+            int response = dialog.Run();
+            if (response == (int)ResponseType.Cancel)
+            {
+                dialog.Destroy();
+                return false;
+            }
+            else if (response == (int)ResponseType.Ok)
+            {
+                action();
+                dialog.Destroy();
+                return true;
+            }
+            return false;
+        }
     }
 }

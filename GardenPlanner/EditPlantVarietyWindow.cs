@@ -83,9 +83,11 @@ namespace GardenPlanner
             MainWindow.GetInstance().ReloadFamilies();
         }
 
-        protected override void Delete(PlantVariety variety)
+        protected override void Delete()
         {
-            throw new System.NotImplementedException();
+            bool deleted = DeleteDialog(() => GardenData.LoadedData.RemovePlantVariety(Variety), Variety.Name);
+            if (deleted)
+                base.Delete();
         }
 
         protected override void Info()

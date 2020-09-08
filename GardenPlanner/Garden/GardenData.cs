@@ -38,9 +38,39 @@ namespace GardenPlanner.Garden
             Families.Remove(key);
         }
 
+        /// <summary>
+        /// Removes a plant family from the family collection and removes all references to plants and varieties in this family
+        /// </summary>
         public void RemoveFamily(PlantFamily family)
         {
             RemoveFamily(family.ID);
+            foreach (Garden garden in Gardens.Values)
+                foreach (Planting planting in garden.Plantings.Values)
+                    planting.RemoveFamily(family);
+        }
+
+        /// <summary>
+        /// Removes all references to a plant
+        /// </summary>
+        public void RemovePlant(Plant plant)
+        {
+            GetFamily(plant.FamilyID).RemovePlant(plant.ID);
+
+            foreach (Garden garden in Gardens.Values)
+                foreach (Planting planting in garden.Plantings.Values)
+                    planting.RemovePlant(plant);
+        }
+
+        /// <summary>
+        /// Removes all references to a variety
+        /// </summary>
+        public void RemovePlantVariety(PlantVariety variety)
+        {
+            GetFamily(variety.FamilyID).Plants[variety.PlantID].RemoveVariety(variety.ID);
+
+            foreach (Garden garden in Gardens.Values)
+                foreach (Planting planting in garden.Plantings.Values)
+                    planting.RemovePlantVariety(variety);
         }
 
         public void AddGarden(string key, Garden garden)

@@ -95,7 +95,7 @@ namespace GardenPlanner
         {
             MainWindow win = MainWindow.GetInstance();
             win.SelectGardenEntry(SelectedArea);
-            win.PlantAddButton.Sensitive = SelectedArea is Planting;
+            win.PlantAddButton.Sensitive = SelectedArea is Planting && win.SelectedEntry is PlantVariety;
             win.AreaEditButton.Sensitive = true;
             Draw();
 

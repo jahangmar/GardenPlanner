@@ -44,11 +44,45 @@ namespace GardenPlanner.Garden
         public void AddVariety(PlantVariety variety, int count = 0) =>
             AddVarietyKeys(variety.FamilyID, variety.PlantID, variety.ID, count);
 
+        public void RemoveVarietyKey(VarietyKeySeq varietyKeySeq) =>
+            Varieties.Remove(varietyKeySeq);
+
         public void RemoveVarietyKey(string family, string plant, string variety)
         {
-            //Varieties.RemoveAll((VarietyKeySeq obj) => obj.FamilyKey.Equals(family) && obj.PlantKey.Equals(plant) && obj.VarietyKey.Equals(variety));
-            Varieties.Remove(new VarietyKeySeq(family, plant, variety));
+            foreach (VarietyKeySeq varietyKeySeq in Varieties.Keys)
+                if (varietyKeySeq.FamilyKey.Equals(family) && varietyKeySeq.PlantKey.Equals(plant) && varietyKeySeq.VarietyKey.Equals(variety))
+                    Varieties.Remove(varietyKeySeq);
         }
+
+        private void RemoveById(System.Func<VarietyKeySeq,bool> func)
+        {
+            var list = new List<VarietyKeySeq>(Varieties.Keys);
+            foreach (VarietyKeySeq varietyKeySeq in list)
+            {
+                if (func(varietyKeySeq)) {
+                    RemoveVarietyKey(varietyKeySeq);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Removes all references to the family
+        /// </summary>
+        public void RemoveFamily(PlantFamily family) =>
+            RemoveById((arg) => arg.FamilyKey.Equals(family.ID));
+
+        /// <summary>
+        /// Removes all references to the plant
+        /// </summary>
+        public void RemovePlant(Plant plant) =>
+            RemoveById((arg) => arg.PlantKey.Equals(plant.ID));
+
+        /// <summary>
+        /// Removes all references to the variety
+        /// </summary>
+        public void RemovePlantVariety(PlantVariety variety) =>
+            RemoveById((arg) => arg.VarietyKey.Equals(variety.ID));
 
         public void CalcColor()
         {

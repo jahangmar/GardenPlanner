@@ -39,9 +39,11 @@ namespace GardenPlanner
             return (PlantFamily)base.ModifyOrCreate(family);
         }
 
-        protected override void Delete(PlantFamily affectable)
+        protected override void Delete()
         {
-            throw new System.NotImplementedException();
+            bool deleted = DeleteDialog(() => GardenData.LoadedData.RemoveFamily(Family), Family.Name);
+            if (deleted)
+                base.Delete();
         }
 
         protected override void Save()

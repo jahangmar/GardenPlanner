@@ -37,12 +37,13 @@ namespace GardenPlanner
 
         void ImageButton_Clicked(object sender, EventArgs e)
         {
-            FileChooserDialog fcd = new FileChooserDialog("Choose image for " + Plant.Name, this, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Load", ResponseType.Apply);
+            FileChooserDialog fcd = new FileChooserDialog("Choose image for " + Plant.Name, MainWindow.GetInstance(), FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Load", ResponseType.Apply);
             FileFilter f = new FileFilter();
             f.AddPattern("*.png");
             f.Name = "png image";
             fcd.AddFilter(f);
 
+            this.Sensitive = false;
             fcd.Response += (object o, ResponseArgs args) =>
             {
                 switch (args.ResponseId)
@@ -68,6 +69,7 @@ namespace GardenPlanner
                 fcd.Destroy();
             };
             fcd.Run();
+            this.Sensitive = true;
         }
 
         public static void ShowWindow(Plant plant, bool isEdited = false, bool create = false)

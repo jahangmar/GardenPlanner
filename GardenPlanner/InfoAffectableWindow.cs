@@ -18,6 +18,8 @@ namespace GardenPlanner
             Modal = true;
             Title = title;
 
+            TransientFor = MainWindow.GetInstance();
+
             VPaned.Add1(infoView);
             VPaned.Add2(ActionButtonBox);
 
@@ -35,6 +37,12 @@ namespace GardenPlanner
                     Edit();
             };
 
+            this.Destroyed += (object o, System.EventArgs args) =>
+            {
+                //MainWindow.GetInstance().Sensitive = true;
+            };
+
+            //MainWindow.GetInstance().Sensitive = false;
         }
               
         protected int AddEntry(string entry, bool newline=true) => infoView.AddEntry(entry, newline);

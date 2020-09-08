@@ -23,7 +23,7 @@ public partial class MainWindow : Window
     HButtonBox ToolBox = new HButtonBox();
     Button PlantEditButton = new Button("Edit");
     Button PlantInfoButton = new Button("Info");
-    public Button PlantAddButton = new Button("Add");
+    public Button PlantAddButton = new Button("");
 
     SpinButton ZoomButton = new SpinButton(0.1, 10, 0.1);
     public Button AreaDeleteButton = new Button("Delete Area");
@@ -61,9 +61,6 @@ public partial class MainWindow : Window
         Title = "Garden project '" + GardenData.LoadedData.Name + "'";
 
         //GardenData.LoadedData = GardenPlanner.MainClass.TestData();
-
-
-
 
 
         PlantSideVPaned.Add1(FamilyPlantVarietySelector);
@@ -134,6 +131,7 @@ public partial class MainWindow : Window
                     {
                         planting.AddVariety(variety, res);
                         GardenDrawingArea.ActiveInstance.Draw();
+                        ShowAreaSelectionInfo(area.SelectedArea);
                     }
                 });
 
@@ -394,6 +392,8 @@ public partial class MainWindow : Window
 
     public void ResetForNewData()
     {
+        SelectedEntry = null;
+
         PlantAddButton.Sensitive = false;
         AreaEditButton.Sensitive = false;
 
@@ -444,9 +444,13 @@ public partial class MainWindow : Window
 
     public void ReloadFamilies()
     {
+        SelectedEntry = null;
+        PlantAddButton.Sensitive = false;
+        SelectPlantEntry();
         ComboBox families = PopulateFamilies(GardenData.LoadedData);
         RemoveAllChildren(FamilyPlantVarietySelector);
         FamilyPlantVarietySelector.Add1(families);
+        ShowAreaSelectionInfo(GardenDrawingArea.ActiveInstance?.SelectedArea);
         ShowAll();
     }
 
@@ -489,6 +493,12 @@ public partial class MainWindow : Window
 
     public void ShowAreaSelectionInfo(GardenArea area)
     {
+        if (area == null)
+        {
+            ShowEmptyAreaSelectionInfo();
+            return;
+        }
+
         AreaInfo.Buffer.Clear();
 
         AreaInfo.AddEntry(area.Name, AreaInfo.headline);
@@ -496,7 +506,6 @@ public partial class MainWindow : Window
         AreaInfo.AddEntry("Created: "+area.created.Month+"/"+area.created.Year);
         AreaInfo.AddEntry("Removed: " + area.removed.Month + "/" + area.removed.Year);
 
-        //TODO info for all 3 types
         if (area is Planting planting)
         {
             AreaInfo.AddEntry("Varieties:");
@@ -521,7 +530,7 @@ public partial class MainWindow : Window
 
     public int GetMonth() => monthButton.ValueAsInt;
 
-    private GardenDataEntry SelectedEntry;
+    public GardenDataEntry SelectedEntry;
 
     public void SelectGardenEntry(GardenArea area)
     {
@@ -545,24 +554,53 @@ public partial class MainWindow : Window
         }
     }
 
+    private void SelectPlantEntry()
+    {
+        PlantAddButton.Label = "";
+        PlantEditButton.Label = "";
+        PlantInfoButton.Label = "";
+        PlantEditButton.Sensitive = false;
+        PlantInfoButton.Sensitive = false;
+    }
+
     private void SelectPlantEntry(GardenDataEntry entry)
     {
+        if (entry == null)
+        {
+            SelectPlantEntry();
+            return;
+        }
+
+
         string type = "";
         if (entry is PlantFamily)
+        {
             type = "family";
+            PlantAddButton.Sensitive = false;
+            PlantAddButton.Label = "";
+        }
         if (entry is Plant)
+        {
             type = "plant";
+            PlantAddButton.Sensitive = false;
+            PlantAddButton.Label = "";
+        }
         if (entry is PlantVariety)
+        {
             type = "variety";
+            PlantAddButton.Sensitive = GardenDrawingArea.ActiveInstance.SelectedArea is Planting;
+            PlantAddButton.Label = "Add " + type + " '" + entry.Name + "' to planting";
+        }
 
         PlantEditButton.Label = "Edit " + type + " '" + entry.Name + "'";
         PlantInfoButton.Label = "Info for " + type + " '" + entry.Name + "'";
-        PlantAddButton.Label = "Add " + type + " '" + entry.Name + "'";
+        PlantEditButton.Sensitive = true;
+        PlantInfoButton.Sensitive = true;
 
         SelectedEntry = entry;
     }
 
-    private ComboBox PopulateVarieties(Plant plant)
+    private ComboBox PopulateVarieties(Plant plant, ComboBox plantBox)
     {
         ComboBox varietyBox = new ComboBox(empty);
         varietyIDs = new List<string>();
@@ -577,6 +615,8 @@ public partial class MainWindow : Window
 
         varietyBox.Changed += (object sender, System.EventArgs e) =>
         {
+            plantBox.Active = -1;
+
             if (varietyBox.Active < varietyIDs.Count)
             {
                 SelectPlantEntry(plant.Varieties[varietyIDs[varietyBox.Active]]);
@@ -590,7 +630,7 @@ public partial class MainWindow : Window
         return varietyBox;
     }
 
-    private ComboBox PopulatePlants(PlantFamily family)
+    private ComboBox PopulatePlants(PlantFamily family, ComboBox familyBox)
     {
         ComboBox plantBox = new ComboBox(empty);
         plantIDs = new List<string>();
@@ -607,19 +647,23 @@ public partial class MainWindow : Window
 
         plantBox.Changed += (object sender, System.EventArgs e) =>
         {
-            if (plantBox.Active < plantIDs.Count)
+            familyBox.Active = -1;
+            if (plantBox.Active >= 0)
             {
-                //if (VarietyBox != null)
-                //    PlantVarietySelector.Remove(VarietyBox);
-                SelectPlantEntry(family.Plants[plantIDs[plantBox.Active]]);
+                if (plantBox.Active < plantIDs.Count)
+                {
+                    //if (VarietyBox != null)
+                    //    PlantVarietySelector.Remove(VarietyBox);
+                    SelectPlantEntry(family.Plants[plantIDs[plantBox.Active]]);
 
-                VarietyBox = PopulateVarieties(family.Plants[plantIDs[plantBox.Active]]);
-                PlantVarietySelector.Add2(VarietyBox);
-                Build();
-            }
-            else //selected add action
-            {
-                EditPlantWindow.ShowWindow(family);
+                    VarietyBox = PopulateVarieties(family.Plants[plantIDs[plantBox.Active]], plantBox);
+                    PlantVarietySelector.Add2(VarietyBox);
+                    Build();
+                }
+                else //selected add action
+                {
+                    EditPlantWindow.ShowWindow(family);
+                }
             }
         };
 
@@ -641,22 +685,31 @@ public partial class MainWindow : Window
         familyBox.TooltipText = "Select plant family";
         familyBox.AddEvents((int)Gdk.EventMask.AllEventsMask);
 
+
+        familyBox.PopdownRequested += (object o, PopdownRequestedArgs args) => System.Console.WriteLine("popdown");
+        familyBox.PopupMenu += (object o, PopupMenuArgs args) => System.Console.WriteLine("popupmenu");
+        familyBox.PopupRequested += (object sender, System.EventArgs e) => System.Console.WriteLine("popup");
+
+
         familyBox.Changed += (object sender, System.EventArgs e) =>
         {
-            if (familyBox.Active < familyIDs.Count)// && FamilyBox.Active < PlantBoxes.Count)
+            if (familyBox.Active >= 0)
             {
-                SelectPlantEntry(data.Families[familyIDs[familyBox.Active]]);
+                if (familyBox.Active < familyIDs.Count)// && FamilyBox.Active < PlantBoxes.Count)
+                {
+                    SelectPlantEntry(data.Families[familyIDs[familyBox.Active]]);
 
-                if (PlantVarietySelector != null)
-                    FamilyPlantVarietySelector.Remove(PlantVarietySelector);
-                PlantVarietySelector = new VPaned();
-                PlantVarietySelector.Add1(PopulatePlants(GardenData.LoadedData.Families[familyIDs[familyBox.Active]]));
-                FamilyPlantVarietySelector.Add2(PlantVarietySelector);
-                Build();
-            }
-            else //selected add action
-            {
-                EditPlantFamilyWindow.ShowWindow();
+                    if (PlantVarietySelector != null)
+                        FamilyPlantVarietySelector.Remove(PlantVarietySelector);
+                    PlantVarietySelector = new VPaned();
+                    PlantVarietySelector.Add1(PopulatePlants(GardenData.LoadedData.Families[familyIDs[familyBox.Active]], familyBox));
+                    FamilyPlantVarietySelector.Add2(PlantVarietySelector);
+                    Build();
+                }
+                else //selected add action
+                {
+                    EditPlantFamilyWindow.ShowWindow();
+                }
             }
         };
 
