@@ -36,22 +36,22 @@ namespace GardenPlanner.Garden
     }
 
 
-    public class DictionaryVarietyKeySeqConverter : JsonConverter<Dictionary<VarietyKeySeq, int>>
+    public class DictionaryVarietyKeySeqConverter : JsonConverter<Dictionary<VarietyKeySeq, PlantingInfo>>
     {
-        public override Dictionary<VarietyKeySeq, int> ReadJson(JsonReader reader, Type objectType, Dictionary<VarietyKeySeq, int> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Dictionary<VarietyKeySeq, PlantingInfo> ReadJson(JsonReader reader, Type objectType, Dictionary<VarietyKeySeq, PlantingInfo> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            List<KeyValuePair<VarietyKeySeq, int>> list = serializer.Deserialize<List<KeyValuePair<VarietyKeySeq, int>>>(reader);
-            Dictionary<VarietyKeySeq, int> result = new Dictionary<VarietyKeySeq, int>();
-            foreach (KeyValuePair<VarietyKeySeq, int> pair in list)
+            List<KeyValuePair<VarietyKeySeq, PlantingInfo>> list = serializer.Deserialize<List<KeyValuePair<VarietyKeySeq, PlantingInfo>>>(reader);
+            Dictionary<VarietyKeySeq, PlantingInfo> result = new Dictionary<VarietyKeySeq, PlantingInfo>();
+            foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in list)
                 result.Add(pair.Key, pair.Value);
             return result;
         }
 
-        public override void WriteJson(JsonWriter writer, Dictionary<VarietyKeySeq, int> value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Dictionary<VarietyKeySeq, PlantingInfo> value, JsonSerializer serializer)
         {
-            List<KeyValuePair<VarietyKeySeq, int>> list = new List<KeyValuePair<VarietyKeySeq, int>>();
+            List<KeyValuePair<VarietyKeySeq, PlantingInfo>> list = new List<KeyValuePair<VarietyKeySeq, PlantingInfo>>();
             foreach (VarietyKeySeq key in value.Keys)
-                list.Add(new KeyValuePair<VarietyKeySeq, int>(key, value[key]));
+                list.Add(new KeyValuePair<VarietyKeySeq, PlantingInfo>(key, value[key]));
             //writer.WriteValue(JsonConvert.SerializeObject(list));
             serializer.Serialize(writer, list);
         }

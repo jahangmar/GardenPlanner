@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Gtk;
 
 using GardenPlanner.Garden;
@@ -7,8 +8,9 @@ namespace GardenPlanner
 {
     class MainClass
     {
+        public static string MAIN_PATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "gardenplanner");
 
-        public static string MAIN_PATH = "/home/jan/.gardenplanner/";
+        public static string VERSION = "0.0.0-alpha";
 
         public static void Main(string[] args)
         {
@@ -19,6 +21,8 @@ namespace GardenPlanner
             //System.Console.WriteLine(ser);
             //streamWriter.Write(ser);
             //streamWriter.Flush();
+
+            System.Console.WriteLine();
 
             Application.Init();
             MainWindow win = MainWindow.GetInstance();
@@ -83,11 +87,10 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -think about if the plants or areas need more attributes or edit options right now
- *      ->frostempfindlichkeit, (temperaturbedarf)
- * -wheater data integration
+ * -set unsaved if values change
  * -scrolling
  * -add color chooser class for plant edit
+ * -minor bug: fix formatting in infobox
  * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)
  *      -> getcompatiblefamilies returns set of unified compatible things of plant and its family
  */

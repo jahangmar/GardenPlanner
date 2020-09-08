@@ -20,8 +20,8 @@ namespace GardenPlanner
             {
                 Planting area = new Planting(dialog.NameEntry.Text, dialog.DescrEntry.Text);
                 SetValuesForCreation(area, points, dialog);
-
                 action(area);
+                GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
             };
         }

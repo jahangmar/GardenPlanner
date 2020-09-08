@@ -21,25 +21,27 @@ namespace GardenPlanner.Garden
         /// </summary>
         public DateRange HarvestDateRange;
 
+        public bool Annual = true;
+
         /// <summary>
         /// Number of days it takes from sowing to germination.
         /// </summary>
-        public int DaysUntilGermination;
+        public int DaysUntilGermination = 0;
 
         /// <summary>
         /// Number of days it takes from sowing to planting outside.
         /// </summary>
-        public int DaysUntilPlantOutside;
+        public int DaysUntilPlantOutside = 0;
 
         /// <summary>
         /// Number of days it takes from planting or sowing to harvest
         /// </summary>
-        public int DaysUntilHarvest;
+        public int DaysUntilHarvest = 0;
 
         /// <summary>
         /// Indicates if the plant is a heavy, medium or light feeder.
         /// </summary>
-        public FeederType FeederType;
+        public FeederType FeederType = FeederType.Heavy;
 
         /// <summary>
         /// Minimal temperature this plant can survive with or grow without problems.

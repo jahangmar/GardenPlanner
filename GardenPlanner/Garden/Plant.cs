@@ -37,7 +37,7 @@ namespace GardenPlanner.Garden
         }
 
 
-        public string GetImageSurfacePath() => GardenData.GetImagePath() + "/plants/" + Name.Replace(' ', '_') + ".png";
+        public string GetImageSurfacePath() => System.IO.Path.Combine(System.IO.Path.Combine(GardenData.GetImagePath(), "plants"), Name.Replace(' ', '_') + ".png");
         private ImageSurface imageSurface = null;
 
         public bool HasImageSurface() => System.IO.File.Exists(GetImageSurfacePath());

@@ -397,6 +397,8 @@ public partial class MainWindow : Window
         PlantAddButton.Sensitive = false;
         AreaEditButton.Sensitive = false;
 
+        GardenDrawingArea.ActiveInstance = null;
+
         ReloadFamilies();
 
         RemoveAllChildren(GraphicsSidebarHPaned);
@@ -509,10 +511,10 @@ public partial class MainWindow : Window
         if (area is Planting planting)
         {
             AreaInfo.AddEntry("Varieties:");
-            foreach (KeyValuePair<VarietyKeySeq, int> pair in planting.Varieties)
+            foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in planting.Varieties)
             {
                 VarietyKeySeq seq = pair.Key;
-                int count = pair.Value;
+                int count = pair.Value.Count;
                 PlantVariety variety = GardenData.LoadedData.GetVariety(seq);
                 Plant plant = GardenData.LoadedData.GetPlant(seq.FamilyKey, seq.PlantKey);
                 AreaInfo.AddEntry(variety.Name + " (" + plant.Name + "): " + count);

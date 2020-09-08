@@ -12,6 +12,16 @@ namespace GardenPlanner
         MenuItem MenuItemSave = new MenuItem("Save");
         MenuItem MenuItemClose = new MenuItem("Close");
 
+        MenuItem HelpItem = new MenuItem("Help");
+        Menu HelpMenu = new Menu();
+        //MenuItem MenuItemGetHelp = new MenuItem("")
+        MenuItem MenuItemAbout = new MenuItem("About");
+
+        //MenuItem WheatherDataItem = new MenuItem("Wheather Data");
+        //Menu WheatherDataMenu = new Menu();
+        //MenuItem 
+
+
         FileFilter f;
 
         public MainWindowMenuBar()
@@ -28,9 +38,29 @@ namespace GardenPlanner
             MenuItemSave.Activated += SaveAction;
             MenuItemLoad.Activated += LoadAction;
 
+
+            HelpItem.Submenu = HelpMenu;
+            HelpMenu.Add(MenuItemAbout);
+            Append(HelpItem);
+
+            MenuItemAbout.Activated += ShowAboutDialog;
+
             f = new FileFilter();
             f.AddPattern("*.gdata");
             f.Name = "Garden data";
+        }
+
+        private void ShowAboutDialog(object sender, EventArgs args)
+        {
+            AboutDialog about = new AboutDialog();
+            about.Authors = new string[]{ "Jahangmar" };
+            about.ProgramName = "GardenPlanner";
+            about.Version = MainClass.VERSION;
+            about.Website = "https://github.com/jahangmar/";
+            about.WebsiteLabel = "GardenPlanner on github";
+            about.TransientFor = MainWindow.GetInstance();
+            about.Run();
+            about.Destroy();
         }
 
         private void New()

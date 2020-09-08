@@ -22,7 +22,7 @@ namespace GardenPlanner.Garden
             this.Name = name;
         }
 
-        public static string GetImagePath() => MainClass.MAIN_PATH + "/imgs/";
+        public static string GetImagePath() => System.IO.Path.Combine(MainClass.MAIN_PATH,"imgs");
 
         public static int GetFirstYear() => 2000; //TODO
         public static int GetLastYear() => 2030; //TODO

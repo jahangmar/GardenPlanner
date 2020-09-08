@@ -14,7 +14,7 @@ namespace GardenPlanner.Garden
         /// </summary>
         //public List<VarietyKeySeq> Varieties;
         [JsonConverter(typeof(DictionaryVarietyKeySeqConverter))]
-        public Dictionary<VarietyKeySeq, int> Varieties;
+        public Dictionary<VarietyKeySeq, PlantingInfo> Varieties;
 
 
 
@@ -27,20 +27,20 @@ namespace GardenPlanner.Garden
         public Planting(string name, string description) : base(name, description)
         {
             //Varieties = new List<VarietyKeySeq>();
-            Varieties = new Dictionary<VarietyKeySeq, int>();
+            Varieties = new Dictionary<VarietyKeySeq, PlantingInfo>();
             Color = new Color(0, 0, 0);
         }
 
         public Planting(string name, string description, int cyear, int cmonth, int ryear, int rmonth) : base(name, description, cyear, cmonth, ryear, rmonth)
         {
-            Varieties = new Dictionary<VarietyKeySeq, int>();
+            Varieties = new Dictionary<VarietyKeySeq, PlantingInfo>();
             Color = new Color(0, 0, 0);
         }
 
         public void AddVarietyKeys(string family, string plant, string variety, int count=0)
         {
             //Varieties.Add(new VarietyKeySeq(family, plant, variety));
-            Varieties.Add(new VarietyKeySeq(family, plant, variety), count);
+            Varieties.Add(new VarietyKeySeq(family, plant, variety), new PlantingInfo() { Count = count });
         }
 
         public void AddVariety(PlantVariety variety, int count = 0) =>
@@ -91,10 +91,10 @@ namespace GardenPlanner.Garden
 
             double r = 0, g = 0, b = 0;
             int sum = 0;
-            foreach (KeyValuePair<VarietyKeySeq, int> pair in Varieties)
+            foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in Varieties)
             {
                 VarietyKeySeq seq = pair.Key;
-                int count = pair.Value;
+                int count = pair.Value.Count;
                 PlantVariety variety = GardenData.LoadedData.GetVariety(seq);
                 Color color = variety.Color;
                 r += count * color.R;
@@ -117,10 +117,10 @@ namespace GardenPlanner.Garden
             if (Varieties.Count > 0)
             {
                 int i = 0;
-                foreach (KeyValuePair<VarietyKeySeq, int> keyValuePair in Varieties)
+                foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> keyValuePair in Varieties)
                 {
                     VarietyKeySeq varietyKeySeq = keyValuePair.Key;
-                    int count = keyValuePair.Value;
+                    int count = keyValuePair.Value.Count;
                     Plant plant = GardenData.LoadedData.GetPlant(varietyKeySeq.FamilyKey, varietyKeySeq.PlantKey);
 
                     PointD plantingShapePoint = Shape.GetTopLeftPoint().ToCairoPointD(xoffset, yoffset, zoom);
