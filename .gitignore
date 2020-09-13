@@ -1,3 +1,5 @@
+*.gdata
+
 # globs
 Makefile.in
 *.userprefs

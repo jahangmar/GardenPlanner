@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Copyright (c) 2020 Jahangmar
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+//
+
+using System;
 using System.IO;
 using Gtk;
 
@@ -21,8 +37,6 @@ namespace GardenPlanner
             //System.Console.WriteLine(ser);
             //streamWriter.Write(ser);
             //streamWriter.Flush();
-
-            System.Console.WriteLine();
 
             Application.Init();
             MainWindow win = MainWindow.GetInstance();
@@ -87,7 +101,11 @@ namespace GardenPlanner
 }
 
 /*TODO
+ * -what happens with the id if the name changes? Relevant for plant images.
+ * -Bug: area creation after zoom has offset
  * -set unsaved if values change
+ * -info window doesnt show feeder and edit window shows wrong feeder info
+ * -add possibility to change points
  * -scrolling
  * -add color chooser class for plant edit
  * -minor bug: fix formatting in infobox
