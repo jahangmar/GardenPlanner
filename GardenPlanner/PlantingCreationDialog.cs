@@ -32,6 +32,8 @@ namespace GardenPlanner
         {
             PlantingCreationDialog dialog = new PlantingCreationDialog();
 
+            GardenDrawingArea.ActiveInstance?.Draw();
+
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 Planting area = new Planting(dialog.NameEntry.Text, dialog.DescrEntry.Text);

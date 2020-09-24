@@ -19,7 +19,10 @@ namespace GardenPlanner.Garden
 {
     public class DateRange
     {
-        private const int defyear = 2000;
+        private const int defyear = 1900;
+
+        private DateTime start;
+        private DateTime end;
 
         public DateRange()
         {
@@ -27,24 +30,121 @@ namespace GardenPlanner.Garden
             end = DateTime.Parse("01.01." + defyear);
         }
 
-        private DateTime start;
-        private DateTime end;
-
-        public void SetStart(string s)
+        public DateRange(int startyear, int startmonth, int startday, int endyear, int endmonth, int endday)
         {
-            start = DateTime.Parse(s);
-            if (start.Year == defyear)
-                start.AddYears(1);
+            start = new DateTime(startyear, startmonth, startday);
+            end = new DateTime(endyear, endmonth, endday);
         }
 
-        public void SetEnd(string s)
+        public DateRange(int startyear, int startmonth, int endyear, int endmonth) : this(startyear, startmonth, 1, endyear, endmonth, 1)
         {
-            end = DateTime.Parse(s);
-            if (end.Year == defyear)
-                end.AddYears(1);
+
         }
 
-        public int GetDaysUntilHarvest() => 0;
+        public DateTime GetStart() => start;
+        public DateTime GetEnd() => end;
+
+        public int GetRangeInDays() => (end - start).Days;
+        public int GetRangeInRoundMonths() => (int) System.Math.Round(GetRangeInMonth());
+        public float GetRangeInMonth() => GetRangeInDays() / 30f;
+        public int GetRangeInRoundYears() => (int)System.Math.Round(GetRangeInYears());
+        public float GetRangeInYears() => GetRangeInDays() / 365f;
+
+        private bool IsDefault(DateTime dateTime) => dateTime.Year == defyear;
+        public bool IsDefault() => IsDefault(start) || IsDefault(end);
+
+        public bool IsDateInRange(int year, int month) => (year == start.Year && month >= start.Month || year > start.Year) &&
+            (year == end.Year && month <= end.Month || year < end.Year) || year == 0 && month == 0;
+
+        public bool IsDateInRange(DateTime dateTime) => IsDateInRange(dateTime.Year, dateTime.Month);
+
+        private void CheckStart()
+        {
+            if (start > end && !IsDefault(end))
+                start = end;
+        }
+
+        private void CheckEnd()
+        {
+            if (end < start && !IsDefault(start))
+                end = start;
+        }
+
+        public void SetStartDay(int day)
+        {
+            start = new DateTime(start.Year, start.Month, day);
+            CheckStart();
+        }
+
+        public void SetStartMonth(int month)
+        {
+            start = new DateTime(start.Year, month, start.Day);
+            CheckStart();
+        }
+
+        public void SetStartYear(int year)
+        {
+            start = new DateTime(year, start.Month, start.Day);
+            CheckStart();
+        }
+
+        public void SetStartYearMonth(int year, int month)
+        {
+            start = new DateTime(year, month, 1);
+            CheckStart();
+        }
+
+        public void SetStartYearMonthDay(int year, int month, int day)
+        {
+            start = new DateTime(year, month, day);
+            CheckStart();
+        }
+
+        public void SetStart(int year, int month, int day) => SetStartYearMonthDay(year, month, day);
+
+        public void SetStart(DateTime dateTime)
+        {
+            SetStartYearMonthDay(dateTime.Year, dateTime.Month, dateTime.Day);
+        }
+
+        public void SetEndDay(int day)
+        {
+            end = new DateTime(end.Year, end.Month, day);
+            CheckEnd();
+        }
+
+        public void SetEndMonth(int month)
+        {
+            end = new DateTime(end.Year, month, end.Day);
+            CheckEnd();
+        }
+
+        public void SetEndYear(int year)
+        {
+            end = new DateTime(year, end.Month, end.Day);
+            CheckEnd();
+        }
+
+        public void SetEndYearMonth(int year, int month)
+        {
+            end = new DateTime(year, month, 1);
+            CheckEnd();
+        }
+
+        public void SetEndYearMonthDay(int year, int month, int day)
+        {
+            end = new DateTime(year, month, day);
+            CheckEnd();
+        }
+
+        public void SetEnd(int year, int month, int day) => SetEndYearMonthDay(year, month, day);
+
+        public void SetEnd(DateTime dateTime)
+        {
+            SetEndYearMonthDay(dateTime.Year, dateTime.Month, dateTime.Day);
+        }
+
+        public int GetDaysUntilHarvest() => (end - start).Days;
 
         public override string ToString()
         {

@@ -19,6 +19,7 @@ using Cairo;
 using Gdk;
 using GardenPlanner.Garden;
 using System.Collections.Generic;
+using System;
 
 namespace GardenPlanner
 {
@@ -217,7 +218,80 @@ namespace GardenPlanner
             DrawGrid(context);
             DrawGarden(context);
             DrawSelection(context);
+            DrawCropRotation(context);
+
             context.Dispose();
+        }
+
+        private void DrawCropRotation(Context context)
+        {
+
+            if (MainWindowMenuBar.ShowCropRotation)
+            {
+                foreach (Planting planting in Garden.Plantings.Values)
+                {
+
+                    bool incomp = false;
+
+                    if (MainWindow.GetInstance().SelectedEntry is Affectable aff)
+                    {
+                        foreach (VarietyKeySeq varietyKeySeq in planting.Varieties.Keys)
+                        {
+                            if (aff.IncompatiblePlants.Contains(varietyKeySeq.PlantKey) || aff.IncompatibleFamilies.Contains(varietyKeySeq.FamilyKey))
+                            {
+                                incomp = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    if (incomp)
+                    {
+                        continue;
+                    }
+
+                    void MarkLevel(int i)
+                    {
+                        Cairo.Color color;
+                        switch (i)
+                        {
+                            case 0:
+                                color = new Cairo.Color(1, 0, 0, 0.5);
+                                break;
+                            case 1:
+                                color = new Cairo.Color(1, 0.5, 0, 0.5);
+                                break;
+                            case 2:
+                                color = new Cairo.Color(1, 1, 0, 0.5);
+                                break;
+                            default:
+                                color = new Cairo.Color(1, 1, 0.3, 0.5);
+                                break;
+                        }
+                        planting.Shape.Draw(context, XOffset(), YOffset(), color, color, 1, Zoom);
+                        System.Console.WriteLine("drawing with i=" + i + ", ");
+                    }
+
+                    int year = MainWindow.GetInstance().GetYear();
+                    int month = MainWindow.GetInstance().GetMonth();
+                    DateTime current = new DateTime(year, month, 1);
+
+                    if (planting.CheckDate(year, month)) //exists during current time
+                    {
+                        MarkLevel(0);
+                    }
+                    else if (planting.removed < current) //exists in the past
+                    {
+                        DateRange range = new DateRange(planting.removed.Year, planting.removed.Month, current.Year, current.Month);
+                        if (range.GetRangeInYears() < 3)
+                            MarkLevel((int) Math.Floor(range.GetRangeInYears()));
+                    }
+                }
+            }
         }
 
         private void DrawSelection(Context context)

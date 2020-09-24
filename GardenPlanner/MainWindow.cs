@@ -205,6 +205,8 @@ public partial class MainWindow : Window
                 if (GardenDrawingArea.ActiveInstance != null)
                 {
                     GardenDrawingArea.ActiveInstance.UndoSelection();
+                    GardenDrawingArea.ActiveInstance.NewPoints.Clear();
+                    GardenDrawingArea.ActiveInstance.Draw();
                 }
 
             }
@@ -221,16 +223,27 @@ public partial class MainWindow : Window
                             {
                                 GardenDrawingArea.ActiveInstance.Garden.Shape.AddPoints(points);
                                 GardenDrawingArea.ActiveInstance.Garden.Shape.FinishPoints();
+                                GardenDrawingArea.ActiveInstance.NewPoints.Clear();
+                                GardenDrawingArea.ActiveInstance.Draw();
                             }
                             break;
                         case 1://planting
                             PlantingCreationDialog.ShowPlantingCreationDialog(new List<GardenPoint>(points), (Planting planting) =>
-                                    GardenDrawingArea.ActiveInstance.Garden.AddPlanting(GardenData.GenID(planting.Name), planting));
+                            {
+                                GardenDrawingArea.ActiveInstance.NewPoints.Clear();
+                                GardenDrawingArea.ActiveInstance.Draw();
+                                GardenDrawingArea.ActiveInstance.Garden.AddPlanting(GardenData.GenID(planting.Name), planting);
+                            });
+                                    
 
                             break;
                         case 2://method area
-                            GardenAreaCreationDialog.ShowGardenAreaCreationDialog(new List<GardenPoint>(points), (GardenArea area) =>
-                                    GardenDrawingArea.ActiveInstance.Garden.AddMethodArea(GardenData.GenID(area.Name), area));
+                            GardenAreaCreationDialog.ShowGardenAreaCreationDialog(new List<GardenPoint>(points), (GardenArea area) => {
+                                GardenDrawingArea.ActiveInstance.NewPoints.Clear();
+                                GardenDrawingArea.ActiveInstance.Draw();
+                                GardenDrawingArea.ActiveInstance.Garden.AddMethodArea(GardenData.GenID(area.Name), area);
+                            });
+
                             break;
                     }
                 }
@@ -258,12 +271,6 @@ public partial class MainWindow : Window
                 AreaCancelButton.Sensitive = true;
             }
 
-
-            if (GardenDrawingArea.ActiveInstance != null)
-            {
-                GardenDrawingArea.ActiveInstance.NewPoints.Clear();
-                GardenDrawingArea.ActiveInstance.Draw();
-            }
         };
 
 

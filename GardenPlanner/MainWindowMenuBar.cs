@@ -33,12 +33,17 @@ namespace GardenPlanner
         //MenuItem MenuItemGetHelp = new MenuItem("")
         MenuItem MenuItemAbout = new MenuItem("About");
 
+        MenuItem ViewItem = new MenuItem("View");
+        Menu ViewMenu = new Menu();
+        CheckMenuItem ViewMenuShowCropRotation = new CheckMenuItem("Show crop rotation suggestion");
+
         //MenuItem WheatherDataItem = new MenuItem("Wheather Data");
         //Menu WheatherDataMenu = new Menu();
         //MenuItem 
 
-
         FileFilter f;
+
+        public static bool ShowCropRotation;
 
         public MainWindowMenuBar()
         {
@@ -55,16 +60,32 @@ namespace GardenPlanner
             MenuItemLoad.Activated += LoadAction;
 
 
+            ViewItem.Submenu = ViewMenu;
+            ViewMenu.Add(ViewMenuShowCropRotation);
+            Append(ViewItem);
+
+            ViewMenuShowCropRotation.Activated += ViewMenuShowCropRotation_Activated;
+
+
             HelpItem.Submenu = HelpMenu;
             HelpMenu.Add(MenuItemAbout);
             Append(HelpItem);
 
             MenuItemAbout.Activated += ShowAboutDialog;
 
+
+
             f = new FileFilter();
             f.AddPattern("*.gdata");
             f.Name = "Garden data";
         }
+
+        void ViewMenuShowCropRotation_Activated(object sender, EventArgs e)
+        {
+            ShowCropRotation = ViewMenuShowCropRotation.Active;
+            GardenDrawingArea.ActiveInstance?.Draw();
+        }
+
 
         private void ShowAboutDialog(object sender, EventArgs args)
         {

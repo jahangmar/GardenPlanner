@@ -75,8 +75,11 @@ namespace GardenPlanner
             TopVBox.Add(ButtonBox);
             this.Add(TopVBox);
 
+            GardenDrawingArea.ActiveInstance?.Draw();
+
             CancelButton.Clicked += (object sender, System.EventArgs e) =>
             {
+                GardenDrawingArea.ActiveInstance?.Draw();
                 this.Destroy();
             };
 
@@ -107,6 +110,7 @@ namespace GardenPlanner
                 action(area);
                 GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
+
             };
         }
 

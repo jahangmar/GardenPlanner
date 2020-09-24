@@ -28,11 +28,14 @@ namespace GardenPlanner.Garden
     {
         private const int LINE_WIDTH = 1;
 
+        private DateRange ExistTime = new DateRange();
+
         /// <summary>
         /// Time this area was created.
         /// </summary>
-        public DateTime created;
-        public DateTime removed;
+        //private DateTime created;
+
+        //private DateTime removed;
 
         /// <summary>
         /// Identifier of the garden this area belongs to
@@ -48,8 +51,10 @@ namespace GardenPlanner.Garden
         /// </summary>
         public List<BedMethod> Methods;
 
-        public bool CheckDate(int year, int month) => (year == created.Year && month >= created.Month || year > created.Year) &&
-            (year == removed.Year && month <= removed.Month || year < removed.Year) || year == 0 && month == 0;
+        public DateTime created { get => ExistTime.GetStart(); set => ExistTime.SetStart(value); }
+        public DateTime removed { get => ExistTime.GetEnd(); set => ExistTime.SetEnd(value); }
+
+        public bool CheckDate(int year, int month) => ExistTime.IsDateInRange(year, month);
 
         [JsonConstructor]
         public GardenArea(string name, string description) : base(name, description)
@@ -66,16 +71,12 @@ namespace GardenPlanner.Garden
 
         public void SetCreated(int year, int month)
         {
-            created = new DateTime(year, month, 1);
-            if (removed < created)
-                removed = created;
+            ExistTime.SetStartYearMonth(year, month);
         }
 
         public void SetRemoved(int year, int month)
         {
-            removed = new DateTime(year, month, 1);
-            if (removed < created)
-                created = removed;
+            ExistTime.SetEndYearMonth(year, month);
         }
 
         public bool ContainsPointOnEdge(GardenPoint p, int xoffset = 0, int yoffset = 0, double zoom = GardenPoint.STD_ZOOM) =>
