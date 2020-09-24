@@ -109,6 +109,5 @@ namespace GardenPlanner
  * -scrolling
  * -add color chooser class for plant edit
  * -minor bug: fix formatting in infobox
- * -maybe add references (e.g. varieities have plant reference "GetPlant()" that only checks once per Load)
- *      -> getcompatiblefamilies returns set of unified compatible things of plant and its family
+ * -add check for compatible families/plants (same as for incomaptible)
  */

@@ -237,7 +237,7 @@ namespace GardenPlanner
                     {
                         foreach (VarietyKeySeq varietyKeySeq in planting.Varieties.Keys)
                         {
-                            if (aff.IncompatiblePlants.Contains(varietyKeySeq.PlantKey) || aff.IncompatibleFamilies.Contains(varietyKeySeq.FamilyKey))
+                            if (aff.CheckIncompatiblePlants(varietyKeySeq.PlantKey) || aff.CheckIncompatibleFamilies(varietyKeySeq.FamilyKey))
                             {
                                 incomp = true;
                                 break;
@@ -249,7 +249,7 @@ namespace GardenPlanner
                         break;
                     }
 
-                    if (incomp)
+                    if (!incomp)
                     {
                         continue;
                     }
@@ -273,7 +273,6 @@ namespace GardenPlanner
                                 break;
                         }
                         planting.Shape.Draw(context, XOffset(), YOffset(), color, color, 1, Zoom);
-                        System.Console.WriteLine("drawing with i=" + i + ", ");
                     }
 
                     int year = MainWindow.GetInstance().GetYear();

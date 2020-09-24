@@ -28,6 +28,15 @@ namespace GardenPlanner.Garden
         /// </summary>
         public Dictionary<string, PlantVariety> Varieties;
 
+        private PlantFamily family;
+
+        public PlantFamily GetFamily()
+        {
+            if (family == null)
+                family = GardenData.LoadedData.GetFamily(FamilyID);
+            return family;
+        }
+
         public Plant(string name, string description) : base(name, description)
         {
             Varieties = new Dictionary<string, PlantVariety>();
@@ -65,6 +74,16 @@ namespace GardenPlanner.Garden
                     imageSurface = new ImageSurface(GetImageSurfacePath());
             }
             return imageSurface;
+        }
+
+        public override bool CheckIncompatibleFamilies(string familyID)
+        {
+            return this.FamilyID.Equals(familyID) || IncompatibleFamilies.Contains(familyID) || GetFamily().CheckIncompatibleFamilies(familyID);
+        }
+
+        public override bool CheckIncompatiblePlants(string plantID)
+        {
+            return this.ID.Equals(plantID) || IncompatiblePlants.Contains(plantID) || GetFamily().IncompatiblePlants.Contains(plantID);
         }
     }
 }

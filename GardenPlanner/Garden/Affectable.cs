@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GardenPlanner.Garden
 {
-    public class Affectable : GardenDataEntry
+    public abstract class Affectable : GardenDataEntry
     {
         /// <summary>
         /// Scientific name for the family or plant
@@ -44,5 +44,8 @@ namespace GardenPlanner.Garden
         {
 
         }
+
+        public abstract bool CheckIncompatibleFamilies(string familyID);
+        public abstract bool CheckIncompatiblePlants(string plantID);
     }
 }

@@ -46,5 +46,15 @@ namespace GardenPlanner.Garden
         {
             Plants.Remove(plantID);
         }
+
+        public override bool CheckIncompatibleFamilies(string familyID)
+        {
+            return familyID.Equals(ID) || IncompatibleFamilies.Contains(familyID);
+        }
+
+        public override bool CheckIncompatiblePlants(string plantID)
+        {
+            return IncompatiblePlants.Contains(plantID);
+        }
     }
 }
