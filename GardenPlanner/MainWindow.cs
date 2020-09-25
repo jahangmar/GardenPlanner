@@ -422,6 +422,9 @@ public partial class MainWindow : Window
 
         GardenDrawingArea.ActiveInstance = null;
 
+        yearButton.Value = System.DateTime.Now.Year;
+        monthButton.Value = System.DateTime.Now.Month;
+
         ReloadFamilies();
 
         RemoveAllChildren(GraphicsSidebarHPaned);

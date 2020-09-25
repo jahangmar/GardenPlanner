@@ -42,6 +42,22 @@ namespace GardenPlanner
 
             AddEntry(plant.Description, infoView.italic);
 
+            string feeder = "";
+            switch (plant.FeederType)
+            {
+                case FeederType.Heavy:
+                    feeder = "Starkzehrer";
+                    break;
+                case FeederType.Medium:
+                    feeder = "Mittelzehrer";
+                    break;
+                case FeederType.Light:
+                    feeder = "Schwachzeher";
+                    break;
+            }
+
+            AddEntry("Nährstoffbedarf: " + feeder);
+
             AddEntry("Aussaat draußen: " + plant.PlantOutsideDateRange);
 
             ApplyTags();

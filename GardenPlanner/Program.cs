@@ -101,13 +101,10 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -what happens with the id if the name changes? Relevant for plant images.
- * -Bug: area creation after zoom has offset
- * -set unsaved if values change
- * -info window doesnt show feeder and edit window shows wrong feeder info
- * -add possibility to change points
- * -scrolling
- * -add color chooser class for plant edit
- * -minor bug: fix formatting in infobox
- * -add check for compatible families/plants (same as for incomaptible)
+ * -Add: set unsaved if values change
+ * -Add: add possibility to change points
+ * -Add: scrolling
+ * -Bug (minor): fix formatting in infobox
+ * -Add: add check for compatible families/plants (same as for incomaptible)
+ * -Add: add visualization for planting suggestions based on good neighbours + free space + white space
  */

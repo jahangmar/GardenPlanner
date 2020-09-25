@@ -28,6 +28,9 @@ namespace GardenPlanner
     /// </summary>
     public class GardenDrawingArea : Gtk.DrawingArea
     {
+
+        private const int GRID_SIZE = 100;
+
         public Garden.Garden Garden;
 
         public static double Zoom = 1;
@@ -52,7 +55,7 @@ namespace GardenPlanner
                     if (MainWindow.GetInstance().AreaNewButton.Active)
                     {
                         UndoSelection();
-                        GardenPoint gridPoint = SnapToGrid((int)args.Event.X, (int)args.Event.Y);
+                        GardenPoint gridPoint = SnapToGrid((int)(args.Event.X), (int)(args.Event.Y));
                         NewPoints.Add(gridPoint);
                         Draw();
                     }
@@ -158,8 +161,9 @@ namespace GardenPlanner
 
         private GardenPoint SnapToGrid(int x, int y)
         {
-            double grid = (25);
-            return new GardenPoint(-XOffset() + (int)(System.Math.Round((double) (x / grid)) * grid), -YOffset() + (int)(System.Math.Round((double) (y / grid)) * grid));
+            double grid = (GRID_SIZE/4)*Zoom;
+            GardenPoint result = new GardenPoint(-GRID_SIZE + (int)System.Math.Round((int)(System.Math.Round((double)(x / grid)) * grid) / Zoom), -GRID_SIZE + (int)System.Math.Round((int)(System.Math.Round((double)(y / grid)) * grid) / Zoom));
+            return result;
         }
 
         /// <summary>
@@ -206,8 +210,8 @@ namespace GardenPlanner
             return base.OnExposeEvent(evnt);
         }
 
-        private int XOffset() => (int)(100 * Zoom);
-        private int YOffset() => (int)(100 * Zoom);
+        private int XOffset() => (int)(GRID_SIZE * Zoom);
+        private int YOffset() => (int)(GRID_SIZE * Zoom);
 
         public void Draw()
         {
@@ -323,7 +327,7 @@ namespace GardenPlanner
             int width = this.Allocation.Width;
             int height = this.Allocation.Height;
 
-            double factor = Zoom * 100;
+            double factor = Zoom * GRID_SIZE;
             context.LineWidth = 0.5;
             for (int x=0; x*factor < width; x++)
             {

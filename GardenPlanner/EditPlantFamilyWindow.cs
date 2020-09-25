@@ -75,13 +75,16 @@ namespace GardenPlanner
             try
             {
                 string id = GardenData.GenID(Family.Name);
-
+                /*
                 //if variety already exists it is deleted first before it is added again
                 if (!Create)
                 {
                     GardenData.LoadedData.RemoveFamily(Family);
                 }
                 GardenData.LoadedData.AddFamily(id, Family);
+                */
+                if (Create)
+                    GardenData.LoadedData.AddFamily(id, Family);
 
                 ShowSuccessSave(Family.Name);
             }

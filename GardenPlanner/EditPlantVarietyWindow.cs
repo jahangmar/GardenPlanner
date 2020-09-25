@@ -81,13 +81,16 @@ namespace GardenPlanner
                 Plant plant = GardenData.LoadedData.GetPlant(Variety.FamilyID, Variety.PlantID);
 
                 string id = GardenData.GenID(Variety.Name);
-
+                /*
                 //if variety already exists it is deleted first before it is added again
                 if (!Create)
                 {
                     plant.RemoveVariety(Variety.ID);
                 }
                 plant.AddVariety(id, Variety);
+                */
+                if (Create)
+                    plant.AddVariety(id, Variety);
 
                 ShowSuccessSave(Variety.Name);
             }

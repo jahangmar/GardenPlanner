@@ -32,7 +32,7 @@ namespace GardenPlanner
             Create = create;
 
             FeederComboBox = new ComboBoxEntry(System.Enum.GetNames(typeof(FeederType)));
-            FeederComboBox.Active = 0;
+            FeederComboBox.Active = (int)plant.FeederType;
             AddEntry("Feeder", FeederComboBox);
         }
 
@@ -90,12 +90,17 @@ namespace GardenPlanner
 
                 string id = GardenData.GenID(Plant.Name);
 
+                /*
                 //if variety already exists it is deleted first before it is added again
                 if (!Create)
                 {
                     family.RemovePlant(Plant.ID);
                 }
                 family.AddPlant(id, Plant);
+                */
+
+                if (Create)
+                    family.AddPlant(id, Plant);
 
                 ShowSuccessSave(Plant.Name);
             }
