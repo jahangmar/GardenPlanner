@@ -102,6 +102,7 @@
     <Compile Include="PlantingCreationDialog.cs" />
     <Compile Include="ColorChooser.cs" />
     <Compile Include="Garden\PlantingInfo.cs" />
+    <Compile Include="PointInputWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

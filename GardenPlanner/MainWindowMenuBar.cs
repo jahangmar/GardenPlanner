@@ -106,11 +106,12 @@ namespace GardenPlanner
             Garden.GardenData.LoadedData = GardenPlanner.MainClass.TestData();
             MainWindow.GetInstance().Title = "Garden project '" + Garden.GardenData.LoadedData.Name + "'";
             MainWindow.GetInstance().ResetForNewData();
+            Garden.GardenData.unsaved = false;
         }
 
         private void NewAction(object sender, EventArgs e)
         {
-            if (Garden.GardenData.LoadedData.unsaved)
+            if (Garden.GardenData.unsaved)
             {
                 Dialog dialog = new MessageDialog(MainWindow.GetInstance(), DialogFlags.Modal, MessageType.Warning, ButtonsType.None, "There are unsaved changes. Continue to create new project?", new { });
                 dialog.AddButton("Cancel", ResponseType.Cancel);
@@ -129,7 +130,7 @@ namespace GardenPlanner
                 else if (response == (int)ResponseType.Apply)
                 {
                     Save();
-                    if (!Garden.GardenData.LoadedData.unsaved)
+                    if (!Garden.GardenData.unsaved)
                     {
 
                     }
@@ -166,9 +167,10 @@ namespace GardenPlanner
                             md.Run();
                             md.Destroy();
                         }
-                        else
+                        else //successfully loaded
                         {
                             MainWindow.GetInstance().ResetForNewData();
+                            Garden.GardenData.unsaved = false;
                         }
 
                         break;
@@ -196,6 +198,10 @@ namespace GardenPlanner
                             MessageDialog md = new MessageDialog(MainWindow.GetInstance(), DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "Failed to save '" + fcd.Filename + "': " + Garden.GardenData.ErrorMessage, new { });
                             md.Run();
                             md.Destroy();
+                        }
+                        else // successfull save
+                        {
+                            Garden.GardenData.unsaved = false;
                         }
 
                         break;

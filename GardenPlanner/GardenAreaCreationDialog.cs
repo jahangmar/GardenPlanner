@@ -37,6 +37,9 @@ namespace GardenPlanner
 
         protected GardenAreaCreationDialog(string title) : base(title)
         {
+            TransientFor = MainWindow.GetInstance();
+            Modal = true;
+
             HBox hbox;
 
             hbox = new HBox();
@@ -79,6 +82,7 @@ namespace GardenPlanner
 
             CancelButton.Clicked += (object sender, System.EventArgs e) =>
             {
+                GardenDrawingArea.ActiveInstance?.NewPoints.Clear();
                 GardenDrawingArea.ActiveInstance?.Draw();
                 this.Destroy();
             };
@@ -97,6 +101,7 @@ namespace GardenPlanner
             area.Shape.FinishPoints();
             area.SetCreated(dialog.CYearButton.ValueAsInt, dialog.CMonthButton.ValueAsInt);
             area.SetRemoved(dialog.RYearButton.ValueAsInt, dialog.RMonthButton.ValueAsInt);
+            GardenData.unsaved = true;
         }
 
         public static void ShowGardenAreaCreationDialog(List<GardenPoint> points, System.Action<GardenArea> action)

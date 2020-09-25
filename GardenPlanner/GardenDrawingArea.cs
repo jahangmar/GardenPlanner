@@ -37,6 +37,7 @@ namespace GardenPlanner
 
         public static GardenDrawingArea ActiveInstance;
 
+        public GardenPoint SelectedPoint;
         public GardenArea SelectedArea;
         public List<GardenPoint> NewPoints = new List<GardenPoint>();
 
@@ -82,8 +83,13 @@ namespace GardenPlanner
                         item3.Sensitive = false;
                         MenuItem item4 = new MenuItem("Remove area");
                         item4.Activated += (sender, e) => MainWindow.GetInstance().AreaDeleteButton.Activate();
+                        MenuItem item5 = new MenuItem("Edit point");
+                        item5.Sensitive = SelectedPoint != null;
+                        item5.Activated += (sender, e) => PointInputWindow.ShowWindow("Set new point", Math.Min(SelectedPoint.X, SelectedPoint.Y)-100, Math.Max(SelectedPoint.X, SelectedPoint.Y) + 100, SelectedPoint.X, SelectedPoint.Y,
+                            (int x, int y) => { SelectedArea.Shape.ModPoint(SelectedPoint, new GardenPoint(x, y), true); SelectedPoint = null; Draw(); });
+
                         Menu menu = new Menu() {
-                            item1, item2, item3, item4
+                            item1, item2, item3, item4, item5
                         };
 
                         menu.AttachToWidget(this, null);
@@ -183,6 +189,10 @@ namespace GardenPlanner
                 foreach (GardenArea area in Garden.MethodAreas.Values)
                     if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
                     {
+                        if (SelectedArea != null)
+                            SelectedPoint = SelectedArea.GetPointInRange(clicked, 10, XOffset(), YOffset(), Zoom);
+                        else
+                            SelectedPoint = area.GetPointInRange(clicked, 10, XOffset(), YOffset(), Zoom);
                         SelectedArea = area;
                         return true;
                     }
@@ -190,6 +200,10 @@ namespace GardenPlanner
                 foreach (GardenArea area in Garden.Plantings.Values)
                     if (area.CheckDate(year, month) && area.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
                     {
+                        if (SelectedArea != null)
+                            SelectedPoint = SelectedArea.GetPointInRange(clicked, 10, XOffset(), YOffset(), Zoom);
+                        else
+                            SelectedPoint = area.GetPointInRange(clicked, 10, XOffset(), YOffset(), Zoom);
                         SelectedArea = area;
                         return true;
                     }
@@ -198,6 +212,7 @@ namespace GardenPlanner
             if (Garden.ContainsPointOnEdge(clicked, XOffset(), YOffset(), Zoom))
             {
                 SelectedArea = Garden;
+                SelectedPoint = Garden.GetPointInRange(clicked, 10, XOffset(), YOffset(), Zoom);
                 return true;
             }
 
@@ -307,6 +322,18 @@ namespace GardenPlanner
                 context.MoveTo(NewPoints[0].ToCairoPointD(XOffset(), YOffset(), Zoom));
                 NewPoints.ForEach((GardenPoint p) => context.LineTo(p.ToCairoPointD(XOffset(), YOffset(), Zoom)));
                 context.Stroke();
+            }
+
+            if (SelectedPoint != null)
+            {
+                Cairo.PointD pointd = SelectedPoint.ToCairoPointD(XOffset(), YOffset(), Zoom);
+                context.MoveTo(pointd.X - 4, pointd.Y - 4);
+                context.LineTo(pointd.X + 4, pointd.Y - 4);
+                context.LineTo(pointd.X + 4, pointd.Y + 4);
+                context.LineTo(pointd.X - 4, pointd.Y + 4);
+                context.LineTo(pointd.X - 4, pointd.Y - 4);
+                context.SetSourceRGB(0.3, 0.3, 0.3);
+                context.Fill();
             }
         }
 

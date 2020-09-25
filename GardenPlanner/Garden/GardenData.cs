@@ -29,7 +29,8 @@ namespace GardenPlanner.Garden
 
         public string Name;
 
-        public bool unsaved = false;
+        [JsonIgnore]
+        public static bool unsaved = false;
 
         public GardenData(string name)
         {
@@ -144,7 +145,7 @@ namespace GardenPlanner.Garden
             }
 
                 LoadedData = obj;
-                LoadedData.unsaved = false;
+                GardenData.unsaved = false;
                 return true;
         }
 
@@ -152,7 +153,7 @@ namespace GardenPlanner.Garden
         {
 
             string name = filename.Substring(filename.LastIndexOf('/')+1);
-            name = name.Substring(0, name.LastIndexOf('.'));
+            name = name.LastIndexOf('.') > 0 ? name.Substring(0, name.LastIndexOf('.')) : name;
             LoadedData.Name = name;
 
             try

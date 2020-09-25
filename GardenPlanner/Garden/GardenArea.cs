@@ -82,6 +82,9 @@ namespace GardenPlanner.Garden
         public bool ContainsPointOnEdge(GardenPoint p, int xoffset = 0, int yoffset = 0, double zoom = GardenPoint.STD_ZOOM) =>
             Shape.ContainsPointOnEdge(p, xoffset, yoffset, zoom);
 
+        public GardenPoint GetPointInRange(GardenPoint p, int range = 10, int xoffset = 0, int yoffset = 0, double zoom = GardenPoint.STD_ZOOM) =>
+            Shape.GetPointInRange(p, range, xoffset, yoffset, zoom);
+
         public virtual void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom = 1, int year=0, int month=0)
         {
             if (CheckDate(year, month))

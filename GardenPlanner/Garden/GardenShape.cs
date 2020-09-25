@@ -71,6 +71,26 @@ namespace GardenPlanner.Garden
             Points[idx] = gardenPoint;
         }
 
+        public void ModPoint(GardenPoint oldPoint, GardenPoint newPoint, bool multiple = false)
+        {
+            List<int> mod = new List<int>();
+            for (int i = 0; i < Points.Count; i++)
+            {
+                GardenPoint point = Points[i];
+                if (point == oldPoint || point.X == oldPoint.X && point.Y == oldPoint.Y)
+                {
+                    mod.Add(i);
+                    if (!multiple)
+                        break;
+                }
+            }
+
+            foreach (int idx in mod)
+            {
+                ModPoint(newPoint, idx);
+            }
+        }
+
         public void ClearPoints() => Points.Clear();
 
         public void RemovePoint(int x, int y)
@@ -96,6 +116,25 @@ namespace GardenPlanner.Garden
                 found = p.Between(Points[i]*zoom+offset, Points[i + 1]*zoom+offset);
             }
             return found;
+        }
+
+        /// <summary>
+        /// Checks for point near the given point <paramref name="cp"/> within a distance of <paramref name="range"/>
+        /// </summary>
+        public GardenPoint GetPointInRange(GardenPoint cp, int range = 10, int xoffset = 0, int yoffset = 0, double zoom = GardenPoint.STD_ZOOM)
+        {
+            GardenPoint result = null;
+            GardenPoint offset = new GardenPoint(xoffset, yoffset);
+            foreach (GardenPoint sp in Points)
+            {
+                GardenPoint zoomed = sp * zoom + offset;
+                if (Math.Abs(zoomed.X - cp.X) < range && Math.Abs(zoomed.Y - cp.Y) < range)
+                {
+                    result = sp;
+                    break;
+                }
+            }
+            return result;
         }
 
         /// <summary>

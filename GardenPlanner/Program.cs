@@ -101,8 +101,6 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -Add: set unsaved if values change
- * -Add: add possibility to change points
  * -Add: scrolling
  * -Bug (minor): fix formatting in infobox
  * -Add: add check for compatible families/plants (same as for incomaptible)

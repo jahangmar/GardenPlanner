@@ -345,6 +345,7 @@ public partial class MainWindow : Window
                         GardenDrawingArea.ActiveInstance = drawingArea;
                         drawingArea.Draw();
                     }
+                    GardenData.unsaved = true;
                 }
                 else if (gardenDrawingArea.SelectedArea is Planting planting)
                 {
@@ -352,6 +353,7 @@ public partial class MainWindow : Window
                     gardenDrawingArea.UndoSelection();
                     SelectGardenEntry(null);
                     gardenDrawingArea.Draw();
+                    GardenData.unsaved = true;
                 }
                 else if (gardenDrawingArea.SelectedArea is GardenArea area)
                 {
@@ -359,6 +361,7 @@ public partial class MainWindow : Window
                     gardenDrawingArea.UndoSelection();
                     SelectGardenEntry(null);
                     gardenDrawingArea.Draw();
+                    GardenData.unsaved = true;
                 }
             }
             dialog.Destroy();
@@ -490,7 +493,7 @@ public partial class MainWindow : Window
 
     public void TryToClose()
     {
-        if (GardenData.LoadedData.unsaved)
+        if (GardenData.unsaved)
         {
             Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Warning, ButtonsType.None, "There are unsaved changes. Really quit?", new { });
             dialog.AddButton("Cancel", ResponseType.Cancel);

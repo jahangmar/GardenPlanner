@@ -105,6 +105,7 @@ namespace GardenPlanner
             dialog.Destroy();
             this.Destroy();
             MainWindow.GetInstance().RepopulateGrowables();
+            GardenData.unsaved = true;
         }
 
         public void ShowErrorSave(string name, string reason = "")
