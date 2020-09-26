@@ -54,6 +54,8 @@ namespace GardenPlanner.Garden
         public DateTime created { get => ExistTime.GetStart(); set => ExistTime.SetStart(value); }
         public DateTime removed { get => ExistTime.GetEnd(); set => ExistTime.SetEnd(value); }
 
+        public int AreaSize() => Shape.Area();
+
         public bool CheckDate(int year, int month) => ExistTime.IsDateInRange(year, month);
 
         [JsonConstructor]

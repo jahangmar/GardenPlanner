@@ -22,7 +22,7 @@ namespace GardenPlanner
     public class GardenAreaCreationDialog : Window
     {
         VBox TopVBox = new VBox();
-        VBox EditVBox = new VBox();
+        protected VBox EditVBox = new VBox();
         protected Entry NameEntry = new Entry();
         protected Entry DescrEntry = new Entry();
 
@@ -40,37 +40,12 @@ namespace GardenPlanner
             TransientFor = MainWindow.GetInstance();
             Modal = true;
 
-            HBox hbox;
-
-            hbox = new HBox();
-            hbox.Add(new Label("Name"));
-            hbox.Add(NameEntry);
-            EditVBox.Add(hbox);
-
-            hbox = new HBox();
-            hbox.Add(new Label("Description"));
-            hbox.Add(DescrEntry);
-            EditVBox.Add(hbox);
-
-            hbox = new HBox();
-            hbox.Add(new Label("Year Created"));
-            hbox.Add(CYearButton);
-            EditVBox.Add(hbox);
-
-            hbox = new HBox();
-            hbox.Add(new Label("Month Created"));
-            hbox.Add(CMonthButton);
-            EditVBox.Add(hbox);
-
-            hbox = new HBox();
-            hbox.Add(new Label("Year Removed"));
-            hbox.Add(RYearButton);
-            EditVBox.Add(hbox);
-
-            hbox = new HBox();
-            hbox.Add(new Label("Month Removed"));
-            hbox.Add(RMonthButton);
-            EditVBox.Add(hbox);
+            AddEditEntry("Name", NameEntry);
+            AddEditEntry("Description", DescrEntry);
+            AddEditEntry("Year Created", CYearButton);
+            AddEditEntry("Month Created", CMonthButton);
+            AddEditEntry("Year Removed", RYearButton);
+            AddEditEntry("Month Removed", RMonthButton);
 
             TopVBox.Add(EditVBox);
             ButtonBox.Add(CancelButton);
@@ -93,6 +68,15 @@ namespace GardenPlanner
             RMonthButton.Value = MainWindow.GetInstance().GetMonth();
 
             ShowAll();
+        }
+
+        protected HBox AddEditEntry(string label, Widget widget)
+        {
+            HBox hbox = new HBox();
+            hbox.Add(new Label(label));
+            hbox.Add(widget);
+            EditVBox.Add(hbox);
+            return hbox;
         }
 
         static protected void SetValuesForCreation(GardenArea area, List<Garden.GardenPoint> points, GardenAreaCreationDialog dialog)
@@ -119,14 +103,8 @@ namespace GardenPlanner
             };
         }
 
-        public static void ShowGardenAreaEditDialog(GardenArea area)
+        static protected void SetValuesForEdit(GardenArea area, GardenAreaCreationDialog dialog)
         {
-            string title = "Edit method area '" + area.Name + "'";
-            if (area is Garden.Garden)
-                title = "Edit garden '" + area.Name + "'";
-            else if (area is Planting)
-                title = "Edit planting '" + area.Name + "'";
-            GardenAreaCreationDialog dialog = new GardenAreaCreationDialog(title);
             dialog.CreateButton.Label = "Edit";
             dialog.NameEntry.Text = area.Name;
             dialog.DescrEntry.Text = area.Description;
@@ -137,15 +115,32 @@ namespace GardenPlanner
 
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
-                area.Name = dialog.NameEntry.Text;
-                area.Description = dialog.DescrEntry.Text;
-                area.SetCreated(dialog.CYearButton.ValueAsInt, dialog.CMonthButton.ValueAsInt);
-                area.SetRemoved(dialog.RYearButton.ValueAsInt, dialog.RMonthButton.ValueAsInt);
+                dialog.SetValues(area);
                 GardenDrawingArea.ActiveInstance.MakeSelection();
                 GardenDrawingArea.ActiveInstance?.Draw();
                 MainWindow.GetInstance().ShowAreaSelectionInfo(area);
                 dialog.Destroy();
+                GardenData.unsaved = true;
             };
+        }
+
+        protected virtual void SetValues(GardenArea area)
+        {
+            area.Name = this.NameEntry.Text;
+            area.Description = this.DescrEntry.Text;
+            area.SetCreated(this.CYearButton.ValueAsInt, this.CMonthButton.ValueAsInt);
+            area.SetRemoved(this.RYearButton.ValueAsInt, this.RMonthButton.ValueAsInt);
+        }
+
+        public static void ShowGardenAreaEditDialog(GardenArea area)
+        {
+            string title = "Edit method area '" + area.Name + "'";
+            if (area is Garden.Garden)
+                title = "Edit garden '" + area.Name + "'";
+            else if (area is Planting)
+                title = "Edit planting '" + area.Name + "'";
+            GardenAreaCreationDialog dialog = new GardenAreaCreationDialog(title);
+            SetValuesForEdit(area, dialog);
         }
     }
 }

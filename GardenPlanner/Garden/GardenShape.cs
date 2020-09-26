@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cairo;
 using Newtonsoft.Json;
 
@@ -101,6 +102,9 @@ namespace GardenPlanner.Garden
         public void RemovePoint(GardenPoint point) => RemovePoint(point.X, point.Y);
 
         public List<GardenPoint> GetPoints() => Points;
+
+        public int Area() =>
+            Math.Abs(Points.Take(Points.Count - 1).Select((GardenPoint p, int i) => (Points[i + 1].X - p.X) * (Points[i + 1].Y + p.Y) / 2).Sum());
 
         public bool ContainsPointOnEdge(GardenPoint p, int xoffset=0, int yoffset=0, double zoom = GardenPoint.STD_ZOOM)
         {

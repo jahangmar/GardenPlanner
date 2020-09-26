@@ -55,7 +55,7 @@ namespace GardenPlanner.Garden
 
         public void AddVarietyKeys(string family, string plant, string variety, int count=0)
         {
-            //Varieties.Add(new VarietyKeySeq(family, plant, variety));
+            VarietyKeySeq varietyKeySeq = new VarietyKeySeq(family, plant, variety);
             Varieties.Add(new VarietyKeySeq(family, plant, variety), new PlantingInfo() { Count = count });
         }
 

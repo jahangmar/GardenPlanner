@@ -79,8 +79,8 @@ namespace GardenPlanner
                         item1.Activated += (sender, e) => DateInputWindow.ShowWindow("Set created date", (int y,int m) => { SelectedArea.SetCreated(y, m); });
                         MenuItem item2 = new MenuItem("Set removed date");
                         item2.Activated += (sender, e) => DateInputWindow.ShowWindow("Set removed date", (int y, int m) => { SelectedArea.SetRemoved(y, m); });
-                        MenuItem item3 = new MenuItem("Remove variety...");
-                        item3.Sensitive = false;
+                        MenuItem item3 = new MenuItem("Edit area");
+                        item3.Activated += (sender, e) => MainWindow.GetInstance().AreaEditButton.Activate();
                         MenuItem item4 = new MenuItem("Remove area");
                         item4.Activated += (sender, e) => MainWindow.GetInstance().AreaDeleteButton.Activate();
                         MenuItem item5 = new MenuItem("Edit point");

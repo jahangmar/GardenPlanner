@@ -307,7 +307,12 @@ public partial class MainWindow : Window
             if (gardenDrawingArea == null || gardenDrawingArea.Garden == null || gardenDrawingArea.SelectedArea == null)
                 return;
 
-            GardenAreaCreationDialog.ShowGardenAreaEditDialog(gardenDrawingArea.SelectedArea);
+            if (gardenDrawingArea.SelectedArea is Planting planting)
+                PlantingCreationDialog.ShowPlantingEditDialog(planting);
+            else if (gardenDrawingArea.SelectedArea is Garden)
+                GardenAreaCreationDialog.ShowGardenAreaEditDialog(gardenDrawingArea.SelectedArea);
+            else
+                GardenAreaCreationDialog.ShowGardenAreaEditDialog(gardenDrawingArea.SelectedArea);
         };
 
         AreaDeleteButton.Clicked += (object sender, System.EventArgs e) =>
@@ -536,6 +541,7 @@ public partial class MainWindow : Window
         AreaInfo.AddEntry(area.Description, AreaInfo.italic);
         AreaInfo.AddEntry("Created: "+area.created.Month+"/"+area.created.Year);
         AreaInfo.AddEntry("Removed: " + area.removed.Month + "/" + area.removed.Year);
+        AreaInfo.AddEntry($"Size: {area.AreaSize() / 10000f}m²");
 
         if (area is Planting planting)
         {
