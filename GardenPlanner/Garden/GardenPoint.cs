@@ -23,6 +23,9 @@ namespace GardenPlanner.Garden
     /// </summary>
     public class GardenPoint
     {
+        const int SIZE = 8;
+        readonly Color COLOR = new Color(0.3, 0.3, 0.3);
+
         /// <summary>
         /// Amount of pixels that equal 1cm
         /// </summary>
@@ -93,7 +96,18 @@ namespace GardenPlanner.Garden
 
             return false;
         }
-    
+
+        public void Draw(Context context, int xoffset = 0, int yoffset = 0, double zoom = 1)
+        {
+            Cairo.PointD pointd = ToCairoPointD(xoffset, yoffset, zoom);
+            context.MoveTo(pointd.X - SIZE / 2, pointd.Y - SIZE / 2);
+            context.LineTo(pointd.X + SIZE / 2, pointd.Y - SIZE / 2);
+            context.LineTo(pointd.X + SIZE / 2, pointd.Y + SIZE / 2);
+            context.LineTo(pointd.X - SIZE / 2, pointd.Y + SIZE / 2);
+            context.LineTo(pointd.X - SIZE / 2, pointd.Y - SIZE / 2);
+            context.SetSourceRGB(COLOR.R, COLOR.G, COLOR.B);
+            context.Fill();
+        }
 
         public override int GetHashCode() =>
             X.GetHashCode() ^ Y.GetHashCode();

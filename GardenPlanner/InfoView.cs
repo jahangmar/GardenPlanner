@@ -67,16 +67,12 @@ namespace GardenPlanner
         //TextIter iter;
         public void AddEntry(string entry, TextTag tag, bool newline = true)
         {
-            //iter = InfoView.Buffer.EndIter;
-            //InfoView.Buffer.InsertWithTags(ref iter, entry + (newline ? "\n" : ""), tag);
-
             int len = AddEntry(entry, newline);
             TextIter end = Buffer.EndIter;
             TextIter start = Buffer.EndIter;
 
             start.BackwardChars(len);
             InfoTags.Add(new InfoTag { start = start.Offset, end = end.Offset, tag = tag });
-            //InfoView.Buffer.ApplyTag(tag, start, end);
         }
 
         public void ApplyTags()
@@ -88,6 +84,7 @@ namespace GardenPlanner
 
                 Buffer.ApplyTag(infoTag.tag, startIter, endIter);
             }
+            InfoTags.Clear();
         }
     }
 }

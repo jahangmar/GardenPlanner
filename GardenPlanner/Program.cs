@@ -101,9 +101,11 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -Add: scrolling
- * -Bug (minor): fix formatting in infobox
+ * -Add: Options to hide stuff
+ * -Add: MethodArea visualization and editing
  * -maybe change varietykeyseq dictionary to list
+ * -Add: translation
+ * -Add: scrolling
  * -Add: add (internal) check for compatible families/plants (same as for incomaptible)
  * -Add: add visualization for planting suggestions based on good neighbours + free space + white space
  */

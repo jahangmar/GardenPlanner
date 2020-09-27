@@ -93,7 +93,7 @@ namespace GardenPlanner
             about.Authors = new string[]{ "Jahangmar" };
             about.ProgramName = "GardenPlanner";
             about.Version = MainClass.VERSION;
-            about.Website = "https://github.com/jahangmar/";
+            about.Website = "https://github.com/jahangmar/GardenPlanner";
             about.WebsiteLabel = "GardenPlanner on github";
             about.TransientFor = MainWindow.GetInstance();
             about.Run();

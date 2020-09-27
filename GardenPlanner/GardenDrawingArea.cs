@@ -322,18 +322,12 @@ namespace GardenPlanner
                 context.MoveTo(NewPoints[0].ToCairoPointD(XOffset(), YOffset(), Zoom));
                 NewPoints.ForEach((GardenPoint p) => context.LineTo(p.ToCairoPointD(XOffset(), YOffset(), Zoom)));
                 context.Stroke();
+                NewPoints.ForEach((GardenPoint p) => p.Draw(context, XOffset(), YOffset(), Zoom));
             }
 
             if (SelectedPoint != null)
             {
-                Cairo.PointD pointd = SelectedPoint.ToCairoPointD(XOffset(), YOffset(), Zoom);
-                context.MoveTo(pointd.X - 4, pointd.Y - 4);
-                context.LineTo(pointd.X + 4, pointd.Y - 4);
-                context.LineTo(pointd.X + 4, pointd.Y + 4);
-                context.LineTo(pointd.X - 4, pointd.Y + 4);
-                context.LineTo(pointd.X - 4, pointd.Y - 4);
-                context.SetSourceRGB(0.3, 0.3, 0.3);
-                context.Fill();
+                SelectedPoint.Draw(context, XOffset(), YOffset(), Zoom);
             }
         }
 
