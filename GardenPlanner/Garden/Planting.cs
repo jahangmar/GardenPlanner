@@ -15,6 +15,7 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using Cairo;
 using Newtonsoft.Json;
 
@@ -180,6 +181,28 @@ namespace GardenPlanner.Garden
                     i++;
                 }
             }      
+        }
+
+        public override List<string> GetTodoList(DateRange range)
+        {
+            List<string> result = new List<string>();
+
+            if (range.IsDateInRange(created))
+            {
+                result.Add(DateRange.ApproxDayMonthDateTimeToString(created)+": plant "+ Varieties.Keys.ToList().ConvertAll((VarietyKeySeq input) => GardenData.LoadedData.GetVariety(input).Name).Aggregate((string arg1, string arg2) => arg1 + ", " + arg2)+ " in "+Name);
+            }
+
+            foreach (VarietyKeySeq varietyKeySeq in Varieties.Keys)
+            {
+                PlantVariety variety = GardenData.LoadedData.GetVariety(varietyKeySeq);
+                System.DateTime dateTime = created.AddDays(-variety.DaysUntilPlantOutside);
+                if (variety.MustBeSownInside && range.IsDateInRange(created.AddDays(-variety.DaysUntilPlantOutside)))
+                {
+                    result.Add(DateRange.ApproxDayMonthDateTimeToString(dateTime) + ": sow " + variety.Name + " inside");
+                }
+            }
+
+            return result;
         }
     }
 }

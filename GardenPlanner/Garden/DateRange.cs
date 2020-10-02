@@ -146,20 +146,41 @@ namespace GardenPlanner.Garden
 
         public int GetDaysUntilHarvest() => (end - start).Days;
 
+        public bool IsEmpty() => start.Equals(end);
+
         public override string ToString()
         {
             Translation trans = Translation.GetTranslation();
-            return trans.From + " " + DateTimeToString(start) + " " + trans.To + " " + DateTimeToString(end);
+            return trans.From + " " + DayMonthDateTimeToString(start) + " " + trans.To + " " + DayMonthDateTimeToString(end);
         }
 
-        private string DateTimeToString(DateTime dateTime)
+        public static string DayMonthDateTimeToString(DateTime dateTime)
         {
             Translation trans = Translation.GetTranslation();
             if (dateTime.Year == defyear)
             {
                 return trans.Unset;
             }
-            return dateTime.Day + "." + dateTime.Month;
+            return dateTime.Day + "." + dateTime.Month + ".";
+        }
+
+        public static string ApproxDayMonthDateTimeToString(DateTime dateTime)
+        {
+            Translation trans = Translation.GetTranslation();
+            string s = "";
+            if (dateTime.Day <= 10)
+            {
+                s = trans.Dates_Beginning.Upper0();
+            }
+            else if (dateTime.Day <= 20)
+            {
+                s = trans.Dates_Middle.Upper0();
+            }
+            else
+            {
+                s = trans.Dates_End.Upper0();
+            }
+            return s + " " + trans.Dates_Months[dateTime.Month];
         }
     }
 }

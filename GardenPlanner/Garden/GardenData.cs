@@ -105,6 +105,9 @@ namespace GardenPlanner.Garden
                 throw new GardenDataException("familyID not found: " + familyID);
         }
 
+        public Plant GetPlant(VarietyKeySeq varietyKeySeq) =>
+            GetPlant(varietyKeySeq.FamilyKey, varietyKeySeq.PlantKey);
+
         public Plant GetPlant(string familyID, string plantID)
         {
             PlantFamily family = GetFamily(familyID);

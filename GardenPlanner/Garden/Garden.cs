@@ -15,7 +15,7 @@
 //
 
 using System.Collections.Generic;
-using System;
+using System.Linq;
 using Cairo;
 using Newtonsoft.Json;
 
@@ -97,6 +97,12 @@ namespace GardenPlanner.Garden
                     pair.Value.Draw(context, xoffset, yoffset, zoom, year, month);
                 }
             }
+        }
+
+        public override List<string> GetTodoList(DateRange range)
+        {
+            return Plantings.Values.ToList().ConvertAll((input) => input.GetTodoList(range)).DefaultIfEmpty(new List<string>()).Aggregate((arg1, arg2) => arg1.Concat(arg2).ToList()).Concat(
+            MethodAreas.Values.ToList().ConvertAll((input) => input.GetTodoList(range)).DefaultIfEmpty(new List<string>()).Aggregate((arg1, arg2) => arg1.Concat(arg2).ToList())).ToList();
         }
     }
 }

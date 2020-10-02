@@ -101,10 +101,18 @@ namespace GardenPlanner
 }
 
 /*TODO
+ * -Bug: editarea dialog doesn't save description (after adding varieties)
+ * -Bug: editarea dialog doesn't warns before discarding changes
+ * -Add: visual of plants without image
+ * -Bug: save before close dialog closes program on cancel
+ * -Add: to-do list for future plantings/sowings: automatically make list based on plantings (ex. sow peppers inside)
+ *      -> date (month/day) selection dilaog for plant edit dialog
+ *      -> days until can be planted is more important
  * -Add: Options to hide stuff
  * -Add: MethodArea visualization and editing
- * -maybe change varietykeyseq dictionary to list
+ * -Int: maybe change varietykeyseq dictionary to list
  * -Add: translation
+ * -Add: Maybe use treeview instead for family plant variety
  * -Add: scrolling
  * -Add: add (internal) check for compatible families/plants (same as for incomaptible)
  * -Add: add visualization for planting suggestions based on good neighbours + free space + white space

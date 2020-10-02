@@ -18,5 +18,7 @@ namespace GardenPlanner.Garden
             When = when;
             What = what;
         }
+
+        public override string ToString() => DateRange.DayMonthDateTimeToString(When) + ": " + What;
     }
 }

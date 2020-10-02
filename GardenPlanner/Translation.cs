@@ -50,6 +50,24 @@ namespace GardenPlanner
 
         //Growable
 
+        //Dates
+        public string[] Dates_Months = { "<Dates_Month[0]>", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        public string Dates_Beginning = "beginning of";
+        public string Dates_Middle = "middle of";
+        public string Dates_End = "end of";
 
+    }
+
+    public static class TranslationStringExtension
+    {
+        public static string Upper0(this string value) {
+            if (value == null || value.Length == 0)
+                return value;
+            if (value.Length == 1)
+                return value[0].ToString().ToUpper();
+
+            return value[0].ToString().ToUpper() + value.Substring(1);
+        }
+            
     }
 }

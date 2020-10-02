@@ -20,6 +20,19 @@ namespace GardenPlanner.Garden
             return plant;
         }
 
+        public new bool MustBeSownInside { get => GetPlant().MustBeSownInside; }
+        public new bool MustBeSownOutside { get => GetPlant().MustBeSownOutside; }
+        public new DateRange SowInsideDateRange { get => GetPlant().SowInsideDateRange; }
+        public new DateRange PlantOutsideDateRange { get => GetPlant().PlantOutsideDateRange; }
+        public new DateRange HarvestDateRange { get => GetPlant().HarvestDateRange; }
+        public new bool Annual { get => GetPlant().Annual; }
+        public new int DaysUntilGermination { get => GetPlant().DaysUntilGermination; }
+        public new int DaysUntilHarvest { get => GetPlant().DaysUntilHarvest; }
+        public new int DaysUntilPlantOutside { get => GetPlant().DaysUntilPlantOutside; }
+        public new FeederType FeederType { get => GetPlant().FeederType; }
+        public new int MinTemp { get => GetPlant().MinTemp; }
+        public new int MaxTemp { get => GetPlant().MaxTemp; }
+
         public PlantVariety(string name, string description): base(name, description)
         {
 

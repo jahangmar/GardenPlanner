@@ -25,6 +25,17 @@ namespace GardenPlanner
         private readonly bool Create;
 
         private ComboBoxEntry FeederComboBox;
+        private RadioButton SowAnywhereButton;
+        private RadioButton SowInsideButton;
+        private RadioButton SowOutsideButton;
+
+        private Label SowInsideDateRangeLabel;
+        private Button SowInsideDateRangeButton = new Button("Set");
+        private Label SowOutsideDateRangeLabel;
+        private Button SowOutsideDateRangeButton = new Button("Set");
+
+        private SpinButton DaysUntilPlantSpinButton = new SpinButton(1, 365, 1);
+        private SpinButton DaysUntilGerminationSpinButton = new SpinButton(1, 365, 1);
 
         public EditPlantWindow(Plant plant, bool create = false) : base(create ? "Create new plant" : "Edit plant '" + plant.Name + "'", plant)
         {
@@ -34,6 +45,45 @@ namespace GardenPlanner
             FeederComboBox = new ComboBoxEntry(System.Enum.GetNames(typeof(FeederType)));
             FeederComboBox.Active = (int)plant.FeederType;
             AddEntry("Feeder", FeederComboBox);
+
+            SowAnywhereButton = new RadioButton("anywhere");
+            SowInsideButton = new RadioButton(SowAnywhereButton, "inside");
+            SowOutsideButton = new RadioButton(SowInsideButton, "outside");
+
+            if (!plant.MustBeSownInside && !plant.MustBeSownOutside)
+                SowAnywhereButton.Active = true;
+            else if (plant.MustBeSownInside)
+                SowInsideButton.Active = true;
+            else if (plant.MustBeSownOutside)
+                SowOutsideButton.Active = true;
+
+            AddEntry("Sow", new VBox()
+            {
+                SowAnywhereButton,
+                SowInsideButton,
+                SowOutsideButton
+            });
+
+            SowInsideDateRangeLabel = new Label(plant.SowInsideDateRange.ToString());
+            SowInsideDateRangeButton.Clicked += (sender, e) =>
+            {
+
+            };
+
+            AddEntry("Sow inside", new HBox() { SowInsideDateRangeLabel, SowInsideDateRangeButton });
+
+            SowOutsideDateRangeLabel = new Label(plant.PlantOutsideDateRange.ToString());
+            SowOutsideDateRangeButton.Clicked += (sender, e) =>
+            {
+
+            };
+
+            AddEntry("Plant/sow outside", new HBox() { SowOutsideDateRangeLabel, SowOutsideDateRangeButton });
+
+            AddEntry("Days until it can be planted", DaysUntilPlantSpinButton);
+            DaysUntilPlantSpinButton.Value = plant.DaysUntilPlantOutside;
+            AddEntry("Days until germination", DaysUntilGerminationSpinButton);
+            DaysUntilGerminationSpinButton.Value = plant.DaysUntilGermination;
         }
 
         /// <summary>
@@ -64,6 +114,12 @@ namespace GardenPlanner
 
             plant.FeederType = (FeederType) FeederComboBox.Active;
 
+            plant.MustBeSownInside = SowInsideButton.Active;
+            plant.MustBeSownOutside = SowOutsideButton.Active;
+
+            plant.DaysUntilGermination = DaysUntilGerminationSpinButton.ValueAsInt;
+            plant.DaysUntilPlantOutside = DaysUntilPlantSpinButton.ValueAsInt;
+
             return (Plant)base.ModifyOrCreate(plant);
         }
 
@@ -89,15 +145,6 @@ namespace GardenPlanner
                 PlantFamily family = GardenData.LoadedData.GetFamily(Plant.FamilyID);
 
                 string id = GardenData.GenID(Plant.Name);
-
-                /*
-                //if variety already exists it is deleted first before it is added again
-                if (!Create)
-                {
-                    family.RemovePlant(Plant.ID);
-                }
-                family.AddPlant(id, Plant);
-                */
 
                 if (Create)
                     family.AddPlant(id, Plant);

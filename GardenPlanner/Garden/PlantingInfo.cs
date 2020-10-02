@@ -3,7 +3,7 @@ namespace GardenPlanner.Garden
 {
     public class PlantingInfo
     {
-
+        public DateTime ExactPlantingDate;
         public int Count = 0;
         public int Rows = 0;
         public int RowSpacing = 0;

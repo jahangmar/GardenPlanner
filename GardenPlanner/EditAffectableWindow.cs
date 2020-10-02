@@ -115,7 +115,7 @@ namespace GardenPlanner
             dialog.Destroy();
         }
 
-        protected Affectable ModifyOrCreate(Affectable affectable = null)
+        protected Affectable ModifyOrCreate(Affectable affectable)
         {
             affectable.Name = NameEntry.Text;
             affectable.Description = DescriptionTextView.Buffer.Text;

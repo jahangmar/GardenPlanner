@@ -124,10 +124,6 @@ public partial class MainWindow : Window
             this.Add(TopVBox);
 
 
-
-
-
-
         ResetForNewData();
 
         FamilyPlantVarietySelector.SetSizeRequest(100, 400);
@@ -561,6 +557,28 @@ public partial class MainWindow : Window
     public void ShowEmptyAreaSelectionInfo()
     {
         AreaInfo.Buffer.Clear();
+
+        AreaInfo.AddEntry("TODO LIST", AreaInfo.headline);
+
+        int syear = GetYear();
+        int smonth = GetMonth();
+        int eyear = GetYear();
+        int emonth = GetMonth();
+        DateRange range = new DateRange(syear, smonth, eyear, emonth);
+        foreach (Garden garden in GardenData.LoadedData.Gardens.Values)
+        {
+            if (garden.CheckDate(syear, smonth) || garden.CheckDate(eyear, emonth))
+            {
+                List<string> strings = garden.GetTodoList(range);
+                if (strings.Count > 0)
+                    AreaInfo.AddEntry("Garden '" + garden.Name + "':", AreaInfo.bold);
+                foreach (string s in strings)
+                {
+                    AreaInfo.AddEntry("\t"+s, AreaInfo.italic);
+                }
+            }
+        }
+        AreaInfo.ApplyTags();
     }
 
     public int GetYear() => yearButton.ValueAsInt;

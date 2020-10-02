@@ -16,6 +16,10 @@ namespace GardenPlanner.Garden
         /// </summary>
         public DateRange PlantOutsideDateRange = new DateRange();
 
+        public bool MustBeSownInside = false;
+
+        public bool MustBeSownOutside = false;
+
         /// <summary>
         /// Date for when this plant can be harvested
         /// </summary>
@@ -34,7 +38,7 @@ namespace GardenPlanner.Garden
         public int DaysUntilPlantOutside = 0;
 
         /// <summary>
-        /// Number of days it takes from planting or sowing to harvest
+        /// Number of days it takes from planting or sowing outside to harvest
         /// </summary>
         public int DaysUntilHarvest = 0;
 
@@ -53,11 +57,12 @@ namespace GardenPlanner.Garden
         /// </summary>
         public int MaxTemp = 30;
 
-        public Cairo.Color Color = new Cairo.Color(0, 0, 0);
+        public Cairo.Color Color = new Cairo.Color(1, 1, 1);
 
         public Growable(string name, string description) : base(name, description)
         {
 
         }
+
     }
 }

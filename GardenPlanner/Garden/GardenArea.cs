@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using Cairo;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace GardenPlanner.Garden
 {
@@ -91,6 +92,11 @@ namespace GardenPlanner.Garden
         {
             if (CheckDate(year, month))
                 this.Shape.Draw(context, xoffset, yoffset, new Color(0.3, 0.2, 0.2), new Color(0.4, 0.3, 0.3, 0.5), LINE_WIDTH, zoom);
+        }
+
+        public virtual List<string> GetTodoList(DateRange range)
+        {
+            return Methods.Where((BedMethod arg) => range.IsDateInRange(arg.When)).ToList().ConvertAll((BedMethod input) => input.ToString());
         }
     }
 }
