@@ -36,6 +36,8 @@ namespace GardenPlanner
             //streamWriter.Write(ser);
             //streamWriter.Flush();
 
+            GardenPlannerSettings.Load();
+
             Application.Init();
             MainWindow win = MainWindow.GetInstance();
             win.Show();
@@ -53,16 +55,16 @@ namespace GardenPlanner
             knoblauch.ScientificName = "allium sativum";
             zwiebelgewaechse.AddPlant("knoblauch", knoblauch);
             var morado = new PlantVariety("Morado", "rotviolett, aus Spanien, geeignet für Herbstpflanzung, bildet Brutzwiebeln");
-            morado.Color = new Cairo.Color(0.9, 0.9, 0.9);
+            morado.SetColor(new Cairo.Color(0.9, 0.9, 0.9));
             knoblauch.AddVariety("morado", morado);
             var vallelado = new PlantVariety("Vallelado", "bla");
-            vallelado.Color = new Cairo.Color(0.9, 0.9, 0.9);
+            vallelado.SetColor(new Cairo.Color(0.9, 0.9, 0.9));
             knoblauch.AddVariety("vallelado", vallelado);
 
             var nachtschattengew = new PlantFamily("Nachtschattengewächse", "");
             Data.AddFamily("nachtschattengewaechse", nachtschattengew);
             var kartoffeln = new Plant("Kartoffel", "");
-            kartoffeln.Color = new Cairo.Color(0.2, 0.8, 0.8);
+            kartoffeln.SetColor(new Cairo.Color(0.2, 0.8, 0.8));
             nachtschattengew.AddPlant("kartoffel", kartoffeln);
 
             var bed1 = new Garden.Garden("Omas Garten", "Alte Garten von Oma", 2000, 1, 2000,1);
@@ -99,7 +101,6 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -Add: visual of plants without image
  * -Bug: save before close dialog closes program on cancel
  * -Add: Options to hide stuff
  * -Add: MethodArea visualization and editing

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cairo;
 
 namespace GardenPlanner.Garden
 {
@@ -57,12 +58,17 @@ namespace GardenPlanner.Garden
         /// </summary>
         public int MaxTemp = 30;
 
-        public Cairo.Color Color = new Cairo.Color(1, 1, 1);
+        private Cairo.Color Color = new Cairo.Color(1, 1, 1);
+
+        public Color GetColor() => Color;
+        public void SetColor(Color color)
+        {
+            Color = color;
+        }
 
         public Growable(string name, string description) : base(name, description)
         {
 
         }
-
     }
 }

@@ -414,6 +414,7 @@ public partial class MainWindow : Window
 
         this.Destroyed += (sender, e) =>
         {
+            GardenPlannerSettings.Save();
             Application.Quit();
         };
     }

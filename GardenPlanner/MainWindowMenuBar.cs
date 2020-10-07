@@ -33,6 +33,7 @@ namespace GardenPlanner
         Menu SettingsMenu = new Menu();
         MenuItem LanguageItem = new MenuItem("Language");
         Menu LanguageMenu = new Menu();
+        CheckMenuItem ShowAreaImagesItem = new CheckMenuItem("Show area images");
 
         MenuItem HelpItem = new MenuItem("Help");
         Menu HelpMenu = new Menu();
@@ -70,13 +71,31 @@ namespace GardenPlanner
             SettingsMenu.Add(LanguageItem);
             LanguageItem.Submenu = LanguageMenu;
             RadioMenuItem group = null;
+            bool init = true;
             foreach (KeyValuePair<string, Translation> pair in Translation.BuiltIn)
             {
+
                 RadioMenuItem radioItem = group == null ? new RadioMenuItem(pair.Key) : new RadioMenuItem(group, pair.Key);
                 group = radioItem;
-                radioItem.Activated += (sender, e) => { Translation.GetTranslation(pair.Key); MainWindow.GetInstance().ResetForNewData(); };
+                radioItem.Active = GardenPlannerSettings.GetSettings().Language.Equals(pair.Key);
+                radioItem.Activated += (sender, e) => {
+                    if (init)//during program initialization this should not be executed
+                        return;
+                    GardenPlannerSettings.GetSettings().Language = pair.Key;
+                    Translation.GetTranslation(pair.Key);
+                    MainWindow.GetInstance().ResetForNewData();
+                };
                 LanguageMenu.Append(radioItem);
             }
+            init = false;
+
+            ShowAreaImagesItem.Active = GardenPlannerSettings.GetSettings().ShowAreaImages;
+            ShowAreaImagesItem.Activated += (sender, e) =>
+            {
+                GardenPlannerSettings.GetSettings().ShowAreaImages = ShowAreaImagesItem.Active;
+                GardenDrawingArea.ActiveInstance?.Draw();
+            };
+            SettingsMenu.Append(ShowAreaImagesItem);
 
             Append(SettingsItem);
 

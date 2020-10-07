@@ -113,7 +113,7 @@ namespace GardenPlanner.Garden
                 VarietyKeySeq seq = pair.Key;
                 int count = pair.Value.Count;
                 PlantVariety variety = GardenData.LoadedData.GetVariety(seq);
-                Color color = variety.Color;
+                Color color = variety.GetColor();
                 r += count * color.R;
                 g += count * color.G;
                 b += count * color.B;
@@ -131,7 +131,7 @@ namespace GardenPlanner.Garden
                 return;
 
             Shape.Draw(context, xoffset, yoffset, LINE_COLOR, Color, LINE_WIDTH, zoom);
-            if (Varieties.Count > 0)
+            if (GardenPlannerSettings.GetSettings().ShowAreaImages && Varieties.Count > 0)
             {
                 int i = 0;
                 foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> keyValuePair in Varieties)
@@ -167,11 +167,12 @@ namespace GardenPlanner.Garden
                         double imageZoom = IMAGE_SIZE * zoom;
                         double x = plantingShapePoint.X + 1 + imageZoom * i;
                         double y = plantingShapePoint.Y + 1;
+                        context.SetSourceColor(plant.GetColor());
                         context.MoveTo(x, y);
                         context.LineTo(x + imageZoom, y);
                         context.LineTo(x + imageZoom, y + imageZoom);
                         context.LineTo(x, y + imageZoom);
-                        context.SetSourceColor(plant.Color);
+
                         context.Fill();
                     }
                     context.SetSourceColor(new Color(0, 0, 0));

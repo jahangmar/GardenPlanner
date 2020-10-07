@@ -104,7 +104,7 @@
     <Compile Include="Garden\PlantingInfo.cs" />
     <Compile Include="PointInputWindow.cs" />
     <Compile Include="GermanTranslation.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="GardenPlannerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />
