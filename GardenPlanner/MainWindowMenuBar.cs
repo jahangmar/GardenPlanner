@@ -15,6 +15,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using Gtk;
 
 namespace GardenPlanner
@@ -27,6 +28,11 @@ namespace GardenPlanner
         MenuItem MenuItemLoad = new MenuItem("Load");
         MenuItem MenuItemSave = new MenuItem("Save");
         MenuItem MenuItemClose = new MenuItem("Close");
+
+        MenuItem SettingsItem = new MenuItem("Settings");
+        Menu SettingsMenu = new Menu();
+        MenuItem LanguageItem = new MenuItem("Language");
+        Menu LanguageMenu = new Menu();
 
         MenuItem HelpItem = new MenuItem("Help");
         Menu HelpMenu = new Menu();
@@ -58,6 +64,21 @@ namespace GardenPlanner
             MenuItemNew.Activated += NewAction;
             MenuItemSave.Activated += SaveAction;
             MenuItemLoad.Activated += LoadAction;
+
+
+            SettingsItem.Submenu = SettingsMenu;
+            SettingsMenu.Add(LanguageItem);
+            LanguageItem.Submenu = LanguageMenu;
+            RadioMenuItem group = null;
+            foreach (KeyValuePair<string, Translation> pair in Translation.BuiltIn)
+            {
+                RadioMenuItem radioItem = group == null ? new RadioMenuItem(pair.Key) : new RadioMenuItem(group, pair.Key);
+                group = radioItem;
+                radioItem.Activated += (sender, e) => { Translation.GetTranslation(pair.Key); MainWindow.GetInstance().ResetForNewData(); };
+                LanguageMenu.Append(radioItem);
+            }
+
+            Append(SettingsItem);
 
 
             ViewItem.Submenu = ViewMenu;

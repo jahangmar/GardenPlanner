@@ -1,29 +1,44 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
+using System.Collections.Generic;
 
 namespace GardenPlanner
 {
     public class Translation
     {
-        public static Translation Load()
+        protected static Translation instance;
+
+        protected Translation()
         {
-            TextReader treader = new StreamReader("/tmp/gplanner.json");
-            JsonReader reader = new JsonTextReader(treader);
-            return JsonConvert.DeserializeObject<Translation>(treader.ReadToEnd());
+
         }
 
-        //private static Translation instance;
+        public static void Load(string tr)
+        {
+            TextReader treader = new StreamReader(Path.Combine(Path.Combine(MainClass.MAIN_PATH, "translations"), tr));
+            JsonReader reader = new JsonTextReader(treader);
+            instance = JsonConvert.DeserializeObject<Translation>(treader.ReadToEnd());
+        }
 
         public static Translation GetTranslation()
         {
-            return new Translation();
-            /*
             if (instance == null)
-                instance = Load();
+                instance = BuiltIn["english"];
 
-            return instance;
-            */           
+            return instance;      
         }
+
+        public static Translation GetTranslation(string tr)
+        {
+            instance = BuiltIn[tr];
+            return instance;
+        }
+
+        public static Dictionary<string, Translation> BuiltIn = new Dictionary<string, Translation>()
+        {
+            {"english", new Translation()},
+            {"german", new GermanTranslation()}
+        };
 
         //General
         public string Plant = "plant";
@@ -61,7 +76,7 @@ namespace GardenPlanner
     public static class TranslationStringExtension
     {
         public static string Upper0(this string value) {
-            if (value == null || value.Length == 0)
+            if (string.IsNullOrEmpty(value))
                 return value;
             if (value.Length == 1)
                 return value[0].ToString().ToUpper();

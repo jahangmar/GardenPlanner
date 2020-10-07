@@ -30,8 +30,6 @@ namespace GardenPlanner
 
         public static void Main(string[] args)
         {
-            Translation translation = new Translation();
-
             //System.IO.StreamWriter streamWriter = new System.IO.StreamWriter("/tmp/gplanner.json");
             //string ser = Newtonsoft.Json.JsonConvert.SerializeObject(translation);
             //System.Console.WriteLine(ser);
@@ -101,13 +99,8 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -Bug: editarea dialog doesn't save description (after adding varieties)
- * -Bug: editarea dialog doesn't warns before discarding changes
  * -Add: visual of plants without image
  * -Bug: save before close dialog closes program on cancel
- * -Add: to-do list for future plantings/sowings: automatically make list based on plantings (ex. sow peppers inside)
- *      -> date (month/day) selection dilaog for plant edit dialog
- *      -> days until can be planted is more important
  * -Add: Options to hide stuff
  * -Add: MethodArea visualization and editing
  * -Int: maybe change varietykeyseq dictionary to list

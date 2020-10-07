@@ -57,9 +57,21 @@ namespace GardenPlanner
 
             CancelButton.Clicked += (object sender, System.EventArgs e) =>
             {
-                GardenDrawingArea.ActiveInstance?.NewPoints.Clear();
-                GardenDrawingArea.ActiveInstance?.Draw();
-                this.Destroy();
+                Dialog dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Warning, ButtonsType.OkCancel, "Are you sure to discard the changes made?", new { });
+
+                int response = dialog.Run();
+                if (response == (int)ResponseType.Cancel)
+                {
+
+                }
+                else if (response == (int)ResponseType.Ok)
+                {
+                    GardenDrawingArea.ActiveInstance?.NewPoints.Clear();
+                    GardenDrawingArea.ActiveInstance?.Draw();
+                    this.Destroy();
+                }
+                dialog.Destroy();
+
             };
 
             CYearButton.Value = MainWindow.GetInstance().GetYear();
@@ -105,7 +117,7 @@ namespace GardenPlanner
 
         static protected void SetValuesForEdit(GardenArea area, GardenAreaCreationDialog dialog)
         {
-            dialog.CreateButton.Label = "Edit";
+            dialog.CreateButton.Label = "Save";
             dialog.NameEntry.Text = area.Name;
             dialog.DescrEntry.Text = area.Description;
             dialog.CYearButton.Value = area.created.Year;

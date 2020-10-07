@@ -397,6 +397,7 @@ public partial class MainWindow : Window
                 gardenDrawingArea.UndoSelection();
             }
             gardenDrawingArea.Draw();
+            ShowAreaSelectionInfo(gardenDrawingArea.SelectedArea);
         }
 
         //FamilyPlantVarietySelector.Add1(PopulateFamilies(GardenData.LoadedData)); 

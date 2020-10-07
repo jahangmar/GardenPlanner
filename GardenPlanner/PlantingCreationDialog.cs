@@ -110,6 +110,7 @@ namespace GardenPlanner
         {
             Planting planting = area as Planting;
             planting.Varieties = this.Varieties;
+            base.SetValues(area);
         }
 
         public static void ShowPlantingEditDialog(Planting area)
