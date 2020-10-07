@@ -515,7 +515,8 @@ public partial class MainWindow : Window
             else if (response == (int)ResponseType.Apply)
             {
                 MenuBar.Save();
-                this.Destroy();
+                if (!GardenData.unsaved)
+                    this.Destroy();
             }
             dialog.Destroy();
         }

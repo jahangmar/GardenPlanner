@@ -190,7 +190,8 @@ namespace GardenPlanner.Garden
 
             if (range.IsDateInRange(created))
             {
-                result.Add(DateRange.ApproxDayMonthDateTimeToString(created)+": plant "+ Varieties.Keys.ToList().ConvertAll((VarietyKeySeq input) => GardenData.LoadedData.GetVariety(input).Name).Aggregate((string arg1, string arg2) => arg1 + ", " + arg2)+ " in "+Name);
+                if (Varieties.Count > 0)
+                    result.Add(DateRange.ApproxDayMonthDateTimeToString(created)+": plant "+ Varieties.Keys.ToList().ConvertAll((VarietyKeySeq input) => GardenData.LoadedData.GetVariety(input).Name).Aggregate((string arg1, string arg2) => arg1 + ", " + arg2)+ " in "+Name);
             }
 
             foreach (VarietyKeySeq varietyKeySeq in Varieties.Keys)

@@ -37,18 +37,8 @@ namespace GardenPlanner
         protected PlantingCreationDialog(string title, Planting planting) : base(title)
         {
             Varieties = new Dictionary<VarietyKeySeq, PlantingInfo>(planting.Varieties);
-            SetUpVarieties();
 
-            VarityBox.Changed += (object sender, EventArgs e) =>
-            {
-               VarietyRemoveButton.Sensitive = VarityBox.Active >= 0;
-            };
-
-            VarietyRemoveButton.Clicked += (object sender, EventArgs e) =>
-            {
-                Varieties.Remove(keys[VarityBox.Active]);
-                SetUpVarieties();
-            };
+            SetUpVarieties(planting);
 
             ShowAll();
         }
@@ -56,7 +46,7 @@ namespace GardenPlanner
         HBox VarietiesLabeledHBox;
         HBox VarietiesInnerHBox;
 
-        private void SetUpVarieties()
+        private void SetUpVarieties(Planting planting)
         {
             string[] labels = new string[Varieties.Count];
             keys = new VarietyKeySeq[Varieties.Count];
@@ -67,14 +57,36 @@ namespace GardenPlanner
                 labels[i] = GardenData.LoadedData.GetVariety(en.Current).Name + " x " + Varieties[en.Current].Count;
             }
             VarityBox = new ComboBoxEntry(labels);
-            VarietyRemoveButton.Sensitive = false;
+
+
+            VarityBox.Changed += (object sender, EventArgs e) =>
+            {
+                System.Console.WriteLine($"changed: active is {VarityBox.Active}");
+                VarietyRemoveButton.Sensitive = VarityBox.Active >= 0;
+            };
+
+
             if (VarietiesLabeledHBox != null)
             {
                 VarietiesInnerHBox.Remove(VarietyRemoveButton);
                 EditVBox.Remove(VarietiesLabeledHBox);
             }
+
+
+            VarietyRemoveButton = new Button("Remove");
+            VarietyRemoveButton.Sensitive = false;
+
+            VarietyRemoveButton.Clicked += (object sender, EventArgs e) =>
+            {
+                System.Console.WriteLine($"clicked: active is {VarityBox.Active}");
+                Varieties.Remove(keys[VarityBox.Active]);
+                SetUpVarieties(planting);
+            };
+
+
             VarietiesInnerHBox = new HBox();
             VarietiesInnerHBox.Add(VarityBox);
+
             VarietiesInnerHBox.Add(VarietyRemoveButton);
             VarietiesLabeledHBox = AddEditEntry("Varieties", VarietiesInnerHBox);
             ShowAll();

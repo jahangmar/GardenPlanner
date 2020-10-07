@@ -101,8 +101,6 @@ namespace GardenPlanner
 }
 
 /*TODO
- * -Bug: save before close dialog closes program on cancel
- * -Add: Options to hide stuff
  * -Add: MethodArea visualization and editing
  * -Int: maybe change varietykeyseq dictionary to list
  * -Add: translation
