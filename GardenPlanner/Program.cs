@@ -106,6 +106,7 @@ namespace GardenPlanner
  * -Add: translation
  * -Add: Maybe use treeview instead for family plant variety
  * -Add: scrolling
+ * -Add: window resize and gui sizes
  * -Add: add (internal) check for compatible families/plants (same as for incomaptible)
  * -Add: add visualization for planting suggestions based on good neighbours + free space + white space
  */

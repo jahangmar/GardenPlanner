@@ -34,6 +34,7 @@ namespace GardenPlanner.Garden
         {
             start = new DateTime(startyear, startmonth, startday);
             end = new DateTime(endyear, endmonth, endday);
+            CheckEnd();
         }
 
         public DateRange(int startyear, int startmonth, int endyear, int endmonth) : this(startyear, startmonth, 1, endyear, endmonth, 1)
@@ -56,6 +57,9 @@ namespace GardenPlanner.Garden
         public bool IsDateInRange(int year, int month) => (year == start.Year && month >= start.Month || year > start.Year) &&
             (year == end.Year && month <= end.Month || year < end.Year) || year == 0 && month == 0;
 
+        /// <summary>
+        /// Checks if the given date is in this range. Ignores the day.
+        /// </summary>
         public bool IsDateInRange(DateTime dateTime) => IsDateInRange(dateTime.Year, dateTime.Month);
 
         private void CheckStart()
