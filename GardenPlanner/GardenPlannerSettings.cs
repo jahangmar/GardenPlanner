@@ -49,5 +49,7 @@ namespace GardenPlanner
 
         public string Language = "english";
         public bool ShowAreaImages = true;
+        public bool ShowPlantNames = false;
+        public bool ShowVarietyNames = false;
     }
 }

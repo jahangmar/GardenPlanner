@@ -34,15 +34,17 @@ namespace GardenPlanner
         MenuItem LanguageItem = new MenuItem("Language");
         Menu LanguageMenu = new Menu();
         CheckMenuItem ShowAreaImagesItem = new CheckMenuItem("Show area images");
+        CheckMenuItem ShowPlantNames = new CheckMenuItem("Show plant names");
+        CheckMenuItem ShowVarietyNames = new CheckMenuItem("Show variety names");
 
         MenuItem HelpItem = new MenuItem("Help");
         Menu HelpMenu = new Menu();
         //MenuItem MenuItemGetHelp = new MenuItem("")
         MenuItem MenuItemAbout = new MenuItem("About");
 
-        MenuItem ViewItem = new MenuItem("View");
-        Menu ViewMenu = new Menu();
-        CheckMenuItem ViewMenuShowCropRotation = new CheckMenuItem("Show crop rotation suggestion");
+        MenuItem ToolItem = new MenuItem("Tools");
+        Menu ToolMenu = new Menu();
+        CheckMenuItem ToolMenuShowCropRotation = new CheckMenuItem("Show crop rotation suggestion");
 
         //MenuItem WheatherDataItem = new MenuItem("Wheather Data");
         //Menu WheatherDataMenu = new Menu();
@@ -54,6 +56,8 @@ namespace GardenPlanner
 
         public MainWindowMenuBar()
         {
+            GardenPlannerSettings settings = GardenPlannerSettings.GetSettings();
+
             FileItem.Submenu = FileMenu;
             FileMenu.Add(MenuItemNew);
             FileMenu.Add(MenuItemLoad);
@@ -77,11 +81,11 @@ namespace GardenPlanner
 
                 RadioMenuItem radioItem = group == null ? new RadioMenuItem(pair.Key) : new RadioMenuItem(group, pair.Key);
                 group = radioItem;
-                radioItem.Active = GardenPlannerSettings.GetSettings().Language.Equals(pair.Key);
+                radioItem.Active = settings.Language.Equals(pair.Key);
                 radioItem.Activated += (sender, e) => {
                     if (init)//during program initialization this should not be executed
                         return;
-                    GardenPlannerSettings.GetSettings().Language = pair.Key;
+                    settings.Language = pair.Key;
                     Translation.GetTranslation(pair.Key);
                     MainWindow.GetInstance().ResetForNewData();
                 };
@@ -89,22 +93,37 @@ namespace GardenPlanner
             }
             init = false;
 
-            ShowAreaImagesItem.Active = GardenPlannerSettings.GetSettings().ShowAreaImages;
+            ShowAreaImagesItem.Active = settings.ShowAreaImages;
             ShowAreaImagesItem.Activated += (sender, e) =>
             {
-                GardenPlannerSettings.GetSettings().ShowAreaImages = ShowAreaImagesItem.Active;
+                settings.ShowAreaImages = ShowAreaImagesItem.Active;
                 GardenDrawingArea.ActiveInstance?.Draw();
             };
             SettingsMenu.Append(ShowAreaImagesItem);
 
+            ShowPlantNames.Active = settings.ShowPlantNames;
+            ShowPlantNames.Activated += (sender, e) =>
+            {
+                settings.ShowPlantNames = ShowPlantNames.Active;
+                GardenDrawingArea.ActiveInstance?.Draw();
+            };
+            SettingsMenu.Append(ShowPlantNames);
+            ShowVarietyNames.Active = settings.ShowVarietyNames;
+            ShowVarietyNames.Activated += (sender, e) =>
+            {
+                settings.ShowVarietyNames = ShowVarietyNames.Active;
+                GardenDrawingArea.ActiveInstance?.Draw();
+            };
+            SettingsMenu.Append(ShowVarietyNames);
+
             Append(SettingsItem);
 
 
-            ViewItem.Submenu = ViewMenu;
-            ViewMenu.Add(ViewMenuShowCropRotation);
-            Append(ViewItem);
+            ToolItem.Submenu = ToolMenu;
+            ToolMenu.Add(ToolMenuShowCropRotation);
+            Append(ToolItem);
 
-            ViewMenuShowCropRotation.Activated += ViewMenuShowCropRotation_Activated;
+            ToolMenuShowCropRotation.Activated += ViewMenuShowCropRotation_Activated;
 
 
             HelpItem.Submenu = HelpMenu;
@@ -122,7 +141,7 @@ namespace GardenPlanner
 
         void ViewMenuShowCropRotation_Activated(object sender, EventArgs e)
         {
-            ShowCropRotation = ViewMenuShowCropRotation.Active;
+            ShowCropRotation = ToolMenuShowCropRotation.Active;
             GardenDrawingArea.ActiveInstance?.Draw();
         }
 

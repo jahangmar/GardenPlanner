@@ -139,9 +139,11 @@ namespace GardenPlanner.Garden
                     VarietyKeySeq varietyKeySeq = keyValuePair.Key;
                     int count = keyValuePair.Value.Count;
                     Plant plant = GardenData.LoadedData.GetPlant(varietyKeySeq.FamilyKey, varietyKeySeq.PlantKey);
+                    PlantVariety variety = GardenData.LoadedData.GetVariety(varietyKeySeq);
 
                     PointD plantingShapePoint = Shape.GetTopLeftPoint().ToCairoPointD(xoffset, yoffset, zoom);
 
+                    //Draw image or substitute
                     if (plant.HasImageSurface())
                     {
                         ImageSurface surf = plant.GetImageSurface();
@@ -160,7 +162,6 @@ namespace GardenPlanner.Garden
                         context.Paint();
                         context.Restore();
 
-                        //System.Console.WriteLine("drawing" + plant.Name);
                     }
                     else
                     {
@@ -175,10 +176,33 @@ namespace GardenPlanner.Garden
 
                         context.Fill();
                     }
+
+                    //Draw amount
                     context.SetSourceColor(new Color(0, 0, 0));
                     context.MoveTo(plantingShapePoint.X + 1 + IMAGE_SIZE * zoom * i, plantingShapePoint.Y + (IMAGE_SIZE / 2) * zoom);
                     context.SetFontSize(20 * zoom);
                     context.ShowText(count + "x");
+
+                    //Draw Name
+                    if (GardenPlannerSettings.GetSettings().ShowPlantNames || GardenPlannerSettings.GetSettings().ShowVarietyNames)
+                    {
+                        context.SetSourceColor(new Color(0, 0, 0));
+                        context.MoveTo(plantingShapePoint.X + 1 + IMAGE_SIZE * zoom * i, plantingShapePoint.Y + (1.5 * IMAGE_SIZE) * zoom);
+                        context.SetFontSize(18 * zoom);
+                        context.Rotate(0.45);
+                        string text = "";
+                        if (GardenPlannerSettings.GetSettings().ShowPlantNames && GardenPlannerSettings.GetSettings().ShowVarietyNames)
+                        {
+                            text = variety.Name + " (" + plant.Name + ")";
+                        }
+                        else
+                        {
+                            text = GardenPlannerSettings.GetSettings().ShowPlantNames ? plant.Name : variety.Name;
+                        }
+                        context.ShowText(text);
+                        context.Rotate(-0.45);
+                    }
+
                     i++;
                 }
             }      
