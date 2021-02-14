@@ -51,5 +51,7 @@ namespace GardenPlanner
         public bool ShowAreaImages = true;
         public bool ShowPlantNames = false;
         public bool ShowVarietyNames = false;
+        public int MinYear = 2000;
+        public int MaxYear = 2100;
     }
 }

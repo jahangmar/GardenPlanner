@@ -173,6 +173,7 @@ namespace GardenPlanner.Garden
                         context.LineTo(x + imageZoom, y);
                         context.LineTo(x + imageZoom, y + imageZoom);
                         context.LineTo(x, y + imageZoom);
+                        context.LineTo(x, y);
 
                         context.Fill();
                     }
@@ -187,7 +188,7 @@ namespace GardenPlanner.Garden
                     if (GardenPlannerSettings.GetSettings().ShowPlantNames || GardenPlannerSettings.GetSettings().ShowVarietyNames)
                     {
                         context.SetSourceColor(new Color(0, 0, 0));
-                        context.MoveTo(plantingShapePoint.X + 1 + IMAGE_SIZE * zoom * i, plantingShapePoint.Y + (1.5 * IMAGE_SIZE) * zoom);
+                        context.MoveTo(plantingShapePoint.X + 1 + IMAGE_SIZE * zoom * i, plantingShapePoint.Y + (1.25 * IMAGE_SIZE) * zoom);
                         context.SetFontSize(18 * zoom);
                         context.Rotate(0.45);
                         string text = "";

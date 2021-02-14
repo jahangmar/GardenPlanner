@@ -101,6 +101,9 @@ namespace GardenPlanner
 }
 
 /*TODO
+ * -Int: DateEditBox
+ * -Fix: Better polygon editing
+ * -Fix: Better point/area selecting
  * -Add: MethodArea visualization and editing
  * -Int: maybe change varietykeyseq dictionary to list
  * -Add: translation

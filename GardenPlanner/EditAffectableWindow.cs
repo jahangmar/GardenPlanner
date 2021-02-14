@@ -54,7 +54,6 @@ namespace GardenPlanner
             DescriptionTextView.Buffer.Text = affectable.Description;
             AddEntry("Description ", DescriptionTextView);
 
-
             ActionButtonBox.Add(InfoButton);
             ActionButtonBox.Add(SaveButton);
             ActionButtonBox.Add(DeleteButton);

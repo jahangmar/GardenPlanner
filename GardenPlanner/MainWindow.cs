@@ -22,6 +22,7 @@ using Gtk;
 
 public partial class MainWindow : Window
 {
+    GardenPlannerSettings settings = GardenPlannerSettings.GetSettings();
     MainWindowMenuBar MenuBar = new MainWindowMenuBar();
     VBox TopVBox = new VBox();
     Notebook GardenBedBook = new Notebook();
@@ -50,7 +51,7 @@ public partial class MainWindow : Window
     bool AreaCancelButtonClicked = false;
 
     Frame DateFrame = new Frame();
-    SpinButton yearButton = new SpinButton(2020,2030,1), monthButton = new SpinButton(1,12,1);
+    SpinButton yearButton = new SpinButton(2000, 2100,1), monthButton = new SpinButton(1,12,1);
 
     //Dictionary<string, Dictionary<string, ComboBox>> VarietyBoxes;
     //Dictionary<string, ComboBox> PlantBoxes;
@@ -108,7 +109,8 @@ public partial class MainWindow : Window
 
         frame = new Frame("Date");
         VButtonBox buttonBox = new VButtonBox();
-        yearButton = new SpinButton(GardenData.GetFirstYear(), GardenData.GetLastYear(), 1);
+        //yearButton = new SpinButton(GardenData.GetFirstYear(), GardenData.GetLastYear(), 1);
+        yearButton = new SpinButton(settings.MinYear, settings.MaxYear, 1);
         buttonBox.Add(yearButton);
         buttonBox.Add(monthButton);
 

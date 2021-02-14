@@ -107,6 +107,8 @@
     <Compile Include="GermanTranslation.cs" />
     <Compile Include="GardenPlannerSettings.cs" />
     <Compile Include="test\Garden\DateRangeTest.cs" />
+    <Compile Include="DateEntryBox.cs" />
+    <Compile Include="EditPlantingInfoWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

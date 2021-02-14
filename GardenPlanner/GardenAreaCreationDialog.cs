@@ -29,11 +29,9 @@ namespace GardenPlanner
         HButtonBox ButtonBox = new HButtonBox();
         protected Button CreateButton = new Button("Create");
         protected Button CancelButton = new Button("Cancel");
-        protected SpinButton CYearButton = new SpinButton(2000, 2100, 1);
-        protected SpinButton CMonthButton = new SpinButton(1, 12, 1);
-        protected SpinButton RYearButton = new SpinButton(2000, 2100, 1);
-        protected SpinButton RMonthButton = new SpinButton(1, 12, 1);
 
+        DateEntryBox CreatedDateBox = new DateEntryBox("Date Created");
+        DateEntryBox RemovedDateBox = new DateEntryBox("Date Removed");
 
         protected GardenAreaCreationDialog(string title) : base(title)
         {
@@ -42,10 +40,10 @@ namespace GardenPlanner
 
             AddEditEntry("Name", NameEntry);
             AddEditEntry("Description", DescrEntry);
-            AddEditEntry("Year Created", CYearButton);
-            AddEditEntry("Month Created", CMonthButton);
-            AddEditEntry("Year Removed", RYearButton);
-            AddEditEntry("Month Removed", RMonthButton);
+
+            AddEditEntry(CreatedDateBox);
+            AddEditEntry(RemovedDateBox);
+
 
             TopVBox.Add(EditVBox);
             ButtonBox.Add(CancelButton);
@@ -74,10 +72,9 @@ namespace GardenPlanner
 
             };
 
-            CYearButton.Value = MainWindow.GetInstance().GetYear();
-            RYearButton.Value = MainWindow.GetInstance().GetYear();
-            CMonthButton.Value = MainWindow.GetInstance().GetMonth();
-            RMonthButton.Value = MainWindow.GetInstance().GetMonth();
+            System.DateTime defaultDate = new System.DateTime(MainWindow.GetInstance().GetYear(), MainWindow.GetInstance().GetMonth(), 1);
+            CreatedDateBox.SetDate(defaultDate);
+            RemovedDateBox.SetDate(defaultDate);
 
             ShowAll();
         }
@@ -91,12 +88,18 @@ namespace GardenPlanner
             return hbox;
         }
 
+        protected Widget AddEditEntry(Widget widget)
+        {
+            EditVBox.Add(widget);
+            return widget;
+        }
+
         static protected void SetValuesForCreation(GardenArea area, List<Garden.GardenPoint> points, GardenAreaCreationDialog dialog)
         {
             area.Shape.AddPoints(points);
             area.Shape.FinishPoints();
-            area.SetCreated(dialog.CYearButton.ValueAsInt, dialog.CMonthButton.ValueAsInt);
-            area.SetRemoved(dialog.RYearButton.ValueAsInt, dialog.RMonthButton.ValueAsInt);
+            area.SetCreated(dialog.CreatedDateBox.GetYear(), dialog.CreatedDateBox.GetMonth());
+            area.SetRemoved(dialog.RemovedDateBox.GetYear(), dialog.RemovedDateBox.GetMonth());
             GardenData.unsaved = true;
         }
 
@@ -120,10 +123,8 @@ namespace GardenPlanner
             dialog.CreateButton.Label = "Save";
             dialog.NameEntry.Text = area.Name;
             dialog.DescrEntry.Text = area.Description;
-            dialog.CYearButton.Value = area.created.Year;
-            dialog.CMonthButton.Value = area.created.Month;
-            dialog.RYearButton.Value = area.removed.Year;
-            dialog.RMonthButton.Value = area.removed.Month;
+            dialog.CreatedDateBox.SetDate(area.created);
+            dialog.RemovedDateBox.SetDate(area.removed);
 
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
@@ -140,8 +141,8 @@ namespace GardenPlanner
         {
             area.Name = this.NameEntry.Text;
             area.Description = this.DescrEntry.Text;
-            area.SetCreated(this.CYearButton.ValueAsInt, this.CMonthButton.ValueAsInt);
-            area.SetRemoved(this.RYearButton.ValueAsInt, this.RMonthButton.ValueAsInt);
+            area.SetCreated(CreatedDateBox.GetYear(), CreatedDateBox.GetMonth());
+            area.SetRemoved(RemovedDateBox.GetYear(), RemovedDateBox.GetMonth());
         }
 
         public static void ShowGardenAreaEditDialog(GardenArea area)
