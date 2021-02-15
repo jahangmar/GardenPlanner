@@ -104,5 +104,16 @@ namespace GardenPlanner.Garden
             return Plantings.Values.ToList().ConvertAll((input) => input.GetTodoList(range)).DefaultIfEmpty(new List<string>()).Aggregate((arg1, arg2) => arg1.Concat(arg2).ToList()).Concat(
             MethodAreas.Values.ToList().ConvertAll((input) => input.GetTodoList(range)).DefaultIfEmpty(new List<string>()).Aggregate((arg1, arg2) => arg1.Concat(arg2).ToList())).ToList();
         }
+
+        public override bool Consistency()
+        {
+            bool consistency = true;
+            foreach (KeyValuePair<string, Planting> pair in Plantings)
+            {
+                if (!pair.Value.Consistency())
+                    consistency = false;
+            }
+            return consistency;
+        }
     }
 }

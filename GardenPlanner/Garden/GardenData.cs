@@ -147,9 +147,13 @@ namespace GardenPlanner.Garden
                 return false;
             }
 
-                LoadedData = obj;
-                GardenData.unsaved = false;
-                return true;
+            LoadedData = obj;
+            GardenData.unsaved = false;
+            if (!LoadedData.Consistency())
+            {
+                System.Console.WriteLine("Consistency check failed");
+            }
+            return true;
         }
 
         public static bool Save(string filename)
@@ -191,5 +195,15 @@ namespace GardenPlanner.Garden
             return s;
         }
 
+        public bool Consistency()
+        {
+            bool consistency = true;
+            foreach (KeyValuePair<string, Garden> pair in Gardens)
+            {
+                if (!pair.Value.Consistency())
+                    consistency = false;
+            }
+            return consistency;
+        }
     }
 }

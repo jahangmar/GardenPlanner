@@ -139,6 +139,22 @@ namespace GardenPlanner.Garden
             Color = new Color(r, g, b);
         }
 
+        public override bool Consistency()
+        {
+            bool consistency = true;
+            foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in Varieties)
+            {
+                DateRange range = new DateRange(created.Year, created.Month, removed.Year, removed.Month);
+                if (!range.IsDateInRange(pair.Value.ExactPlantingDate))
+                {
+                    System.Console.WriteLine("consistency check failed: exact planting date was inconsistent with planting creation/removal date");
+                    pair.Value.ExactPlantingDate = new System.DateTime(created.Year, created.Month, 1);
+                    consistency = false;
+                }
+            }
+            return consistency;
+        }
+
         public override void Draw(Context context, int xoffset=0, int yoffset=0, double zoom=1, int year=0, int month=0)
         {
             if (!CheckDate(year, month))
@@ -227,19 +243,29 @@ namespace GardenPlanner.Garden
         {
             List<string> result = new List<string>();
 
+            string PlantingName = Name;
+
             if (range.IsDateInRange(created))
             {
-                if (Varieties.Count > 0)
-                    result.Add(DateRange.ApproxDayMonthDateTimeToString(created)+": plant "+ Varieties.Keys.ToList().ConvertAll((VarietyKeySeq input) => GardenData.LoadedData.GetVariety(input).Name).Aggregate((string arg1, string arg2) => arg1 + ", " + arg2)+ " in "+Name);
+                foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in Varieties)
+                {
+                    VarietyKeySeq varietyKeySeq = pair.Key;
+                    PlantingInfo plantingInfo = pair.Value;
+                    string sown = plantingInfo.DirectlySown ? "sow" : "plant";
+                    result.Add($"{DateRange.ApproxDayMonthDateTimeToString(plantingInfo.ExactPlantingDate)}: {sown} {GardenData.LoadedData.GetVariety(varietyKeySeq).Name}");
+                }
+                //if (Varieties.Count > 0)
+                //    result.Add(DateRange.ApproxDayMonthDateTimeToString(created)+": plant "+ Varieties.Keys.ToList().ConvertAll((VarietyKeySeq input) => GardenData.LoadedData.GetVariety(input).Name).Aggregate((string elem1, string elem2) => elem1 + ", " + elem2)+ " in "+PlantingName);
             }
 
             foreach (VarietyKeySeq varietyKeySeq in Varieties.Keys)
             {
                 PlantVariety variety = GardenData.LoadedData.GetVariety(varietyKeySeq);
-                System.DateTime dateTime = created.AddDays(-variety.DaysUntilPlantOutside);
-                if (variety.MustBeSownInside && range.IsDateInRange(created.AddDays(-variety.DaysUntilPlantOutside)))
+                PlantingInfo plantingInfo = Varieties[varietyKeySeq];
+                System.DateTime plantTime = plantingInfo.ExactPlantingDate.AddDays(-variety.DaysUntilPlantOutside);
+                if (variety.MustBeSownInside && range.IsDateInRange(plantTime))
                 {
-                    result.Add(DateRange.ApproxDayMonthDateTimeToString(dateTime) + ": sow " + variety.Name + " inside");
+                    result.Add(DateRange.ApproxDayMonthDateTimeToString(plantTime) + ": sow " + variety.Name + " inside");
                 }
             }
 

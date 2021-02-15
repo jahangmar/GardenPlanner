@@ -50,13 +50,12 @@ namespace GardenPlanner
 
         public static void ShowPlantingInfoWindow(PlantingInfo plantingInfo, System.Action<PlantingInfo> action, Planting planting, string varietyName)
         {
-            plantingInfo.ExactPlantingDate = planting.created;
             EditPlantingInfoWindow window = new EditPlantingInfoWindow(plantingInfo, action);
             window.Title = $"Add {varietyName} to {planting.Name}";
             window.ShowAll();
         }
 
         public static void ShowPlantingInfoWindow(System.Action<PlantingInfo> action, Planting planting, string varietyName) =>
-            ShowPlantingInfoWindow(new PlantingInfo(), action, planting, varietyName);
+            ShowPlantingInfoWindow(new PlantingInfo() { ExactPlantingDate = planting.created }, action, planting, varietyName);
     }
 }

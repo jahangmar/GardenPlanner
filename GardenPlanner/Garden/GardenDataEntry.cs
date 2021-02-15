@@ -46,5 +46,10 @@ namespace GardenPlanner.Garden
             if (value is GardenDataEntry entry)
                 dic.Remove(entry.ID);
         }
+
+        public virtual bool Consistency()
+        {
+            return true;
+        }
     }
 }
