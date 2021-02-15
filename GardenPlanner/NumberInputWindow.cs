@@ -49,7 +49,6 @@ namespace GardenPlanner
 
             vBox.Add(hButtonBox);
             Add(vBox);
-
         }
 
         public static void ShowWindow(string title, string message, int min, int max, System.Action<int> action)

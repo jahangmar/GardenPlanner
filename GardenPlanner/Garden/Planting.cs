@@ -54,14 +54,28 @@ namespace GardenPlanner.Garden
             Color = new Color(0, 0, 0);
         }
 
-        public void AddVarietyKeys(string family, string plant, string variety, int count=0)
+        public PlantingInfo GetPlantingInfo(PlantVariety variety) =>
+            GetPlantingInfo(variety.FamilyID, variety.PlantID, variety.ID);
+
+        public PlantingInfo GetPlantingInfo(string family, string plant, string variety) =>
+            GetPlantingInfo(new VarietyKeySeq(family, plant, variety));
+
+        public PlantingInfo GetPlantingInfo(VarietyKeySeq key)
         {
-            VarietyKeySeq varietyKeySeq = new VarietyKeySeq(family, plant, variety);
-            Varieties.Add(new VarietyKeySeq(family, plant, variety), new PlantingInfo() { Count = count });
+            if (Varieties.ContainsKey(key))
+                return Varieties[key];
+            else
+                return null;
         }
 
-        public void AddVariety(PlantVariety variety, int count = 0) =>
-            AddVarietyKeys(variety.FamilyID, variety.PlantID, variety.ID, count);
+        public void AddVarietyKeys(string family, string plant, string variety, PlantingInfo plantingInfo)
+        {
+            VarietyKeySeq varietyKeySeq = new VarietyKeySeq(family, plant, variety);
+            Varieties.Add(new VarietyKeySeq(family, plant, variety), plantingInfo);
+        }
+
+        public void AddVariety(PlantVariety variety, PlantingInfo plantingInfo) =>
+            AddVarietyKeys(variety.FamilyID, variety.PlantID, variety.ID, plantingInfo);
 
         public void RemoveVarietyKey(VarietyKeySeq varietyKeySeq) =>
             Varieties.Remove(varietyKeySeq);

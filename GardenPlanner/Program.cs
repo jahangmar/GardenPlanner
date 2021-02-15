@@ -90,8 +90,8 @@ namespace GardenPlanner
             plantingArea.Shape.AddPoint(new GardenPoint(400, 500));
             plantingArea.Shape.FinishPoints();
             bed1.AddPlanting("planting", plantingArea);
-            plantingArea.AddVariety(morado, 3);
-            plantingArea.AddVariety(vallelado, 2);
+            plantingArea.AddVariety(morado, new PlantingInfo() { Count = 3});
+            plantingArea.AddVariety(vallelado, new PlantingInfo() { Count = 2 });
 
             //string s = Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented);
 

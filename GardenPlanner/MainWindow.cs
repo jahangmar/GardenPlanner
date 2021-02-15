@@ -135,25 +135,20 @@ public partial class MainWindow : Window
 
 
         PlantAddButton.Sensitive = false;
-        PlantAddButton.Clicked += (object sender, System.EventArgs e) =>
+        PlantAddButton.Clicked += (sender, e) =>
         {
             GardenDrawingArea area = GardenDrawingArea.ActiveInstance;
             if (area.SelectedArea is Planting planting && SelectedEntry is PlantVariety variety)
             {
-                NumberInputWindow.ShowWindow("Adding "+variety.Name+"...", "Select the amount", 1, 500, (int res) => {
-
-                    {
-                        planting.AddVariety(variety, res);
-                        GardenDrawingArea.ActiveInstance.Draw();
-                        ShowAreaSelectionInfo(area.SelectedArea);
-                    }
-                });
-
-
-            }
+                EditPlantingInfoWindow.ShowPlantingInfoWindow((PlantingInfo plantingInfo) =>
+                {
+                    planting.AddVariety(variety, plantingInfo);
+                    GardenDrawingArea.ActiveInstance.Draw();
+                    ShowAreaSelectionInfo(area.SelectedArea);
+                }, planting, variety.Name);
+            };
         };
-
-
+       
         PlantInfoButton.Clicked += (object sender, System.EventArgs e) =>
         {
             if (SelectedEntry is PlantFamily family)

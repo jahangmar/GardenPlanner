@@ -26,6 +26,7 @@ namespace GardenPlanner
     {
         ComboBoxEntry VarityBox = new ComboBoxEntry();
         Button VarietyRemoveButton = new Button("Remove");
+        Button VarietyEditButton = new Button("Edit");
         Dictionary<VarietyKeySeq, PlantingInfo> Varieties;
         VarietyKeySeq[] keys;
 
@@ -36,7 +37,12 @@ namespace GardenPlanner
 
         protected PlantingCreationDialog(string title, Planting planting) : base(title)
         {
-            Varieties = new Dictionary<VarietyKeySeq, PlantingInfo>(planting.Varieties);
+            Varieties = new Dictionary<VarietyKeySeq, PlantingInfo>();
+
+            foreach (KeyValuePair<VarietyKeySeq, PlantingInfo> pair in planting.Varieties)
+            {
+                Varieties.Add(pair.Key, new PlantingInfo(pair.Value));
+            }
 
             SetUpVarieties(planting);
 
@@ -61,40 +67,46 @@ namespace GardenPlanner
 
             VarityBox.Changed += (object sender, EventArgs e) =>
             {
-                System.Console.WriteLine($"changed: active is {VarityBox.Active}");
                 VarietyRemoveButton.Sensitive = VarityBox.Active >= 0;
+                VarietyEditButton.Sensitive = VarityBox.Active >= 0;
             };
 
 
             if (VarietiesLabeledHBox != null)
             {
                 VarietiesInnerHBox.Remove(VarietyRemoveButton);
-                EditVBox.Remove(VarietiesLabeledHBox);
+                VarietiesInnerHBox.Remove(VarietyEditButton);
+                RemoveLabeledEntry(VarietiesLabeledHBox);
             }
-
 
             VarietyRemoveButton = new Button("Remove");
             VarietyRemoveButton.Sensitive = false;
 
             VarietyRemoveButton.Clicked += (object sender, EventArgs e) =>
             {
-                System.Console.WriteLine($"clicked: active is {VarityBox.Active}");
                 Varieties.Remove(keys[VarityBox.Active]);
                 SetUpVarieties(planting);
             };
 
+            VarietyEditButton = new Button("Edit");
+            VarietyEditButton.Sensitive = false;
+            VarietyEditButton.Clicked += (sender, e) =>
+            {
+                EditPlantingInfoWindow.ShowPlantingInfoWindow(Varieties[keys[VarityBox.Active]], (plantingInfo) =>
+                {
+                    GardenDrawingArea area = GardenDrawingArea.ActiveInstance;
+                    area.Draw();
+                    MainWindow.GetInstance().ShowAreaSelectionInfo(area.SelectedArea);
+                }, planting, GardenData.LoadedData.GetVariety(keys[VarityBox.Active]).Name);
+            };
 
             VarietiesInnerHBox = new HBox();
             VarietiesInnerHBox.Add(VarityBox);
 
+            VarietiesInnerHBox.Add(VarietyEditButton);
             VarietiesInnerHBox.Add(VarietyRemoveButton);
-            VarietiesLabeledHBox = AddEditEntry("Varieties", VarietiesInnerHBox);
+            VarietiesLabeledHBox = AddLabeledEntry("Varieties", VarietiesInnerHBox);
             ShowAll();
-        }
-
-        private static void SetValuesForCreation(Planting area, List<GardenPoint> points, PlantingCreationDialog dialog)
-        {
-            GardenAreaCreationDialog.SetValuesForCreation(area, points, dialog);
         }
 
         public static void ShowPlantingCreationDialog(List<GardenPoint> points, Action<Planting> action)
@@ -106,22 +118,18 @@ namespace GardenPlanner
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 Planting area = new Planting(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                SetValuesForCreation(area, points, dialog);
+                dialog.SetValuesForCreation(area, points);
                 action(area);
                 GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
             };
         }
 
-        private static void SetValuesForEdit(GardenArea area, PlantingCreationDialog dialog)
-        {
-            GardenAreaCreationDialog.SetValuesForEdit(area, dialog);
-        }
-
         protected override void SetValues(GardenArea area)
         {
             Planting planting = area as Planting;
             planting.Varieties = this.Varieties;
+            //TODO change planting info here
             base.SetValues(area);
         }
 
@@ -129,7 +137,7 @@ namespace GardenPlanner
         {
             PlantingCreationDialog dialog = new PlantingCreationDialog("Edit planting '" + area.Name + "'", area);
 
-            SetValuesForEdit(area, dialog);
+            dialog.SetValuesForEdit(area);
         }
     }
 }

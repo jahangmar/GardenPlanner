@@ -19,14 +19,11 @@ using System.Collections.Generic;
 using GardenPlanner.Garden;
 namespace GardenPlanner
 {
-    public class GardenAreaCreationDialog : Window
+    public class GardenAreaCreationDialog : EditWindow
     {
-        VBox TopVBox = new VBox();
-        protected VBox EditVBox = new VBox();
         protected Entry NameEntry = new Entry();
         protected Entry DescrEntry = new Entry();
 
-        HButtonBox ButtonBox = new HButtonBox();
         protected Button CreateButton = new Button("Create");
         protected Button CancelButton = new Button("Cancel");
 
@@ -38,18 +35,14 @@ namespace GardenPlanner
             TransientFor = MainWindow.GetInstance();
             Modal = true;
 
-            AddEditEntry("Name", NameEntry);
-            AddEditEntry("Description", DescrEntry);
+            AddLabeledEntry("Name", NameEntry);
+            AddLabeledEntry("Description", DescrEntry);
 
-            AddEditEntry(CreatedDateBox);
-            AddEditEntry(RemovedDateBox);
+            AddEntry(CreatedDateBox);
+            AddEntry(RemovedDateBox);
 
-
-            TopVBox.Add(EditVBox);
-            ButtonBox.Add(CancelButton);
-            ButtonBox.Add(CreateButton);
-            TopVBox.Add(ButtonBox);
-            this.Add(TopVBox);
+            AddControlButton(CancelButton);
+            AddControlButton(CreateButton);
 
             GardenDrawingArea.ActiveInstance?.Draw();
 
@@ -79,27 +72,12 @@ namespace GardenPlanner
             ShowAll();
         }
 
-        protected HBox AddEditEntry(string label, Widget widget)
-        {
-            HBox hbox = new HBox();
-            hbox.Add(new Label(label));
-            hbox.Add(widget);
-            EditVBox.Add(hbox);
-            return hbox;
-        }
-
-        protected Widget AddEditEntry(Widget widget)
-        {
-            EditVBox.Add(widget);
-            return widget;
-        }
-
-        static protected void SetValuesForCreation(GardenArea area, List<Garden.GardenPoint> points, GardenAreaCreationDialog dialog)
+        protected void SetValuesForCreation(GardenArea area, List<Garden.GardenPoint> points)
         {
             area.Shape.AddPoints(points);
             area.Shape.FinishPoints();
-            area.SetCreated(dialog.CreatedDateBox.GetYear(), dialog.CreatedDateBox.GetMonth());
-            area.SetRemoved(dialog.RemovedDateBox.GetYear(), dialog.RemovedDateBox.GetMonth());
+            area.SetCreated(CreatedDateBox.GetYear(), CreatedDateBox.GetMonth());
+            area.SetRemoved(RemovedDateBox.GetYear(), RemovedDateBox.GetMonth());
             GardenData.unsaved = true;
         }
 
@@ -110,7 +88,7 @@ namespace GardenPlanner
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 GardenArea area = new Garden.Garden(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                SetValuesForCreation(area, points, dialog);
+                dialog.SetValuesForCreation(area, points);
                 action(area);
                 GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
@@ -118,21 +96,21 @@ namespace GardenPlanner
             };
         }
 
-        static protected void SetValuesForEdit(GardenArea area, GardenAreaCreationDialog dialog)
+        protected void SetValuesForEdit(GardenArea area)
         {
-            dialog.CreateButton.Label = "Save";
-            dialog.NameEntry.Text = area.Name;
-            dialog.DescrEntry.Text = area.Description;
-            dialog.CreatedDateBox.SetDate(area.created);
-            dialog.RemovedDateBox.SetDate(area.removed);
+            CreateButton.Label = "Save";
+            NameEntry.Text = area.Name;
+            DescrEntry.Text = area.Description;
+            CreatedDateBox.SetDate(area.created);
+            RemovedDateBox.SetDate(area.removed);
 
-            dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
+            CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
-                dialog.SetValues(area);
+                this.SetValues(area);
                 GardenDrawingArea.ActiveInstance.MakeSelection();
                 GardenDrawingArea.ActiveInstance?.Draw();
                 MainWindow.GetInstance().ShowAreaSelectionInfo(area);
-                dialog.Destroy();
+                this.Destroy();
                 GardenData.unsaved = true;
             };
         }
@@ -153,7 +131,7 @@ namespace GardenPlanner
             else if (area is Planting)
                 title = "Edit planting '" + area.Name + "'";
             GardenAreaCreationDialog dialog = new GardenAreaCreationDialog(title);
-            SetValuesForEdit(area, dialog);
+            dialog.SetValuesForEdit(area);
         }
     }
 }

@@ -109,6 +109,7 @@
     <Compile Include="test\Garden\DateRangeTest.cs" />
     <Compile Include="DateEntryBox.cs" />
     <Compile Include="EditPlantingInfoWindow.cs" />
+    <Compile Include="EditWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />

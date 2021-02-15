@@ -34,7 +34,7 @@ namespace GardenPlanner
             dialog.CreateButton.Clicked += (object sender, System.EventArgs e) =>
             {
                 Garden.Garden area = new Garden.Garden(dialog.NameEntry.Text, dialog.DescrEntry.Text);
-                SetValuesForCreation(area, points, dialog);
+                dialog.SetValuesForCreation(area, points);
                 action(area);
                 GardenDrawingArea.ActiveInstance?.Draw();
                 dialog.Destroy();
