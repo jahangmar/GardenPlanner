@@ -251,7 +251,8 @@ namespace GardenPlanner.Garden
                 {
                     VarietyKeySeq varietyKeySeq = pair.Key;
                     PlantingInfo plantingInfo = pair.Value;
-                    string sown = plantingInfo.DirectlySown ? "sow" : "plant";
+                    Plant plant = GardenData.LoadedData.GetPlant(varietyKeySeq);
+                    string sown = plant.MustBeSownOutside ? "sow" : "plant";
                     result.Add($"{DateRange.ApproxDayMonthDateTimeToString(plantingInfo.ExactPlantingDate)}: {sown} {GardenData.LoadedData.GetVariety(varietyKeySeq).Name}");
                 }
                 //if (Varieties.Count > 0)

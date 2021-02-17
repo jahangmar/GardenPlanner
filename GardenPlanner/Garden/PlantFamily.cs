@@ -47,6 +47,9 @@ namespace GardenPlanner.Garden
             Plants.Remove(plantID);
         }
 
+        public List<Plant> GetPlantsAsList() =>
+            new List<Plant>(Plants.Values);
+
         public override bool CheckIncompatibleFamilies(string familyID)
         {
             return familyID.Equals(ID) || IncompatibleFamilies.Contains(familyID);

@@ -9,7 +9,7 @@ namespace GardenPlanner.Garden
         public int RowSpacing = 0;
         public int InBetweenSpacing = 0;
         public int SeedsPerGroup = 1;
-        public bool DirectlySown = true;
+        public bool DirectlySown = false;
         public int HarvestCount = 0;
         public int HarvestWeight = 0;
 

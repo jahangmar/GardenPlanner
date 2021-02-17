@@ -61,6 +61,8 @@ namespace GardenPlanner.Garden
             Varieties.Remove(varietyID);
         }
 
+        public List<PlantVariety> VarietiesAsList() =>
+            new List<PlantVariety>(Varieties.Values);
 
         public string GetImageSurfacePath() => System.IO.Path.Combine(System.IO.Path.Combine(GardenData.GetImagePath(), "plants"), Name.Replace(' ', '_') + ".png");
         private ImageSurface imageSurface = null;

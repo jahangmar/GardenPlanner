@@ -103,7 +103,6 @@ namespace GardenPlanner
             dialog.Run();
             dialog.Destroy();
             this.Destroy();
-            MainWindow.GetInstance().RepopulateGrowables();
             GardenData.unsaved = true;
         }
 

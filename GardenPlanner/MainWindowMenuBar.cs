@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using GLib;
 using Gtk;
 
 namespace GardenPlanner
@@ -27,6 +28,7 @@ namespace GardenPlanner
         MenuItem MenuItemNew = new MenuItem("New");
         MenuItem MenuItemLoad = new MenuItem("Load");
         MenuItem MenuItemSave = new MenuItem("Save");
+        MenuItem MenuItemImportFamilies = new MenuItem("Import plant families");
         MenuItem MenuItemClose = new MenuItem("Close");
 
         MenuItem SettingsItem = new MenuItem("Settings");
@@ -62,6 +64,7 @@ namespace GardenPlanner
             FileMenu.Add(MenuItemNew);
             FileMenu.Add(MenuItemLoad);
             FileMenu.Add(MenuItemSave);
+            FileMenu.Add(MenuItemImportFamilies);
             FileMenu.Add(MenuItemClose);
             Append(FileItem);
 
@@ -69,6 +72,7 @@ namespace GardenPlanner
             MenuItemNew.Activated += NewAction;
             MenuItemSave.Activated += SaveAction;
             MenuItemLoad.Activated += LoadAction;
+            MenuItemImportFamilies.Activated += ImportFamiliesAction;
 
 
             SettingsItem.Submenu = SettingsMenu;
@@ -137,6 +141,25 @@ namespace GardenPlanner
             f = new FileFilter();
             f.AddPattern("*.gdata");
             f.Name = "Garden data";
+        }
+
+        class TestWindow : Window
+        {
+            public TestWindow() : base("test")
+            {               
+                if (Garden.GardenData.LoadedData != null)
+                {
+                    FamilyTreeView familyTreeView = new FamilyTreeView(Garden.GardenData.LoadedData);
+                    Add(familyTreeView);
+                }
+            }
+
+        }
+
+        void ImportFamiliesAction(object sender, EventArgs e)
+        {
+            TestWindow testWindow = new TestWindow();
+            testWindow.ShowAll();
         }
 
         void ViewMenuShowCropRotation_Activated(object sender, EventArgs e)

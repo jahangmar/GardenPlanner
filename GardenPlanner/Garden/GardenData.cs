@@ -132,6 +132,8 @@ namespace GardenPlanner.Garden
         public PlantVariety GetVariety(VarietyKeySeq varietyKeySeq) =>
             GetVariety(varietyKeySeq.FamilyKey, varietyKeySeq.PlantKey, varietyKeySeq.VarietyKey);
 
+        public List<PlantFamily> GetFamiliesAsList() => new List<PlantFamily>(Families.Values);
+
         public static string ErrorMessage;
 
         public static bool Load(string filename)

@@ -110,6 +110,7 @@
     <Compile Include="DateEntryBox.cs" />
     <Compile Include="EditPlantingInfoWindow.cs" />
     <Compile Include="EditWindow.cs" />
+    <Compile Include="FamilyTreeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Garden\" />
