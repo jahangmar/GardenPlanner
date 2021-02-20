@@ -19,8 +19,10 @@ using GardenPlanner.Garden;
 
 namespace GardenPlanner
 {
-    class FamilyTreeView : TreeView
+    class FamilyTreeView : ScrolledWindow
     {
+        private TreeView treeView = new TreeView();
+
         public Action<GardenDataEntry> SelectedGardenDataEntry;
         public System.Action NewFamily = null;
         public System.Action<PlantFamily> NewPlant = null;
@@ -34,7 +36,7 @@ namespace GardenPlanner
         private class NewPlantEntry : GardenDataEntry
         {
             public PlantFamily Family;
-            public NewPlantEntry(PlantFamily family) : base("<new plant>", "")
+            public NewPlantEntry(PlantFamily family) : base($"<new {family.Name} plant>", "")
             {
                 this.Family = family;
             }
@@ -43,7 +45,7 @@ namespace GardenPlanner
         private class NewVarietyEntry : GardenDataEntry
         {
             public Plant Plant;
-            public NewVarietyEntry(Plant plant) : base("<new variety>", "")
+            public NewVarietyEntry(Plant plant) : base($"<new {plant.Name} variety>", "")
             {
                 this.Plant = plant;
             }
@@ -51,7 +53,7 @@ namespace GardenPlanner
 
         private readonly CellRendererText cellRendererText = new CellRendererText();
 
-        public FamilyTreeView(Garden.GardenData gardenData)
+        public FamilyTreeView(GardenData gardenData)
         {
             AddColumn("Family/Plant/Variety");
 
@@ -72,9 +74,9 @@ namespace GardenPlanner
             }
             treeStore.AppendValues(new NewFamilyEntry());
 
-            this.Model = treeStore;
+            treeView.Model = treeStore;
 
-            this.Selection.Changed += (object sender, EventArgs e) =>
+            treeView.Selection.Changed += (object sender, EventArgs e) =>
             {
                 //System.Console.WriteLine("selected " + GetSelected().Name);
                 GardenDataEntry selected = GetSelected();
@@ -87,12 +89,14 @@ namespace GardenPlanner
                 else
                     SelectedGardenDataEntry?.Invoke(GetSelected());
             };
+
+            Add(treeView);
         }
 
         private Garden.GardenDataEntry GetSelected()
         {
-            Selection.GetSelected(out TreeModel model, out TreeIter iter);
-            return (Garden.GardenDataEntry)Model.GetValue(iter, 0);
+            treeView.Selection.GetSelected(out TreeModel model, out TreeIter iter);
+            return (Garden.GardenDataEntry)model.GetValue(iter, 0);
         }
 
         private void AddColumn(string label)
@@ -103,13 +107,27 @@ namespace GardenPlanner
             };
             column.PackStart(cellRendererText, true);
             column.SetCellDataFunc(cellRendererText, new TreeCellDataFunc(ShowDataEntry));
-            this.AppendColumn(column);
+            treeView.AppendColumn(column);
         }
 
         private void ShowDataEntry(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
         {
-            Garden.GardenDataEntry data = (Garden.GardenDataEntry)Model.GetValue(iter, 0);
-            (cell as CellRendererText).Text = data.Name;
+            Garden.GardenDataEntry data = (Garden.GardenDataEntry)tree_model.GetValue(iter, 0);
+            CellRendererText textRenderer = (CellRendererText)cell;
+            textRenderer.Text = data.Name;
+            if (data is NewFamilyEntry || data is NewPlantEntry || data is NewVarietyEntry)
+                textRenderer.Style = Pango.Style.Italic;
+            else
+                textRenderer.Style = Pango.Style.Normal;
+
+            if (data is PlantFamily)
+                textRenderer.Foreground = "blue";
+            else if (data is Plant)
+                textRenderer.Foreground = "green";
+            else if (data is PlantVariety)
+                textRenderer.Foreground = "red";
+            else if (data is NewFamilyEntry || data is NewPlantEntry || data is NewVarietyEntry)
+                textRenderer.Foreground = "black";
         }
 
     }
