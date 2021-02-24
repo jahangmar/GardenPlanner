@@ -3,7 +3,9 @@ namespace GardenPlanner.Garden
 {
     public class PlantingInfo
     {
-        public DateTime ExactPlantingDate = new DateTime();
+        public DateTime PlannedPlantingDate = new DateTime();
+        public bool AlreadyPlanted = false;
+        public DateTime PlantingDate = new DateTime();
         public int Count = 0;
         public int Rows = 0;
         public int RowSpacing = 0;
@@ -19,7 +21,9 @@ namespace GardenPlanner.Garden
 
         public PlantingInfo(PlantingInfo plantingInfo)
         {
-            this.ExactPlantingDate = plantingInfo.ExactPlantingDate;
+            this.PlannedPlantingDate = plantingInfo.PlannedPlantingDate;
+            this.AlreadyPlanted = plantingInfo.AlreadyPlanted;
+            this.PlantingDate = plantingInfo.PlantingDate;
             this.Count = plantingInfo.Count;
             this.Rows = plantingInfo.Rows;
             this.RowSpacing = plantingInfo.RowSpacing;

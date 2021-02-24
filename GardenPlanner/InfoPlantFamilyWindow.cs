@@ -29,13 +29,13 @@ namespace GardenPlanner
             Family = family;
             Create = create;
 
-            AddEntry(family.Name, infoView.headline);
+            AddEntry(family.Name, infoView.tag_headline);
 
-            AddEntry("(" + family.ScientificName + ")", infoView.weak);
+            AddEntry("(" + family.ScientificName + ")", infoView.tag_weak);
 
             AddEntry("Beschreibung: ", false);
 
-            AddEntry(family.Description, infoView.italic);
+            AddEntry(family.Description, infoView.tag_italic);
 
             ApplyTags();
         }

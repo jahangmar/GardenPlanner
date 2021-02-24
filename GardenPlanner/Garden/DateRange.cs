@@ -158,6 +158,12 @@ namespace GardenPlanner.Garden
             return trans.From + " " + DayMonthDateTimeToString(start) + " " + trans.To + " " + DayMonthDateTimeToString(end);
         }
 
+        public string ToFullString() =>
+            DayMonthYearDateTimeToString(start) + " - " + DayMonthYearDateTimeToString(end);
+
+        public string DayMonthYearDateTimeToString(DateTime dateTime) =>
+            $"{dateTime.Day}.{dateTime.Month}.{dateTime.Year}";
+
         public static string DayMonthDateTimeToString(DateTime dateTime)
         {
             Translation trans = Translation.GetTranslation();

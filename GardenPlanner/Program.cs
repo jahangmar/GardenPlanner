@@ -101,6 +101,7 @@ namespace GardenPlanner
 }
 
 /*TODO
+ * -Bug: If planting has created date X and variety has planting date X+1, todolist shows variety in month X instead of X+1 (but the shown date is X+1)
  * -Fix: Better polygon editing
  * -Fix: Better point/area selecting
  * -Add: MethodArea visualization and editing

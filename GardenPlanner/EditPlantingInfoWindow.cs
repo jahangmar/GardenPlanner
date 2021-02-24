@@ -22,7 +22,9 @@ namespace GardenPlanner
     public class EditPlantingInfoWindow : EditWindow
     {
         SpinButton numberPlantsSpinButton;
-        DateEntryBox plantingDateBox;
+        DateEntryBox plannedDateBox;
+        CheckButton alreadyPlantedButton;
+        DateEntryBox actualDateBox;
 
         public EditPlantingInfoWindow(PlantingInfo plantingInfo, System.Action<PlantingInfo> okAction) : base("Edit planting information")
         {
@@ -35,7 +37,9 @@ namespace GardenPlanner
             AddControlButton("ok", () =>
             {
                 plantingInfo.Count = numberPlantsSpinButton.ValueAsInt;
-                plantingInfo.ExactPlantingDate = plantingDateBox.GetDate();
+                plantingInfo.PlannedPlantingDate = plannedDateBox.GetDate();
+                plantingInfo.AlreadyPlanted = alreadyPlantedButton.Active;
+                plantingInfo.PlantingDate = actualDateBox.GetDate();
                 this.Destroy();
                 okAction.Invoke(plantingInfo);
             });
@@ -43,11 +47,37 @@ namespace GardenPlanner
             numberPlantsSpinButton = new SpinButton(1, settings.MaxPlantingCount, 1);
             numberPlantsSpinButton.Value = plantingInfo.Count;
             AddLabeledEntry("Number of plants", numberPlantsSpinButton);
-            plantingDateBox = new DateEntryBox("exact planting date", true);
-            plantingDateBox.SetDate(plantingInfo.ExactPlantingDate);
-            AddEntry(plantingDateBox);
+
+            plannedDateBox = new DateEntryBox("planned planting date", DateEntryType.MiddleMonthDateEntry);
+            plannedDateBox.SetDate(plantingInfo.PlannedPlantingDate);
+            AddEntry(plannedDateBox);
+
+            alreadyPlantedButton = new CheckButton("already planted")
+            {
+                Active = plantingInfo.AlreadyPlanted
+            };
+            alreadyPlantedButton.Clicked += (sender, e) =>
+            {
+                actualDateBox.Sensitive = alreadyPlantedButton.Active;
+            };
+
+            AddEntry(alreadyPlantedButton);
+
+            actualDateBox = new DateEntryBox("planted on", DateEntryType.DayDateEntry)
+            {
+                Sensitive = alreadyPlantedButton.Active
+            };
+            actualDateBox.SetDate(plantingInfo.PlantingDate);
+            AddEntry(actualDateBox);
         }
 
+        /// <summary>
+        /// Shows the planting info window for varities that already have been added to a planting.
+        /// </summary>
+        /// <param name="plantingInfo">Planting info.</param>
+        /// <param name="action">Action.</param>
+        /// <param name="planting">Planting.</param>
+        /// <param name="varietyName">Variety name.</param>
         public static void ShowPlantingInfoWindow(PlantingInfo plantingInfo, System.Action<PlantingInfo> action, Planting planting, string varietyName)
         {
             EditPlantingInfoWindow window = new EditPlantingInfoWindow(plantingInfo, action);
@@ -55,7 +85,13 @@ namespace GardenPlanner
             window.ShowAll();
         }
 
+        /// <summary>
+        /// Shows the planting info window for new varieties.
+        /// </summary>
+        /// <param name="action">Action.</param>
+        /// <param name="planting">Planting.</param>
+        /// <param name="varietyName">Variety name.</param>
         public static void ShowPlantingInfoWindow(System.Action<PlantingInfo> action, Planting planting, string varietyName) =>
-            ShowPlantingInfoWindow(new PlantingInfo() { ExactPlantingDate = planting.created }, action, planting, varietyName);
+            ShowPlantingInfoWindow(new PlantingInfo() { PlannedPlantingDate = planting.created, PlantingDate = planting.created }, action, planting, varietyName);
     }
 }

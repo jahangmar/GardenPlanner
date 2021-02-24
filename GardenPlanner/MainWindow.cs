@@ -583,8 +583,8 @@ private void RemoveAllChildren(Container w)
 
         AreaInfo.Buffer.Clear();
 
-        AreaInfo.AddEntry(area.Name, AreaInfo.headline);
-        AreaInfo.AddEntry(area.Description, AreaInfo.italic);
+        AreaInfo.AddEntry(area.Name, AreaInfo.tag_headline);
+        AreaInfo.AddEntry(area.Description, AreaInfo.tag_italic);
         AreaInfo.AddEntry("Created: "+area.created.Month+"/"+area.created.Year);
         AreaInfo.AddEntry("Removed: " + area.removed.Month + "/" + area.removed.Year);
         AreaInfo.AddEntry($"Size: {area.AreaSize() / 10000f}m²");
@@ -608,7 +608,7 @@ private void RemoveAllChildren(Container w)
     {
         AreaInfo.Buffer.Clear();
 
-        AreaInfo.AddEntry("TODO LIST", AreaInfo.headline);
+        AreaInfo.AddEntry("TODO LIST", AreaInfo.tag_headline);
 
         int syear = GetYear();
         int smonth = GetMonth();
@@ -621,10 +621,13 @@ private void RemoveAllChildren(Container w)
             {
                 List<string> strings = garden.GetTodoList(range);
                 if (strings.Count > 0)
-                    AreaInfo.AddEntry("Garden '" + garden.Name + "':", AreaInfo.bold);
+                    AreaInfo.AddEntry("Garden '" + garden.Name + "':", AreaInfo.tag_bold);
                 foreach (string s in strings)
                 {
-                    AreaInfo.AddEntry("\t"+s, AreaInfo.italic);
+                    if (s.StartsWith("#"))
+                        AreaInfo.AddEntry("\t" + s.Substring(1), AreaInfo.tag_strikethrough);
+                    else
+                        AreaInfo.AddEntry("\t" + s, AreaInfo.tag_italic);
                 }
             }
         }

@@ -17,14 +17,22 @@ using System;
 using Gtk;
 namespace GardenPlanner
 {
+    public enum DateEntryType
+    {
+        MonthDateEntry,
+        MiddleMonthDateEntry,
+        DayDateEntry
+    }
+
     public class DateEntryBox : Frame
     {
         SpinButton spinButtonYear;
         SpinButton spinButtonMonth;
         RadioButton radioMiddle;
         RadioButton radioBeginning;
+        SpinButton spinButtonDay;
 
-        public DateEntryBox(string label, bool showMiddleButton = false) : base(label)
+        public DateEntryBox(string label, DateEntryType dateEntryType = DateEntryType.MonthDateEntry) : base(label)
         {
             GardenPlannerSettings settings = GardenPlannerSettings.GetSettings();
 
@@ -40,6 +48,15 @@ namespace GardenPlanner
 
             mainVBox.Add(hBoxYear);
 
+            Label labelDay = new Label("Day");
+            spinButtonDay = new SpinButton(1, 31, 1);
+            HBox hBoxDay = new HBox
+            {
+                labelDay,
+                spinButtonDay
+            };
+
+
 
             Label labelMonth = new Label("Month");
             spinButtonMonth = new SpinButton(1, 12, 1);
@@ -53,27 +70,34 @@ namespace GardenPlanner
 
             radioMiddle = new RadioButton("middle");
             radioBeginning = new RadioButton(radioMiddle, "beginning");
-            if (showMiddleButton)
+            switch (dateEntryType)
             {
-                Label labelMiddleMonth = new Label("Time of month");
-                HBox hBoxRadios = new HBox
-                {
-                    radioMiddle,
-                    radioBeginning
-                };
-                HBox hBoxMiddleMonth = new HBox
-                {
-                    labelMiddleMonth,
-                    hBoxRadios
-                };
+                case DateEntryType.MonthDateEntry:
+                    break;
+                case DateEntryType.MiddleMonthDateEntry:
+                    Label labelMiddleMonth = new Label("Time of month");
+                    HBox hBoxRadios = new HBox
+                    {
+                        radioMiddle,
+                        radioBeginning
+                    };
+                    HBox hBoxMiddleMonth = new HBox
+                    {
+                        labelMiddleMonth,
+                        hBoxRadios
+                    };
 
-                mainVBox.Add(hBoxMiddleMonth);
+                    mainVBox.Add(hBoxMiddleMonth);
+                    break;
+                case DateEntryType.DayDateEntry:
+                    mainVBox.Add(hBoxDay);
+                    break;
             }
 
             this.Add(mainVBox);
         }
 
-        public DateEntryBox(string label, DateTime date, bool showMiddleButton = false) : this(label, showMiddleButton)
+        public DateEntryBox(string label, DateTime date, DateEntryType dateEntryType = DateEntryType.MonthDateEntry) : this(label, dateEntryType)
         {
             SetDate(date);
         }
@@ -83,6 +107,7 @@ namespace GardenPlanner
             spinButtonYear.Value = date.Year;
             spinButtonMonth.Value = date.Month;
             radioBeginning.Active = (date.Day < 15);
+            spinButtonDay.Value = date.Day;
         }
 
         public DateTime GetDate()

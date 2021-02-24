@@ -29,15 +29,15 @@ namespace GardenPlanner
             Variety = variety;
             Create = create;
 
-            AddEntry(variety.Name, infoView.headline);
+            AddEntry(variety.Name, infoView.tag_headline);
 
             Plant plant = GardenData.LoadedData.GetPlant(variety.FamilyID, variety.PlantID);
             AddEntry(plant.Name + "-Sorte" +" ", false); 
-            AddEntry("(" + plant.ScientificName + ")", infoView.weak);
+            AddEntry("(" + plant.ScientificName + ")", infoView.tag_weak);
 
             AddEntry("Beschreibung: ", false);
 
-            AddEntry(variety.Description, infoView.italic);
+            AddEntry(variety.Description, infoView.tag_italic);
 
             AddEntry("Aussaat draußen: " + variety.PlantOutsideDateRange);
 

@@ -32,15 +32,15 @@ namespace GardenPlanner
             Plant = plant;
             Create = create;
 
-            AddEntry(plant.Name, infoView.headline);
+            AddEntry(plant.Name, infoView.tag_headline);
 
             PlantFamily family = GardenData.LoadedData.GetFamily(plant.FamilyID);
             AddEntry("Gehört zu "+ family.Name , false);
-            AddEntry("(" + plant.ScientificName + ")", infoView.weak);
+            AddEntry("(" + plant.ScientificName + ")", infoView.tag_weak);
 
             AddEntry("Beschreibung: ", false);
 
-            AddEntry(plant.Description, infoView.italic);
+            AddEntry(plant.Description, infoView.tag_italic);
 
             string feeder = "";
             switch (plant.FeederType)

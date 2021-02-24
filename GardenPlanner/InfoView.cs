@@ -20,23 +20,29 @@ namespace GardenPlanner
 {
     public class InfoView : TextView
     {
-        public readonly TextTag headline = new TextTag("headline")
+        public readonly TextTag tag_headline = new TextTag("headline")
         {
             Weight = Pango.Weight.Bold,
             Underline = Pango.Underline.Single
         };
-        public readonly TextTag italic = new TextTag("italic")
+        public readonly TextTag tag_italic = new TextTag("italic")
         {
             Style = Pango.Style.Italic
         };
-        public readonly TextTag bold = new TextTag("bold")
+        public readonly TextTag tag_bold = new TextTag("bold")
         {
             Weight = Pango.Weight.Bold
         };
-        public readonly TextTag weak = new TextTag("weak")
+        public readonly TextTag tag_weak = new TextTag("weak")
         {
             Foreground = "red"
         };
+        public readonly TextTag tag_strikethrough = new TextTag("strikethrough")
+        {
+            Strikethrough = true,
+            Foreground = "grey"
+        };
+
 
         class InfoTag
         {
@@ -48,10 +54,11 @@ namespace GardenPlanner
 
         public InfoView() : base()
         {
-            Buffer.TagTable.Add(headline);
-            Buffer.TagTable.Add(bold);
-            Buffer.TagTable.Add(italic);
-            Buffer.TagTable.Add(weak);
+            Buffer.TagTable.Add(tag_headline);
+            Buffer.TagTable.Add(tag_bold);
+            Buffer.TagTable.Add(tag_italic);
+            Buffer.TagTable.Add(tag_weak);
+            Buffer.TagTable.Add(tag_strikethrough);
 
             WrapMode = WrapMode.Word;
             Editable = false;
